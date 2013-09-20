@@ -30,10 +30,14 @@
     margin-bottom: 5px;
     font-size: 40px;
   }
+
+  .fb-left{padding-top:30px; margin-right: 320px;}
+  .fb-right{width: 320px; float: right; padding-top:70px;margin-left:0px; margin-right: 0px;border-left:1px solid #ddd;padding-left:20px;min-height:100%;overflow:hidden}
   </style>
 </head>
 <body>
-  <div class='fb-main'></div>
+  <div class='fb-main row nomargin'></div>
+
 
   <script src="../bower_components/jquery/jquery.js"></script>
   <script src="../bower_components/jquery-ui/ui/jquery.ui.core.js"></script>
@@ -54,6 +58,7 @@
   <script>
     $(function(){
       fb = new Formbuilder('.fb-main', {
+        noScroll : true,
         bootstrapData: [{"label":"Please enter your clearance number","field_type":"text","required":true,"field_options":{},"cid":"c6"},{"label":"Security personnel #82?","field_type":"radio","required":true,"field_options":{"options":[{"label":"Yes","checked":false},{"label":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"label":"Medical history","field_type":"file","required":true,"field_options":{},"cid":"c14"}]
       });
 

@@ -245,11 +245,7 @@ this["Formbuilder"]["templates"]["partials/left_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-left\'>\n  <ul class=\'fb-tabs\'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ' +
-((__t = ( Formbuilder.templates['partials/add_field']() )) == null ? '' : __t) +
-'\n    ' +
-((__t = ( Formbuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
-'\n  </div>\n</div>';
+__p += '<div class="span2">JSTree Here</div>\n<div class=\'span6\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>';
 
 }
 return __p
@@ -259,7 +255,11 @@ this["Formbuilder"]["templates"]["partials/right_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-right\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n';
+__p += '<div class=\'span4\'>\n  <ul class=\'fb-tabs nav nav-tabs compact \'>\n    <li class=\'active\'><a data-target=\'#addField\'>Add new field</a></li>\n    <li><a data-target=\'#editField\'>Edit field</a></li>\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ' +
+((__t = ( Formbuilder.templates['partials/add_field']() )) == null ? '' : __t) +
+'\n    ' +
+((__t = ( Formbuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
+'\n  </div>\n</div>\n';
 
 }
 return __p

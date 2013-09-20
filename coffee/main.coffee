@@ -343,6 +343,7 @@ class Formbuilder
         @scrollLeftWrapper $(".fb-field-wrapper.editing")
 
       scrollLeftWrapper: ($responseFieldEl) ->
+        return if @options.noScroll
         @unlockLeftWrapper()
         $.scrollWindowTo ($responseFieldEl.offset().top - @$responseFields.offset().top), 200, =>
           @lockLeftWrapper()

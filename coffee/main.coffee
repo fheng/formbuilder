@@ -95,7 +95,9 @@ class Formbuilder
       render: ->
         # If this is from the .trigger event of a model, avoid it
         # allows us to update form field values on the LHS also
-        return if arguments.length > 0
+        if (arguments.length > 0 && (arguments[0].norender== true))
+          return
+
         @$el.addClass('response-field-'+@model.get(Formbuilder.options.mappings.FIELD_TYPE))
             .data('cid', @model.cid)
             .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
@@ -106,7 +108,8 @@ class Formbuilder
         @parentView.createAndShowEditView(@model)
 
       forceEditRender: (e) ->
-        @model.set('value', e.target.value)
+        @model.set('value', e.target.value, { silent : true })
+        @model.trigger('change', { norender : true });
 
       clear: ->
         @parentView.handleFormUpdate()

@@ -1,3 +1,4 @@
+return;
 Formbuilder.registerField 'section_break',
 
   type: 'non_input'

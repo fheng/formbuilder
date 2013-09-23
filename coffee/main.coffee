@@ -84,6 +84,8 @@ class Formbuilder
         'click .subtemplate-wrapper': 'focusEditView'
         'click .js-duplicate': 'duplicate'
         'click .js-clear': 'clear'
+        'input input' : 'forceEditRender',
+        'input textarea' : 'forceEditRender'
 
       initialize: ->
         @parentView = @options.parentView
@@ -91,6 +93,9 @@ class Formbuilder
         @listenTo @model, "destroy", @remove
 
       render: ->
+        # If this is from the .trigger event of a model, avoid it
+        # allows us to update form field values on the LHS also
+        return if arguments.length > 0
         @$el.addClass('response-field-'+@model.get(Formbuilder.options.mappings.FIELD_TYPE))
             .data('cid', @model.cid)
             .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
@@ -99,6 +104,9 @@ class Formbuilder
 
       focusEditView: (e) ->
         @parentView.createAndShowEditView(@model)
+
+      forceEditRender: (e) ->
+        @model.set('value', e.target.value)
 
       clear: ->
         @parentView.handleFormUpdate()
@@ -336,7 +344,7 @@ class Formbuilder
 
         $newEditEl = @editView.render().$el
         @$el.find(".fb-edit-field-wrapper").html $newEditEl
-        @$el.find(".fb-tabs a[data-target=\"#editField\"]").click()
+        @$el.find(".fb-tabs a[data-target=\"#editField\"]").click() unless @options.noEditOnDrop
         @scrollLeftWrapper($responseFieldEl)
         return @
 

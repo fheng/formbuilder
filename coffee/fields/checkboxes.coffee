@@ -1,3 +1,4 @@
+return
 Formbuilder.registerField 'checkboxes',
 
   view: """

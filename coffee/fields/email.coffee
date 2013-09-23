@@ -1,3 +1,4 @@
+return
 Formbuilder.registerField 'email',
 
   view: """

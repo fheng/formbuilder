@@ -29,12 +29,19 @@
   .fb-left{padding-top:30px; margin-right: 320px;}
   .fb-right{width: 320px; float: right; padding-top:70px;margin-left:0px; margin-right: 0px;border-left:1px solid #ddd;padding-left:20px;min-height:100%;overflow:hidden}
 
+  .fb-field-wrapper .actions-wrapper {
+    bottom: 2px;
+  }
+
   .fb-common-checkboxes {
     display: none;
   }
 
   .fb-label-description textarea {
     display: none;
+  }
+  .fb-field-wrapper .subtemplate-wrapper .cover {
+    z-index: -2;
   }
   </style>
 </head>
@@ -62,7 +69,8 @@
     $(function(){
       fb = new Formbuilder('.fb-main', {
         noScroll : true,
-        bootstrapData: [{"label":"Please enter your clearance number","field_type":"text","required":true,"field_options":{},"cid":"c6"},{"label":"Security personnel #82?","field_type":"radio","required":true,"field_options":{"options":[{"label":"Yes","checked":false},{"label":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"label":"Medical history","field_type":"file","required":true,"field_options":{},"cid":"c14"}]
+        noEditOnDrop : true,
+        bootstrapData: [{"label":"Please enter your clearance number","field_type":"text","required":true,"field_options":{},"cid":"c6"}]
       });
 
       fb.on('save', function(payload){

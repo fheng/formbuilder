@@ -145,7 +145,9 @@
         events: {
           'click .subtemplate-wrapper': 'focusEditView',
           'click .js-duplicate': 'duplicate',
-          'click .js-clear': 'clear'
+          'click .js-clear': 'clear',
+          'input input': 'forceEditRender',
+          'input textarea': 'forceEditRender'
         },
         initialize: function() {
           this.parentView = this.options.parentView;
@@ -153,6 +155,9 @@
           return this.listenTo(this.model, "destroy", this.remove);
         },
         render: function() {
+          if (arguments.length > 0) {
+            return;
+          }
           this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.FIELD_TYPE)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
             rf: this.model
           }));
@@ -160,6 +165,9 @@
         },
         focusEditView: function(e) {
           return this.parentView.createAndShowEditView(this.model);
+        },
+        forceEditRender: function(e) {
+          return this.model.set('value', e.target.value);
         },
         clear: function() {
           this.parentView.handleFormUpdate();
@@ -425,7 +433,9 @@
           });
           $newEditEl = this.editView.render().$el;
           this.$el.find(".fb-edit-field-wrapper").html($newEditEl);
-          this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
+          if (!this.options.noEditOnDrop) {
+            this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
+          }
           this.scrollLeftWrapper($responseFieldEl);
           return this;
         },
@@ -527,6 +537,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('address', {
     view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
     edit: "",
@@ -536,6 +548,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('checkboxes', {
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
@@ -557,6 +571,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('date', {
     view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>",
     edit: "",
@@ -566,6 +582,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('dropdown', {
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
@@ -588,6 +606,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('email', {
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "",
@@ -606,6 +626,17 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('file', {
+    view: "<input type='file' />",
+    edit: "",
+    addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
+  });
+
+}).call(this);
+
+(function() {
+  return;
+
   Formbuilder.registerField('number', {
     view: "<input type='text' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max']() %>\n<%= Formbuilder.templates['edit/units']() %>\n<%= Formbuilder.templates['edit/integer_only']() %>",
@@ -628,6 +659,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('price', {
     view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
     edit: "",
@@ -637,6 +670,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('radio', {
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
@@ -658,6 +693,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('section_break', {
     type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
@@ -681,6 +718,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('time', {
     view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
     edit: "",
@@ -690,6 +729,8 @@
 }).call(this);
 
 (function() {
+  return;
+
   Formbuilder.registerField('website', {
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>",

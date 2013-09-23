@@ -21,6 +21,7 @@ class Formbuilder
       SIZE: 'field_options.size'
       UNITS: 'field_options.units'
       LABEL: 'label'
+      VALUE: 'value'
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'
@@ -96,7 +97,7 @@ class Formbuilder
 
         return @
 
-      focusEditView: ->
+      focusEditView: (e) ->
         @parentView.createAndShowEditView(@model)
 
       clear: ->
@@ -209,7 +210,8 @@ class Formbuilder
         @$el.html Formbuilder.templates['page']()
 
         # Save jQuery objects for easy use
-        @$fbLeft = @$el.find('.fb-left')
+        @$fbLeft = @$el.find('.fb-left') || @$el.find('.span6.middle')
+        @$fbRight = @$el.find('.fb-right') || @$el.find('.span4.right')
         @$responseFields = @$el.find('.fb-response-fields')
 
         @bindWindowScrollEvent()

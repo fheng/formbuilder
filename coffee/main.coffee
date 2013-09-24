@@ -84,8 +84,8 @@ class Formbuilder
         'click .subtemplate-wrapper': 'focusEditView'
         'click .js-duplicate': 'duplicate'
         'click .js-clear': 'clear'
-        'input input' : 'forceEditRender',
-        'input textarea' : 'forceEditRender'
+        'blur input' : 'forceEditRender',
+        'blur textarea' : 'forceEditRender'
 
       initialize: ->
         @parentView = @options.parentView
@@ -108,9 +108,7 @@ class Formbuilder
         @parentView.createAndShowEditView(@model)
 
       forceEditRender: (e) ->
-        @model.set('value', e.target.value, { silent : true })
-        @model.trigger('change', { norender : true });
-
+        @model.set('value', e.target.value)
       clear: ->
         @parentView.handleFormUpdate()
         @model.destroy()

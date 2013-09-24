@@ -146,8 +146,8 @@
           'click .subtemplate-wrapper': 'focusEditView',
           'click .js-duplicate': 'duplicate',
           'click .js-clear': 'clear',
-          'input input': 'forceEditRender',
-          'input textarea': 'forceEditRender'
+          'blur input': 'forceEditRender',
+          'blur textarea': 'forceEditRender'
         },
         initialize: function() {
           this.parentView = this.options.parentView;
@@ -155,7 +155,7 @@
           return this.listenTo(this.model, "destroy", this.remove);
         },
         render: function() {
-          if (arguments.length > 0 && (arguments[0].noReRender === true)) {
+          if (arguments.length > 0 && (arguments[0].norender === true)) {
             return;
           }
           this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.FIELD_TYPE)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
@@ -167,12 +167,7 @@
           return this.parentView.createAndShowEditView(this.model);
         },
         forceEditRender: function(e) {
-          this.model.set('value', e.target.value, {
-            silent: true
-          });
-          return this.model.trigger('change', {
-            noReRender: true
-          });
+          return this.model.set('value', e.target.value);
         },
         clear: function() {
           this.parentView.handleFormUpdate();

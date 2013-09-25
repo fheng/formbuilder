@@ -617,6 +617,16 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('field_list', {
+    type: 'non_input',
+    view: "<div class=\"btn-group pull-right\">\n<a class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-road\"></i> Edit Data</a>\n<a class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Structure</i></a>\n</div>\n<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<table>\n<thead>\n<tr>\n\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>\nLoading...\n</td>\n</tr>\n</tbody>\n</table>",
+    edit: "<div class=\"btn-group\">\n<a class=\"btn btn-listfield-data\" href=\"#\"><i class=\"icon-road\"></i> Edit Data</a>\n<a class=\"btn btn-listfield-structure\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Structure</i></a>\n</div>\n\n<div class='fb-edit-section-header'>List Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n",
+    addButton: "<span class='symbol'><span class='icon-list'></span></span> Field List"
+  });
+
+}).call(this);
+
+(function() {
   Formbuilder.registerField('file', {
     view: "<input type='file' />",
     edit: "",

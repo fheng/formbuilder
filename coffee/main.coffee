@@ -98,9 +98,10 @@ class Formbuilder
         if (arguments.length > 0 && (arguments[0].norender== true))
           return
 
+        editStructure = if @parentView.options.hasOwnProperty('editStructure') then @parentView.options.editStructure else true
         @$el.addClass('response-field-'+@model.get(Formbuilder.options.mappings.FIELD_TYPE))
             .data('cid', @model.cid)
-            .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+            .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({ editStructure : editStructure, rf: @model}))
 
         return @
 
@@ -129,9 +130,10 @@ class Formbuilder
 
       initialize: ->
         @listenTo @model, "destroy", @remove
+        @parentView = @options.parentView
 
       render: ->
-        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model}))
+        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure }))
         rivets.bind @$el, { model: @model }
         return @
 
@@ -216,7 +218,8 @@ class Formbuilder
         @addAll()
 
       render: ->
-        @$el.html Formbuilder.templates['page']()
+        @options.editStructure = if @options.hasOwnProperty('editStructure') then @options.editStructure else true
+        @$el.html Formbuilder.templates['page']({ editStructure : @options.editStructure })
 
         # Save jQuery objects for easy use
         @$fbLeft = @$el.find('.fb-left') || @$el.find('.span6.middle')
@@ -312,7 +315,7 @@ class Formbuilder
 
       addAll: ->
         @collection.each @addOne, @
-        @setSortable()
+        @setSortable() unless (@options.editStructure == false)
 
       hideShowNoResponseFields: ->
         @$el.find(".fb-no-response-fields")[if @collection.length > 0 then 'hide' else 'show']()

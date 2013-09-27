@@ -1,4 +1,7 @@
-<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
+<% if (editStructure) { %>
+  <div class='fb-edit-section-header'>Label</div>
+  <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
+<% } %>
 <div class='fb-edit-section-header'>Value</div>
 <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.VALUE %>' />
 <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'

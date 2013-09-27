@@ -10,20 +10,9 @@ Formbuilder.registerField 'field_list',
         <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
         <br />
         <br />
-        <table>
-        <thead>
-        <tr>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td>
-        Loading...
-        </td>
-        </tr>
-        </tbody>
-        </table>
+        <div class="fieldlist_table" data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>">
+          Loading data list..
+        </div>
         """
 
   edit: """

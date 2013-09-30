@@ -1,7 +1,8 @@
 Formbuilder.registerField 'text',
 
   view: """
-    <input type='text' value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />
+    <% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>
+    <input type='text' value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />
   """
 
   edit: """
@@ -14,5 +15,5 @@ Formbuilder.registerField 'text',
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.size = 'small'
+    attrs.field_options.size = 'large'
     attrs

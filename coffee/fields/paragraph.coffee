@@ -14,5 +14,5 @@ Formbuilder.registerField 'paragraph',
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.size = 'small'
+    attrs.field_options.size = 'large'
     attrs

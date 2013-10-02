@@ -22,6 +22,7 @@ class Formbuilder
       UNITS: 'field_options.units'
       LABEL: 'label'
       VALUE: 'value'
+      HASH: 'hash'
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
       ADMIN_ONLY: 'admin_only'

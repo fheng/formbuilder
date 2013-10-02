@@ -2,7 +2,7 @@ Formbuilder.registerField 'text',
 
   view: """
     <% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>
-    <input type='text' value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />
+    <input type='text' data-hash='<%= rf.get(Formbuilder.options.mappings.HASH) %>' value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />
   """
 
   edit: """

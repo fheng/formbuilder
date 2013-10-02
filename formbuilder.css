@@ -21,10 +21,7 @@
 .fb-field-wrapper:hover .subtemplate-wrapper{border-color:#ddd}
 .fb-field-wrapper.editing{background-color:#dfefff;}
 .fb-field-wrapper.editing .subtemplate-wrapper{border-color:#c2d7ef;border-style:solid}
-.fb-field-wrapper .actions-wrapper{display:none;position:absolute;bottom:-7px;right:5px;z-index:3;}
-.fb-field-wrapper .actions-wrapper a{display:inline-block;background-color:#ccc;padding:2px 8px;}
-.fb-field-wrapper .actions-wrapper a.js-duplicate{background-color:#008000}
-.fb-field-wrapper .actions-wrapper a.js-clear{background-color:#f00}
+.fb-field-wrapper .actions-wrapper{display:none;position:absolute;bottom:-7px;right:5px;z-index:3}
 .fb-field-wrapper .subtemplate-wrapper{border:1px dashed transparent;margin-bottom:10px;padding:10px;position:relative;}
 .fb-field-wrapper .subtemplate-wrapper .cover{position:absolute;top:0;left:0;height:100%;width:100%;z-index:2}
 .fb-field-wrapper .subtemplate-wrapper > label{display:block;font-weight:bold;margin-bottom:5px}

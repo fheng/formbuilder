@@ -333,7 +333,7 @@
           $el = $(e.currentTarget);
           target = $el.data('target');
           $el.closest('li').addClass('active').siblings('li').removeClass('active');
-          $(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
+          this.$el.find(target).addClass('active').siblings('.fb-tab-pane').removeClass('active');
           if (target !== '#editField') {
             this.unlockLeftWrapper();
           }

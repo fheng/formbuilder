@@ -4,8 +4,8 @@ Formbuilder.registerField 'field_list',
 
   view: """
         <div class="btn-group pull-right">
-        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-small btn-listfield-data" href="#"><i class="icon-road"></i> Edit Data</a>
-        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-small btn-listfield-structure" href="#"><i class="icon-pencil"></i> Edit Structure</i></a>
+        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-small btn-listfield-data" href="#"><i class="icon-pencil"></i> Edit Data</a>
+        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-small btn-listfield-structure" href="#"><i class="icon-road"></i> Edit Structure</i></a>
         </div>
         <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
         <br />
@@ -17,8 +17,8 @@ Formbuilder.registerField 'field_list',
 
   edit: """
         <div class="btn-group">
-        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-listfield-data" href="#"><i class="icon-road"></i> Edit Data</a>
-        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-listfield-structure" href="#"><i class="icon-pencil"></i> Edit Structure</i></a>
+        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-listfield-data" href="#"><i class="icon-pencil"></i> Edit Data</a>
+        <a data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" class="btn btn-listfield-structure" href="#"><i class="icon-road"></i> Edit Structure</i></a>
         </div>
 
         <div class='fb-edit-section-header'>List Name</div>

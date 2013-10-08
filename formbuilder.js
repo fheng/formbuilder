@@ -258,7 +258,6 @@
         SUBVIEWS: [],
         events: {
           'click .js-save-form': 'saveForm',
-          'click .fb-tabs a': 'showTab',
           'click .fb-add-field-types a': 'addField'
         },
         initialize: function() {
@@ -312,6 +311,7 @@
               parentView: this
             }).render();
           }
+          this.$el.find('.fb-tabs a').unbind().click(this.showTab);
           return this;
         },
         bindWindowScrollEvent: function() {

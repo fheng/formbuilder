@@ -183,7 +183,6 @@ class Formbuilder
 
       events:
         'click .js-save-form': 'saveForm'
-        'click .fb-tabs a': 'showTab'
         'click .fb-add-field-types a': 'addField'
 
       initialize: ->
@@ -232,6 +231,8 @@ class Formbuilder
 
         # Render any subviews (this is an easy way of extending the Formbuilder)
         new subview({parentView: @}).render() for subview in @SUBVIEWS
+
+        @.$el.find('.fb-tabs a').unbind().click(@.showTab)
 
         return @
 

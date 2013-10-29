@@ -147,8 +147,8 @@
           'click .subtemplate-wrapper': 'focusEditView',
           'click .js-duplicate': 'duplicate',
           'click .js-clear': 'clear',
-          'blur input': 'forceEditRender',
-          'blur textarea': 'forceEditRender'
+          'keyup input': 'forceEditRender',
+          'keyup textarea': 'forceEditRender'
         },
         initialize: function() {
           this.parentView = this.options.parentView;
@@ -157,7 +157,8 @@
         },
         render: function() {
           var editStructure;
-          if (arguments.length > 0 && (arguments[0].norender === true)) {
+          if (this.editing) {
+            delete this.editing;
             return;
           }
           editStructure = this.parentView.options.hasOwnProperty('editStructure') ? this.parentView.options.editStructure : true;
@@ -171,7 +172,10 @@
           return this.parentView.createAndShowEditView(this.model);
         },
         forceEditRender: function(e) {
-          return this.model.set('value', e.target.value);
+          var val;
+          val = e.target.value;
+          this.editing = true;
+          this.model.set('value', val);
         },
         clear: function() {
           this.parentView.handleFormUpdate();

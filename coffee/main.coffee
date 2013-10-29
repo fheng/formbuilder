@@ -85,8 +85,9 @@ class Formbuilder
         'click .subtemplate-wrapper': 'focusEditView'
         'click .js-duplicate': 'duplicate'
         'click .js-clear': 'clear'
-        'blur input' : 'forceEditRender',
-        'blur textarea' : 'forceEditRender'
+        'keyup input' : 'forceEditRender',
+        'keyup textarea' : 'forceEditRender'
+
 
       initialize: ->
         @parentView = @options.parentView
@@ -96,7 +97,8 @@ class Formbuilder
       render: ->
         # If this is from the .trigger event of a model, avoid it
         # allows us to update form field values on the LHS also
-        if (arguments.length > 0 && (arguments[0].norender== true))
+        if @.editing
+          delete @.editing
           return
 
         editStructure = if @parentView.options.hasOwnProperty('editStructure') then @parentView.options.editStructure else true
@@ -110,7 +112,12 @@ class Formbuilder
         @parentView.createAndShowEditView(@model)
 
       forceEditRender: (e) ->
-        @model.set('value', e.target.value)
+        # Allow inputting text in the input field to update the model value, but dont allow
+        # this section to re-render, as it kills our focus
+        val = e.target.value
+        @.editing = true
+        @.model.set('value', val)
+        return
       clear: ->
         @parentView.handleFormUpdate()
         @model.destroy()
@@ -233,6 +240,7 @@ class Formbuilder
         new subview({parentView: @}).render() for subview in @SUBVIEWS
 
         @.$el.find('.fb-tabs a').unbind().click(@.showTab)
+
 
         return @
 

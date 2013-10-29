@@ -11,7 +11,9 @@ Formbuilder.registerField 'field_list',
         <br />
         <br />
         <div class="fieldlist_table" data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>">
-          Loading data list..
+        <p class="instructions"><i class="icon-info-sign"></i>Empty list - to add contents: </p><br />
+        &nbsp; &nbsp;  1) Use "Edit Structure" to add fields to the list <br />
+        &nbsp;  &nbsp;  2) Use "Edit Data" to add rows
         </div>
         """
 

@@ -92,7 +92,7 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (editStructure) { ;
-__p += '\n  <div class=\'fb-edit-section-header\'>Label</div>\n  <input type=\'text\' data-rv-input=\'model.' +
+__p += '\n  <div class=\'fb-edit-section-header\'>Name</div>\n  <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '\' />\n';
  } ;

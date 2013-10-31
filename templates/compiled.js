@@ -216,7 +216,9 @@ __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-ad
  for (i in Formbuilder.inputFields) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
-'" class="btn btn-primary">\n          ' +
+'" class="btn btn-primary btn-' +
+((__t = ( i )) == null ? '' : __t) +
+'">\n          ' +
 ((__t = ( Formbuilder.inputFields[i].addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  } ;
@@ -224,7 +226,9 @@ __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
  for (i in Formbuilder.nonInputFields) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
-'" class="btn btn-primary">\n          ' +
+'" class="btn btn-primary btn-' +
+((__t = ( i )) == null ? '' : __t) +
+'">\n          ' +
 ((__t = ( Formbuilder.nonInputFields[i].addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  } ;

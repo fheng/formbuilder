@@ -148,7 +148,8 @@
           'click .js-duplicate': 'duplicate',
           'click .js-clear': 'clear',
           'keyup input': 'forceEditRender',
-          'keyup textarea': 'forceEditRender'
+          'keyup textarea': 'forceEditRender',
+          'change input[type=file]': 'forceEditRender'
         },
         initialize: function() {
           this.parentView = this.options.parentView;
@@ -262,8 +263,7 @@
         SUBVIEWS: [],
         events: {
           'click .js-save-form': 'saveForm',
-          'click .fb-add-field-types a': 'addField',
-          '': ''
+          'click .fb-add-field-types a': 'addField'
         },
         initialize: function() {
           this.$el = $(this.options.selector);
@@ -644,8 +644,8 @@
 
 (function() {
   Formbuilder.registerField('file', {
-    view: "<div class=\"file_container\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' />",
-    edit: "<div class='fb-edit-section-header'>Field Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />",
+    view: "<div class=\"file_container\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
+    edit: "",
     addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
   });
 
@@ -664,7 +664,7 @@
 
 (function() {
   Formbuilder.registerField('paragraph', {
-    view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>'><%= rf.get(Formbuilder.options.mappings.VALUE) %></textarea>",
+    view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' ><%= rf.get(Formbuilder.options.mappings.VALUE) %></textarea>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
     addButton: "<span class=\"symbol\">&#182;</span> Paragraph",
     defaultAttributes: function(attrs) {
@@ -723,7 +723,7 @@
 
 (function() {
   Formbuilder.registerField('text', {
-    view: "<% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>\n<input type='text' data-hash='<%= rf.get(Formbuilder.options.mappings.HASH) %>' value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />",
+    view: "<% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>\n<input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
     addButton: "<span class='symbol'><span class='icon-font'></span></span> Text",
     defaultAttributes: function(attrs) {

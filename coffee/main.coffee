@@ -85,8 +85,9 @@ class Formbuilder
         'click .subtemplate-wrapper': 'focusEditView'
         'click .js-duplicate': 'duplicate'
         'click .js-clear': 'clear'
-        'keyup input' : 'forceEditRender',
+        'keyup input' : 'forceEditRender'
         'keyup textarea' : 'forceEditRender'
+        'change input[type=file]' : 'forceEditRender'
 
 
       initialize: ->

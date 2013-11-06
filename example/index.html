@@ -37,7 +37,7 @@
     display: none;
   }
 
-  .fb-label-description textarea {
+  .fb-name-description textarea {
     display: none;
   }
   .fb-field-wrapper .subtemplate-wrapper .cover {
@@ -84,11 +84,19 @@
 
   <script>
     $(function(){
+      Formbuilder.options.mappings.LABEL = "name";
+      Formbuilder.options.mappings.VALUE = "value";
+      Formbuilder.options.mappings.FIELD_TYPE = "type";
+      Formbuilder.options.mappings.TYPE_ALIASES = {
+        'text' : 'string'
+      };
+
       fb = new Formbuilder('.fb-main', {
         noScroll : true,
         editStructure : true,
-        bootstrapData: [{"hash" : "1a2b3c4d", "_id" : "123", "label":"Please enter your clearance number","field_type":"text","required":true,"field_options":{},"cid":"c6"}],
-        // disbaled fields by using : fields : ['text']
+        eventFix : true,
+        bootstrapData: [{"name":"Please enter your clearance number","type":"string","required":true,"field_options":{},"cid":"c6"},{"name":"Security personnel #82?","type":"radio","required":true,"field_options":{"options":[{"name":"Yes","checked":false},{"name":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"name":"Medical history","type":"file","required":true,"field_options":{},"cid":"c14"}]
+      // disbaled fields by using : fields : ['text']
       });
 
       fb.on('save', function(payload){

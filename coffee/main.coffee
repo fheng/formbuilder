@@ -1,12 +1,14 @@
 class Formbuilder
   @helpers:
     defaultFieldAttrs: (field_type) ->
+      if Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]
+        field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type]
+
       attrs =
-        label: "Untitled"
-        field_type: field_type
         required: true
         field_options: {}
-
+      attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
+      attrs[Formbuilder.options.mappings.LABEL] = "Untitled"
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
     simple_format: (x) ->
@@ -36,6 +38,7 @@ class Formbuilder
       MINLENGTH: 'field_options.minlength'
       MAXLENGTH: 'field_options.maxlength'
       LENGTH_UNITS: 'field_options.min_max_length_units'
+      TYPE_ALIASES: false
 
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'
@@ -52,7 +55,12 @@ class Formbuilder
       $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
       $(".fb-field-wrapper").index $wrapper
     is_input: ->
-      Formbuilder.inputFields[@get(Formbuilder.options.mappings.FIELD_TYPE)]?
+      $type = @get(Formbuilder.options.mappings.FIELD_TYPE);
+      if Formbuilder.options.mappings.TYPE_ALIASES
+        $idx = _.values(Formbuilder.options.mappings.TYPE_ALIASES).indexOf($type)
+        if $idx>-1
+          $type = _.keys(Formbuilder.options.mappings.TYPE_ALIASES)[$idx]
+      Formbuilder.inputFields[$type]?
 
   @collection: Backbone.Collection.extend
     initialize: ->
@@ -103,7 +111,10 @@ class Formbuilder
           return
 
         editStructure = if @parentView.options.hasOwnProperty('editStructure') then @parentView.options.editStructure else true
-        @$el.addClass('response-field-'+@model.get(Formbuilder.options.mappings.FIELD_TYPE))
+        $type = @model.get(Formbuilder.options.mappings.FIELD_TYPE)
+        if Formbuilder.options.mappings.TYPE_ALISES
+          $type = Formbuilder.options.mappings.TYPE_ALISES[$type]
+        @$el.addClass('response-field-'+$type)
             .data('cid', @model.cid)
             .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({ editStructure : editStructure, rf: @model}))
 
@@ -126,7 +137,7 @@ class Formbuilder
       duplicate: ->
         attrs = _.clone(@model.attributes)
         delete attrs['id']
-        attrs['label'] += ' Copy'
+        attrs[Formbuilder.options.mappings.LABEL] += ' Copy'
         @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
     edit_field: Backbone.View.extend
       className: "edit-response-field"
@@ -156,7 +167,8 @@ class Formbuilder
         $el = $(e.currentTarget)
         i = @$el.find('.option').index($el.closest('.option'))
         options = @model.get(Formbuilder.options.mappings.OPTIONS) || []
-        newOption = {label: "", checked: false}
+        newOption = {checked: false}
+        newOption[Formbuilder.options.mappings.LABEL] = ""
 
         if i > -1
           options.splice(i + 1, 0, newOption)
@@ -178,8 +190,10 @@ class Formbuilder
 
       defaultUpdated: (e) ->
         $el = $(e.currentTarget)
-
-        unless @model.get(Formbuilder.options.mappings.FIELD_TYPE) == 'checkboxes' # checkboxes can have multiple options selected
+        $checkboxType = 'checkboxes'
+        if Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES['checkboxes']
+          $checkboxType = Formbuilder.options.mappings.TYPE_ALIASES['checkboxes']
+        unless @model.get(Formbuilder.options.mappings.FIELD_TYPE) == $checkboxType # checkboxes can have multiple options selected
           @$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change')
 
         @forceRender()
@@ -194,6 +208,9 @@ class Formbuilder
         'click .fb-add-field-types a': 'addField'
 
       initialize: ->
+        if !@options.eventFix
+          @events['click .fb-tabs a'] = 'showTab'
+
         @$el = $(@options.selector)
         @formBuilder = @options.formBuilder
 
@@ -228,6 +245,11 @@ class Formbuilder
       render: ->
         @options.editStructure = if @options.hasOwnProperty('editStructure') then @options.editStructure else true
         @options.fields = if @options.hasOwnProperty('fields') then @options.fields else []
+
+        if Formbuilder.options.mappings.TYPE_ALIASES
+          for orig,alias of Formbuilder.options.mappings.TYPE_ALIASES
+            Formbuilder.fields[alias] = Formbuilder.fields[orig]
+
         @$el.html Formbuilder.templates['page']({ editStructure : @options.editStructure, fieldsEnabled : @options.fields })
 
         # Save jQuery objects for easy use
@@ -241,8 +263,8 @@ class Formbuilder
         # Render any subviews (this is an easy way of extending the Formbuilder)
         new subview({parentView: @}).render() for subview in @SUBVIEWS
 
-        @.$el.find('.fb-tabs a').unbind().click(@.showTab)
-
+        if @options.eventFix
+          @.$el.find('.fb-tabs a').unbind().click(@.showTab)
 
         return @
 

@@ -1,4 +1,4 @@
-Formbuilder.registerField 'field_list',
+Formbuilder.registerField 'list',
 
   type: 'non_input'
 

@@ -47,12 +47,15 @@
     Formbuilder.helpers = {
       defaultFieldAttrs: function(field_type) {
         var attrs, _base;
+        if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]) {
+          field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type];
+        }
         attrs = {
-          label: "Untitled",
-          field_type: field_type,
           required: true,
           field_options: {}
         };
+        attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
+        attrs[Formbuilder.options.mappings.LABEL] = "Untitled";
         return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
@@ -82,7 +85,8 @@
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
-        LENGTH_UNITS: 'field_options.min_max_length_units'
+        LENGTH_UNITS: 'field_options.min_max_length_units',
+        TYPE_ALIASES: false
       },
       dict: {
         ALL_CHANGES_SAVED: 'All changes saved',
@@ -108,7 +112,15 @@
         return $(".fb-field-wrapper").index($wrapper);
       },
       is_input: function() {
-        return Formbuilder.inputFields[this.get(Formbuilder.options.mappings.FIELD_TYPE)] != null;
+        var $idx, $type;
+        $type = this.get(Formbuilder.options.mappings.FIELD_TYPE);
+        if (Formbuilder.options.mappings.TYPE_ALIASES) {
+          $idx = _.values(Formbuilder.options.mappings.TYPE_ALIASES).indexOf($type);
+          if ($idx > -1) {
+            $type = _.keys(Formbuilder.options.mappings.TYPE_ALIASES)[$idx];
+          }
+        }
+        return Formbuilder.inputFields[$type] != null;
       }
     });
 
@@ -157,13 +169,17 @@
           return this.listenTo(this.model, "destroy", this.remove);
         },
         render: function() {
-          var editStructure;
+          var $type, editStructure;
           if (this.editing) {
             delete this.editing;
             return;
           }
           editStructure = this.parentView.options.hasOwnProperty('editStructure') ? this.parentView.options.editStructure : true;
-          this.$el.addClass('response-field-' + this.model.get(Formbuilder.options.mappings.FIELD_TYPE)).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
+          $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
+          if (Formbuilder.options.mappings.TYPE_ALISES) {
+            $type = Formbuilder.options.mappings.TYPE_ALISES[$type];
+          }
+          this.$el.addClass('response-field-' + $type).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
             editStructure: editStructure,
             rf: this.model
           }));
@@ -186,7 +202,7 @@
           var attrs;
           attrs = _.clone(this.model.attributes);
           delete attrs['id'];
-          attrs['label'] += ' Copy';
+          attrs[Formbuilder.options.mappings.LABEL] += ' Copy';
           return this.parentView.createField(attrs, {
             position: this.model.indexInDOM() + 1
           });
@@ -225,9 +241,9 @@
           i = this.$el.find('.option').index($el.closest('.option'));
           options = this.model.get(Formbuilder.options.mappings.OPTIONS) || [];
           newOption = {
-            label: "",
             checked: false
           };
+          newOption[Formbuilder.options.mappings.LABEL] = "";
           if (i > -1) {
             options.splice(i + 1, 0, newOption);
           } else {
@@ -248,9 +264,13 @@
           return this.forceRender();
         },
         defaultUpdated: function(e) {
-          var $el;
+          var $checkboxType, $el;
           $el = $(e.currentTarget);
-          if (this.model.get(Formbuilder.options.mappings.FIELD_TYPE) !== 'checkboxes') {
+          $checkboxType = 'checkboxes';
+          if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES['checkboxes']) {
+            $checkboxType = Formbuilder.options.mappings.TYPE_ALIASES['checkboxes'];
+          }
+          if (this.model.get(Formbuilder.options.mappings.FIELD_TYPE) !== $checkboxType) {
             this.$el.find(".js-default-updated").not($el).attr('checked', false).trigger('change');
           }
           return this.forceRender();
@@ -266,6 +286,9 @@
           'click .fb-add-field-types a': 'addField'
         },
         initialize: function() {
+          if (!this.options.eventFix) {
+            this.events['click .fb-tabs a'] = 'showTab';
+          }
           this.$el = $(this.options.selector);
           this.formBuilder = this.options.formBuilder;
           this.collection = new Formbuilder.collection;
@@ -299,9 +322,16 @@
           return this.addAll();
         },
         render: function() {
-          var subview, _i, _len, _ref;
+          var alias, orig, subview, _i, _len, _ref, _ref1;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
           this.options.fields = this.options.hasOwnProperty('fields') ? this.options.fields : [];
+          if (Formbuilder.options.mappings.TYPE_ALIASES) {
+            _ref = Formbuilder.options.mappings.TYPE_ALIASES;
+            for (orig in _ref) {
+              alias = _ref[orig];
+              Formbuilder.fields[alias] = Formbuilder.fields[orig];
+            }
+          }
           this.$el.html(Formbuilder.templates['page']({
             editStructure: this.options.editStructure,
             fieldsEnabled: this.options.fields
@@ -311,14 +341,16 @@
           this.$responseFields = this.$el.find('.fb-response-fields');
           this.bindWindowScrollEvent();
           this.hideShowNoResponseFields();
-          _ref = this.SUBVIEWS;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            subview = _ref[_i];
+          _ref1 = this.SUBVIEWS;
+          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+            subview = _ref1[_i];
             new subview({
               parentView: this
             }).render();
           }
-          this.$el.find('.fb-tabs a').unbind().click(this.showTab);
+          if (this.options.eventFix) {
+            this.$el.find('.fb-tabs a').unbind().click(this.showTab);
+          }
           return this;
         },
         bindWindowScrollEvent: function() {
@@ -625,7 +657,7 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('field_list', {
+  Formbuilder.registerField('list', {
     type: 'non_input',
     view: "<div class=\"btn-group pull-right\">\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<div class=\"fieldlist_table\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\">\n<p class=\"instructions\"><i class=\"icon-info-sign\"></i>Empty list - to add contents: </p><br />\n&nbsp; &nbsp;  1) Use \"Edit Structure\" to add fields to the list <br />\n&nbsp;  &nbsp;  2) Use \"Edit Data\" to add rows\n</div>",
     edit: "<div class=\"btn-group\">\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n\n<div class='fb-edit-section-header'>List Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n",

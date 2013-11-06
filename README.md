@@ -10,10 +10,18 @@ Overridden HTML so far is templates/partials/left_side.html & right_side.html
 DO NOT modify formbuilder.js - it's alas compiled from the coffeescript files. :-(
 
 We've generated some custom properties for use on init:
-noScroll : disable scrolling of the tabbed section to the position of the field we click on
-noEditOnDrop :  Disable opening the edit screen after dropping a field
-editStructure : Set to false to disable editing of structure -disables DnD, only shows the value field  & allows editing the field inline
-fields: An array of enabled fields - defaults to all fields enabled...
+
+    noScroll : disable scrolling of the tabbed section to the position of the field we click on
+    noEditOnDrop :  Disable opening the edit screen after dropping a field
+    editStructure : Set to false to disable editing of structure -disables DnD, only shows the value field  & allows editing the field inline
+    fields: An array of enabled fields - defaults to all fields enabled...
+
+
+Also, ability to alias field by updating the mappings like this:
+
+    Formbuilder.options.mappings.TYPE_ALIASES = {
+      'text' : 'string'
+    };
 
 Formbuilder is a graphical interface for letting users build their own webforms. Think Wufoo or Google Forms, but a lightweight component that can be integrated into your application.
 

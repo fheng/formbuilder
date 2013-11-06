@@ -301,8 +301,10 @@
         render: function() {
           var subview, _i, _len, _ref;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
+          this.options.fields = this.options.hasOwnProperty('fields') ? this.options.fields : [];
           this.$el.html(Formbuilder.templates['page']({
-            editStructure: this.options.editStructure
+            editStructure: this.options.editStructure,
+            fieldsEnabled: this.options.fields
           }));
           this.$fbLeft = this.$el.find('.fb-left') || this.$el.find('.span6.middle');
           this.$fbRight = this.$el.find('.fb-right') || this.$el.find('.span4.right');
@@ -553,8 +555,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('address', {
     view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
     edit: "",
@@ -564,8 +564,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('checkboxes', {
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
@@ -587,8 +585,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('date', {
     view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>",
     edit: "",
@@ -598,8 +594,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('dropdown', {
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
@@ -622,8 +616,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('email', {
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "",
@@ -652,8 +644,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('number', {
     view: "<input type='text' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max']() %>\n<%= Formbuilder.templates['edit/units']() %>\n<%= Formbuilder.templates['edit/integer_only']() %>",
@@ -676,8 +666,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('price', {
     view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
     edit: "",
@@ -687,8 +675,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('radio', {
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
@@ -710,8 +696,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('section_break', {
     type: 'non_input',
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
@@ -735,8 +719,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('time', {
     view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
     edit: "",
@@ -746,8 +728,6 @@
 }).call(this);
 
 (function() {
-  return;
-
   Formbuilder.registerField('website', {
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>",
@@ -958,7 +938,7 @@ __p +=
 '\n' +
 ((__t = ( Formbuilder.templates['partials/left_side']({ editStructure : editStructure }) )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['partials/right_side']({ editStructure : editStructure }) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['partials/right_side']({ editStructure : editStructure, fieldsEnabled : fieldsEnabled }) )) == null ? '' : __t) +
 '\n<div class=\'fb-clear\'></div>';
 
 }
@@ -972,23 +952,31 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-field-types\'>\n    <div class=\'section\'>\n      ';
  for (i in Formbuilder.inputFields) { ;
-__p += '\n        <a data-field-type="' +
+__p += '\n        ';
+ if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { ;
+__p += '\n          <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
 '" class="btn btn-primary btn-' +
 ((__t = ( i )) == null ? '' : __t) +
-'">\n          ' +
+'">\n            ' +
 ((__t = ( Formbuilder.inputFields[i].addButton )) == null ? '' : __t) +
-'\n        </a>\n      ';
+'\n          </a>\n        ';
+ } ;
+__p += '\n      ';
  } ;
 __p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
  for (i in Formbuilder.nonInputFields) { ;
+__p += '\n        ';
+ if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
 '" class="btn btn-primary btn-' +
 ((__t = ( i )) == null ? '' : __t) +
 '">\n          ' +
 ((__t = ( Formbuilder.nonInputFields[i].addButton )) == null ? '' : __t) +
-'\n        </a>\n      ';
+'\n        </a>\n        ';
+ } ;
+__p += '\n      ';
  } ;
 __p += '\n    </div>\n  </div>\n</div>';
 
@@ -1030,7 +1018,7 @@ __p += '\n      <li class="active configurefield"><a data-target=\'#editField\'>
 __p += '\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ';
  if(editStructure){ ;
 __p += '\n      ' +
-((__t = ( Formbuilder.templates['partials/add_field']() )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['partials/add_field']( { fieldsEnabled : fieldsEnabled } ) )) == null ? '' : __t) +
 '\n    ';
  } ;
 __p += '\n    ' +

@@ -227,7 +227,8 @@ class Formbuilder
 
       render: ->
         @options.editStructure = if @options.hasOwnProperty('editStructure') then @options.editStructure else true
-        @$el.html Formbuilder.templates['page']({ editStructure : @options.editStructure })
+        @options.fields = if @options.hasOwnProperty('fields') then @options.fields else []
+        @$el.html Formbuilder.templates['page']({ editStructure : @options.editStructure, fieldsEnabled : @options.fields })
 
         # Save jQuery objects for easy use
         @$fbLeft = @$el.find('.fb-left') || @$el.find('.span6.middle')

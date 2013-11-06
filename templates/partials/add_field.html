@@ -2,17 +2,21 @@
   <div class='fb-add-field-types'>
     <div class='section'>
       <% for (i in Formbuilder.inputFields) { %>
-        <a data-field-type="<%= i %>" class="btn btn-primary btn-<%= i %>">
-          <%= Formbuilder.inputFields[i].addButton %>
-        </a>
+        <% if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { %>
+          <a data-field-type="<%= i %>" class="btn btn-primary btn-<%= i %>">
+            <%= Formbuilder.inputFields[i].addButton %>
+          </a>
+        <% } %>
       <% } %>
     </div>
 
     <div class='section'>
       <% for (i in Formbuilder.nonInputFields) { %>
+        <% if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { %>
         <a data-field-type="<%= i %>" class="btn btn-primary btn-<%= i %>">
           <%= Formbuilder.nonInputFields[i].addButton %>
         </a>
+        <% } %>
       <% } %>
     </div>
   </div>

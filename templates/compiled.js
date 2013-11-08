@@ -8,7 +8,7 @@ with (obj) {
 __p +=
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure }) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure, commonCheckboxes : commonCheckboxes }) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
@@ -61,13 +61,18 @@ return __p
 
 this["Formbuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/label_description']({ editStructure : editStructure }) )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
+'\n  </div>\n  ';
+ if (commonCheckboxes){ ;
+__p += '\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>\n';
+'\n  </div>\n  ';
+ } ;
+__p += '\n  <div class=\'fb-clear\'></div>\n</div>\n';
 
 }
 return __p

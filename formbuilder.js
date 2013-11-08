@@ -169,12 +169,13 @@
           return this.listenTo(this.model, "destroy", this.remove);
         },
         render: function() {
-          var $type, editStructure;
+          var $type, commonCheckboxes, editStructure;
           if (this.editing) {
             delete this.editing;
             return;
           }
           editStructure = this.parentView.options.hasOwnProperty('editStructure') ? this.parentView.options.editStructure : true;
+          commonCheckboxes = this.parentView.options.hasOwnProperty('commonCheckboxes') ? this.parentView.options.commonCheckboxes : true;
           $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
           if (Formbuilder.options.mappings.TYPE_ALISES) {
             $type = Formbuilder.options.mappings.TYPE_ALISES[$type];
@@ -192,7 +193,7 @@
           var val;
           val = e.target.value;
           this.editing = true;
-          this.model.set('value', val);
+          this.model.set(Formbuilder.options.mappings.VALUE, val);
         },
         clear: function() {
           this.parentView.handleFormUpdate();
@@ -223,7 +224,8 @@
         render: function() {
           this.$el.html(Formbuilder.templates["edit/base" + (!this.model.is_input() ? '_non_input' : '')]({
             rf: this.model,
-            editStructure: this.parentView.options.editStructure
+            editStructure: this.parentView.options.editStructure,
+            commonCheckboxes: this.parentView.options.commonCheckboxes
           }));
           rivets.bind(this.$el, {
             model: this.model
@@ -685,6 +687,16 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('page_break', {
+    type: 'non_input',
+    view: "<label class='section-name'>Page Break</label>\n<hr>",
+    edit: "",
+    addButton: "<span class='symbol'><span class='icon-minus'></span></span> Page Break"
+  });
+
+}).call(this);
+
+(function() {
   Formbuilder.registerField('paragraph', {
     view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' ><%= rf.get(Formbuilder.options.mappings.VALUE) %></textarea>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
@@ -778,7 +790,7 @@ with (obj) {
 __p +=
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure }) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure, commonCheckboxes : commonCheckboxes }) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
@@ -831,13 +843,18 @@ return __p
 
 this["Formbuilder"]["templates"]["edit/common"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/label_description']({ editStructure : editStructure }) )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-common-checkboxes\'>\n    ' +
+'\n  </div>\n  ';
+ if (commonCheckboxes){ ;
+__p += '\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
-'\n  </div>\n  <div class=\'fb-clear\'></div>\n</div>\n';
+'\n  </div>\n  ';
+ } ;
+__p += '\n  <div class=\'fb-clear\'></div>\n</div>\n';
 
 }
 return __p

@@ -33,10 +33,6 @@
     bottom: 2px;
   }
 
-  .fb-common-checkboxes {
-    display: none;
-  }
-
   .fb-name-description textarea {
     display: none;
   }
@@ -94,9 +90,11 @@
       fb = new Formbuilder('.fb-main', {
         noScroll : true,
         editStructure : true,
-        eventFix : true,
+        eventFix : false,
+        commonCheckboxes : true,
         bootstrapData: [{"name":"Please enter your clearance number","type":"string","required":true,"field_options":{},"cid":"c6"},{"name":"Security personnel #82?","type":"radio","required":true,"field_options":{"options":[{"name":"Yes","checked":false},{"name":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"name":"Medical history","type":"file","required":true,"field_options":{},"cid":"c14"}]
       // disbaled fields by using : fields : ['text']
+      // commonCheckboxes: false // this disables required checkbox
       });
 
       fb.on('save', function(payload){

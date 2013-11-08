@@ -111,6 +111,8 @@ class Formbuilder
           return
 
         editStructure = if @parentView.options.hasOwnProperty('editStructure') then @parentView.options.editStructure else true
+        commonCheckboxes = if @parentView.options.hasOwnProperty('commonCheckboxes') then @parentView.options.commonCheckboxes else true
+
         $type = @model.get(Formbuilder.options.mappings.FIELD_TYPE)
         if Formbuilder.options.mappings.TYPE_ALISES
           $type = Formbuilder.options.mappings.TYPE_ALISES[$type]
@@ -128,7 +130,7 @@ class Formbuilder
         # this section to re-render, as it kills our focus
         val = e.target.value
         @.editing = true
-        @.model.set('value', val)
+        @.model.set(Formbuilder.options.mappings.VALUE, val)
         return
       clear: ->
         @parentView.handleFormUpdate()
@@ -153,7 +155,7 @@ class Formbuilder
         @parentView = @options.parentView
 
       render: ->
-        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure }))
+        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : @parentView.options.commonCheckboxes }))
         rivets.bind @$el, { model: @model }
         return @
 

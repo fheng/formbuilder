@@ -169,13 +169,12 @@
           return this.listenTo(this.model, "destroy", this.remove);
         },
         render: function() {
-          var $type, commonCheckboxes, editStructure;
+          var $type, editStructure;
           if (this.editing) {
             delete this.editing;
             return;
           }
           editStructure = this.parentView.options.hasOwnProperty('editStructure') ? this.parentView.options.editStructure : true;
-          commonCheckboxes = this.parentView.options.hasOwnProperty('commonCheckboxes') ? this.parentView.options.commonCheckboxes : true;
           $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
           if (Formbuilder.options.mappings.TYPE_ALISES) {
             $type = Formbuilder.options.mappings.TYPE_ALISES[$type];
@@ -222,10 +221,12 @@
           return this.parentView = this.options.parentView;
         },
         render: function() {
+          var commonCheckboxes;
+          commonCheckboxes = this.parentView.options.hasOwnProperty('commonCheckboxes') ? this.parentView.options.commonCheckboxes : true;
           this.$el.html(Formbuilder.templates["edit/base" + (!this.model.is_input() ? '_non_input' : '')]({
             rf: this.model,
             editStructure: this.parentView.options.editStructure,
-            commonCheckboxes: this.parentView.options.commonCheckboxes
+            commonCheckboxes: commonCheckboxes
           }));
           rivets.bind(this.$el, {
             model: this.model

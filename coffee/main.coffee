@@ -111,7 +111,6 @@ class Formbuilder
           return
 
         editStructure = if @parentView.options.hasOwnProperty('editStructure') then @parentView.options.editStructure else true
-        commonCheckboxes = if @parentView.options.hasOwnProperty('commonCheckboxes') then @parentView.options.commonCheckboxes else true
 
         $type = @model.get(Formbuilder.options.mappings.FIELD_TYPE)
         if Formbuilder.options.mappings.TYPE_ALISES
@@ -155,7 +154,9 @@ class Formbuilder
         @parentView = @options.parentView
 
       render: ->
-        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : @parentView.options.commonCheckboxes }))
+        commonCheckboxes = if @parentView.options.hasOwnProperty('commonCheckboxes') then @parentView.options.commonCheckboxes else true
+
+        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : commonCheckboxes }))
         rivets.bind @$el, { model: @model }
         return @
 

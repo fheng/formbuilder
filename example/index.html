@@ -107,7 +107,7 @@
         noScroll : true,
         editStructure : true,
         eventFix : false,
-        bootstrapData: [{"name":"Please enter your clearance number","type":"string", "helpText" : "Enter your clearance number in the field provided", "required":true,"field_options":{},"cid":"c6"},{"name":"Security personnel #82?","type":"radio","required":true,"field_options":{"options":[{"name":"Yes","checked":false},{"name":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"name":"Medical history","type":"file","required":true,"field_options":{},"cid":"c14"}]
+        bootstrapData: [{"name":"Please enter your clearance number", "repeating" : true, "type":"string", "helpText" : "Enter your clearance number in the field provided", "required":true,"field_options":{ minRepeat : 2, maxRepeat : 4 },"cid":"c6"},{"name":"Security personnel #82?","type":"radio","required":true,"field_options":{"options":[{"name":"Yes","checked":false},{"name":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"name":"Medical history","type":"file","required":true,"field_options":{},"cid":"c14"}]
       // disbaled fields by using : fields : ['text']
       // commonCheckboxes: false // this disables required checkbox
       });

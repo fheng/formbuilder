@@ -41,6 +41,8 @@ class Formbuilder
       MAX: 'field_options.max'
       MINLENGTH: 'field_options.minlength'
       MAXLENGTH: 'field_options.maxlength'
+      MINREPITIONS: 'field_options.minRepeat'
+      MAXREPITIONS: 'field_options.maxRepeat'
       LENGTH_UNITS: 'field_options.min_max_length_units'
       TYPE_ALIASES: false
     unAliasType: (type) ->
@@ -154,6 +156,7 @@ class Formbuilder
         'click .js-remove-option': 'removeOption'
         'click .js-default-updated': 'defaultUpdated'
         'input .option-label-input': 'forceRender'
+        'change .fb-repeating input[type=checkbox]' : 'toggleRepititionsInputs'
 
       initialize: ->
         @listenTo @model, "destroy", @remove
@@ -167,8 +170,8 @@ class Formbuilder
 
         if Formbuilder.inputFields[$type] && Formbuilder.inputFields[$type].repeatable && Formbuilder.inputFields[$type].repeatable == true
           $repeatable = true
-
-        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : commonCheckboxes, repeatable : $repeatable }))
+        
+        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : commonCheckboxes, repeatable : $repeatable, repeating: @model.get(Formbuilder.options.mappings.REPEATING) }))
         rivets.bind @$el, { model: @model }
         return @
 
@@ -215,6 +218,12 @@ class Formbuilder
 
       forceRender: ->
         @model.trigger('change')
+      toggleRepititionsInputs: (e) ->
+        $el = $(e.target)
+        if $el.prop('checked')==true
+          @$el.find('.fb-repititions input').prop('disabled', false)
+        else
+          @$el.find('.fb-repititions input').prop('disabled', true)
     main: Backbone.View.extend
       SUBVIEWS: []
 

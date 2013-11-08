@@ -8,7 +8,7 @@ with (obj) {
 __p +=
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure, commonCheckboxes : commonCheckboxes, repeatable : repeatable }) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure, commonCheckboxes : commonCheckboxes, repeatable : repeatable, repeating : repeating }) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
@@ -56,7 +56,17 @@ __p += '<label class="fb-required">\n  <input type=\'checkbox\' data-rv-checked=
  if (repeatable){ ;
 __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
-'\' />\n    Repeating\n  </label>\n';
+'\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min. Repititions\n    ';
+ var disabled = (repeating===true) ? "" : "disabled"; ;
+__p += '\n    <input type="text" ' +
+((__t = ( disabled )) == null ? '' : __t) +
+' data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
+'" style="width: 30px" />\n    Max. Repititions\n    <input type="text" ' +
+((__t = ( disabled )) == null ? '' : __t) +
+' data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
+'" style="width: 30px" />\n  </label>\n';
  } ;
 __p += '\n<label class="fb-adminonly">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
@@ -76,7 +86,7 @@ __p += '<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'
 '\n  </div>\n  ';
  if (commonCheckboxes){ ;
 __p += '\n  <div class=\'fb-common-checkboxes\'>\n    ' +
-((__t = ( Formbuilder.templates['edit/checkboxes']({repeatable : repeatable}) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/checkboxes']({repeatable : repeatable, repeating : repeating}) )) == null ? '' : __t) +
 '\n  </div>\n  ';
  } ;
 __p += '\n  <div class=\'fb-clear\'></div>\n</div>\n';
@@ -140,13 +150,13 @@ this["Formbuilder"]["templates"]["edit/min_max_length"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<!--<div class=\'fb-edit-section-header\'>Length Limit</div>-->\n\n<!--Min-->\n<!--<input type="text" data-rv-input="model.' +
+__p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\'>Length Limit</div>\n\n  Min\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINLENGTH )) == null ? '' : __t) +
-'" style="width: 30px" />-->\n\n<!--&nbsp;&nbsp;-->\n\n<!--Max-->\n<!--<input type="text" data-rv-input="model.' +
+'" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXLENGTH )) == null ? '' : __t) +
-'" style="width: 30px" />-->\n\n<!--&nbsp;&nbsp;-->\n\n<!--<select data-rv-value="model.' +
+'" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
-'" style="width: auto;">-->\n  <!--<option value="characters">characters</option>-->\n  <!--<option value="words">words</option>-->\n<!--</select>-->\n';
+'" style="width: auto;">\n    <option value="characters">characters</option>\n    <option value="words">words</option>\n  </select>\n</div>';
 
 }
 return __p

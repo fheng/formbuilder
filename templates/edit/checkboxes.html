@@ -8,6 +8,13 @@
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REPEATING %>' />
     Repeating
   </label>
+  <label class="fb-repititions">
+    Min. Repititions
+    <% var disabled = (repeating===true) ? "" : "disabled"; %>
+    <input type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MINREPITIONS %>" style="width: 30px" />
+    Max. Repititions
+    <input type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MAXREPITIONS%>" style="width: 30px" />
+  </label>
 <% } %>
 <label class="fb-adminonly">
   <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.ADMIN_ONLY %>' />

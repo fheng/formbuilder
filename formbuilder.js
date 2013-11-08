@@ -945,13 +945,13 @@ __p += '\n  <div class=\'fb-edit-section-header\'>Name</div>\n  <input type=\'te
  } ;
 __p += '\n<div class=\'fb-edit-section-header\'>Value</div>\n<input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALUE )) == null ? '' : __t) +
-'\' />\n<div class=\'fb-edit-section-header\'>' +
+'\' />\n<div class="fb-field-description">\n  <div class=\'fb-edit-section-header\'>' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION_TITLE )) == null ? '' : __t) +
-'</div>\n<textarea data-rv-input=\'model.' +
+'</div>\n  <textarea data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
-'\'\n  placeholder=\'' +
+'\'\n    placeholder=\'' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER )) == null ? '' : __t) +
-'\'></textarea>';
+'\'></textarea>\n</div>';
 
 }
 return __p

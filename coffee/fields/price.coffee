@@ -1,5 +1,5 @@
 Formbuilder.registerField 'price',
-
+  repeatable: true
   view: """
     <div class='input-line'>
       <span class='above-line'>$</span>

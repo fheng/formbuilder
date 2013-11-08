@@ -1,5 +1,5 @@
 Formbuilder.registerField 'date',
-
+  repeatable: true
   view: """
     <div class='input-line'>
       <span class='month'>

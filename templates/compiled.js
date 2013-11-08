@@ -8,7 +8,7 @@ with (obj) {
 __p +=
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure, commonCheckboxes : commonCheckboxes }) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure, commonCheckboxes : commonCheckboxes, repeatable : repeatable }) )) == null ? '' : __t) +
 '\n' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
@@ -47,11 +47,18 @@ return __p
 
 this["Formbuilder"]["templates"]["edit/checkboxes"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+__p += '<label class="fb-required">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REQUIRED )) == null ? '' : __t) +
-'\' />\n  Required\n</label>\n<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+'\' />\n  Required\n</label>\n\n';
+ if (repeatable){ ;
+__p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
+'\' />\n    Repeating\n  </label>\n';
+ } ;
+__p += '\n<label class="fb-adminonly">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
 '\' />\n  Admin only\n</label>';
 
@@ -69,7 +76,7 @@ __p += '<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'
 '\n  </div>\n  ';
  if (commonCheckboxes){ ;
 __p += '\n  <div class=\'fb-common-checkboxes\'>\n    ' +
-((__t = ( Formbuilder.templates['edit/checkboxes']() )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/checkboxes']({repeatable : repeatable}) )) == null ? '' : __t) +
 '\n  </div>\n  ';
  } ;
 __p += '\n  <div class=\'fb-clear\'></div>\n</div>\n';
@@ -103,9 +110,13 @@ __p += '\n  <div class=\'fb-edit-section-header\'>Name</div>\n  <input type=\'te
  } ;
 __p += '\n<div class=\'fb-edit-section-header\'>Value</div>\n<input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALUE )) == null ? '' : __t) +
-'\' />\n<textarea data-rv-input=\'model.' +
+'\' />\n<div class=\'fb-edit-section-header\'>' +
+((__t = ( Formbuilder.options.mappings.DESCRIPTION_TITLE )) == null ? '' : __t) +
+'</div>\n<textarea data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
-'\'\n  placeholder=\'Add a longer description to this field\'></textarea>';
+'\'\n  placeholder=\'' +
+((__t = ( Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER )) == null ? '' : __t) +
+'\'></textarea>';
 
 }
 return __p

@@ -1,5 +1,5 @@
 Formbuilder.registerField 'number',
-
+  repeatable: true
   view: """
     <input type='text' />
     <% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>

@@ -15,6 +15,7 @@ We've generated some custom properties for use on init:
     noEditOnDrop :  Disable opening the edit screen after dropping a field
     editStructure : Set to false to disable editing of structure -disables DnD, only shows the value field  & allows editing the field inline
     fields: An array of enabled fields - defaults to all fields enabled...
+    commonCheckboxes: this disables 'required' and 'admin only' checkbox
 
 
 Also, ability to alias field by updating the mappings like this:

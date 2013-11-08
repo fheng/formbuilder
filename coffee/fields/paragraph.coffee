@@ -1,5 +1,5 @@
 Formbuilder.registerField 'paragraph',
-
+  repeatable: true
   view: """
     <textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' ><%= rf.get(Formbuilder.options.mappings.VALUE) %></textarea>
   """

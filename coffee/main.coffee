@@ -5,8 +5,9 @@ class Formbuilder
         field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type]
 
       attrs =
-        required: true
         field_options: {}
+      attrs[Formbuilder.options.mappings.REQUIRED] = true
+      attrs[Formbuilder.options.mappings.REPEATING] = false
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
       attrs[Formbuilder.options.mappings.LABEL] = "Untitled"
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
@@ -27,9 +28,12 @@ class Formbuilder
       HASH: 'hash'
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
+      REPEATING: 'repeating'
       ADMIN_ONLY: 'admin_only'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'
+      DESCRIPTION_PLACEHOLDER: 'Add a longer description to this field'
+      DESCRIPTION_TITLE: 'Description'
       INCLUDE_OTHER: 'field_options.include_other_option'
       INCLUDE_BLANK: 'field_options.include_blank_option'
       INTEGER_ONLY: 'field_options.integer_only'
@@ -39,7 +43,12 @@ class Formbuilder
       MAXLENGTH: 'field_options.maxlength'
       LENGTH_UNITS: 'field_options.min_max_length_units'
       TYPE_ALIASES: false
-
+    unAliasType: (type) ->
+      if Formbuilder.options.mappings.TYPE_ALIASES
+        $idx = _.values(Formbuilder.options.mappings.TYPE_ALIASES).indexOf(type)
+        if $idx>-1
+          type = _.keys(Formbuilder.options.mappings.TYPE_ALIASES)[$idx]
+      type
     dict:
       ALL_CHANGES_SAVED: 'All changes saved'
       SAVE_FORM: 'Save form'
@@ -55,11 +64,8 @@ class Formbuilder
       $wrapper = $(".fb-field-wrapper").filter ( (_, el) => $(el).data('cid') == @cid  )
       $(".fb-field-wrapper").index $wrapper
     is_input: ->
-      $type = @get(Formbuilder.options.mappings.FIELD_TYPE);
-      if Formbuilder.options.mappings.TYPE_ALIASES
-        $idx = _.values(Formbuilder.options.mappings.TYPE_ALIASES).indexOf($type)
-        if $idx>-1
-          $type = _.keys(Formbuilder.options.mappings.TYPE_ALIASES)[$idx]
+      $type = @get(Formbuilder.options.mappings.FIELD_TYPE)
+      $type = Formbuilder.options.unAliasType($type)
       Formbuilder.inputFields[$type]?
 
   @collection: Backbone.Collection.extend
@@ -155,8 +161,14 @@ class Formbuilder
 
       render: ->
         commonCheckboxes = if @parentView.options.hasOwnProperty('commonCheckboxes') then @parentView.options.commonCheckboxes else true
+        $repeatable = false
+        $type = @model.get(Formbuilder.options.mappings.FIELD_TYPE)
+        $type = Formbuilder.options.unAliasType($type)
 
-        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : commonCheckboxes }))
+        if Formbuilder.inputFields[$type] && Formbuilder.inputFields[$type].repeatable && Formbuilder.inputFields[$type].repeatable == true
+          $repeatable = true
+
+        @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : commonCheckboxes, repeatable : $repeatable }))
         rivets.bind @$el, { model: @model }
         return @
 

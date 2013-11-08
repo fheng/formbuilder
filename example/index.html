@@ -56,6 +56,19 @@
     visibility: visible;
   }
 
+  .fb-adminonly {
+    display: none;
+  }
+
+  .fb-common-wrapper .fb-label-description {
+    float: none;
+    width: auto;
+  }
+
+  .fb-common-wrapper .fb-common-checkboxes {
+    margin-left: 0px;
+  }
+
   </style>
 </head>
 <body>
@@ -83,6 +96,9 @@
       Formbuilder.options.mappings.LABEL = "name";
       Formbuilder.options.mappings.VALUE = "value";
       Formbuilder.options.mappings.FIELD_TYPE = "type";
+      Formbuilder.options.mappings.DESCRIPTION = "helpText";
+      Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER = "Enter some supporting text as instructions";
+      Formbuilder.options.mappings.DESCRIPTION_TITLE = "Instructions";
       Formbuilder.options.mappings.TYPE_ALIASES = {
         'text' : 'string'
       };
@@ -91,7 +107,7 @@
         noScroll : true,
         editStructure : true,
         eventFix : false,
-        bootstrapData: [{"name":"Please enter your clearance number","type":"string","required":true,"field_options":{},"cid":"c6"},{"name":"Security personnel #82?","type":"radio","required":true,"field_options":{"options":[{"name":"Yes","checked":false},{"name":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"name":"Medical history","type":"file","required":true,"field_options":{},"cid":"c14"}]
+        bootstrapData: [{"name":"Please enter your clearance number","type":"string", "helpText" : "Enter your clearance number in the field provided", "required":true,"field_options":{},"cid":"c6"},{"name":"Security personnel #82?","type":"radio","required":true,"field_options":{"options":[{"name":"Yes","checked":false},{"name":"No","checked":false}],"include_other_option":true},"cid":"c10"},{"name":"Medical history","type":"file","required":true,"field_options":{},"cid":"c14"}]
       // disbaled fields by using : fields : ['text']
       // commonCheckboxes: false // this disables required checkbox
       });

@@ -1,5 +1,5 @@
 Formbuilder.registerField 'time',
-
+  repeatable: true
   view: """
     <div class='input-line'>
       <span class='hours'>

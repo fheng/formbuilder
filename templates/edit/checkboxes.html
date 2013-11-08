@@ -1,8 +1,15 @@
-<label>
+<label class="fb-required">
   <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REQUIRED %>' />
   Required
 </label>
-<label>
+
+<% if (repeatable){ %>
+  <label class="fb-repeating">
+    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REPEATING %>' />
+    Repeating
+  </label>
+<% } %>
+<label class="fb-adminonly">
   <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.ADMIN_ONLY %>' />
   Admin only
 </label>

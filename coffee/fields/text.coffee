@@ -1,5 +1,5 @@
 Formbuilder.registerField 'text',
-
+  repeatable: true
   view: """
     <% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>
     <input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />

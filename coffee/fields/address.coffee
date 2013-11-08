@@ -1,5 +1,5 @@
 Formbuilder.registerField 'address',
-
+  repeatable : true
   view: """
     <div class='input-line'>
       <span class='street'>

@@ -1,5 +1,5 @@
 Formbuilder.registerField 'website',
-
+  repeatable: true
   view: """
     <input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />
   """

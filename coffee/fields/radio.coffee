@@ -1,5 +1,5 @@
 Formbuilder.registerField 'radio',
-
+  repeatable: true
   view: """
     <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
       <div>

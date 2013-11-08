@@ -1,5 +1,5 @@
 Formbuilder.registerField 'dropdown',
-
+  repeatable: false
   view: """
     <select>
       <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>

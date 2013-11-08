@@ -4,5 +4,6 @@
 <% } %>
 <div class='fb-edit-section-header'>Value</div>
 <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.VALUE %>' />
+<div class='fb-edit-section-header'><%= Formbuilder.options.mappings.DESCRIPTION_TITLE %></div>
 <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'
-  placeholder='Add a longer description to this field'></textarea>
+  placeholder='<%= Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER %>'></textarea>

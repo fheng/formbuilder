@@ -170,7 +170,7 @@ class Formbuilder
 
         if Formbuilder.inputFields[$type] && Formbuilder.inputFields[$type].repeatable && Formbuilder.inputFields[$type].repeatable == true
           $repeatable = true
-        
+
         @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : commonCheckboxes, repeatable : $repeatable, repeating: @model.get(Formbuilder.options.mappings.REPEATING) }))
         rivets.bind @$el, { model: @model }
         return @

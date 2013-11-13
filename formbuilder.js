@@ -357,6 +357,7 @@
           var alias, orig, subview, _i, _len, _ref, _ref1;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
           this.options.fields = this.options.hasOwnProperty('fields') ? this.options.fields : [];
+          this.options.addAt = this.options.hasOwnProperty('addAt') ? this.options.addAt : 'last';
           if (Formbuilder.options.mappings.TYPE_ALIASES) {
             _ref = Formbuilder.options.mappings.TYPE_ALIASES;
             for (orig in _ref) {
@@ -490,6 +491,8 @@
         },
         createField: function(attrs, options) {
           var rf;
+          options = options || {};
+          options.at = this.options.addAt === "last" ? this.collection.length : 0;
           rf = this.collection.create(attrs, options);
           this.createAndShowEditView(rf);
           return this.handleFormUpdate();
@@ -602,6 +605,7 @@
       }, opts, {
         formBuilder: this
       }));
+      this.collection = this.mainView.collection;
     }
 
     return Formbuilder;
@@ -686,7 +690,7 @@
 (function() {
   Formbuilder.registerField('email', {
     repeatable: true,
-    view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
+    view: "<input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' placeholder=\"email@example.com\" class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "",
     addButton: "<span class=\"symbol\"><span class=\"icon-envelope-alt\"></span></span> Email"
   });
@@ -716,7 +720,7 @@
 (function() {
   Formbuilder.registerField('number', {
     repeatable: true,
-    view: "<input type='text' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
+    view: "<input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max']() %>\n<%= Formbuilder.templates['edit/units']() %>\n<%= Formbuilder.templates['edit/integer_only']() %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> Number"
   });
@@ -726,8 +730,8 @@
 (function() {
   Formbuilder.registerField('page_break', {
     type: 'non_input',
-    view: "<label class='section-name'>Page Break</label>\n<hr>",
-    edit: "",
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr>",
+    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\nplaceholder='Add a longer description to this field'></textarea>",
     addButton: "<span class='symbol'><span class='icon-minus'></span></span> Page Break"
   });
 
@@ -782,7 +786,7 @@
 (function() {
   Formbuilder.registerField('section_break', {
     type: 'non_input',
-    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>",
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr>",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
     addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
   });

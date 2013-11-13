@@ -1,7 +1,7 @@
 Formbuilder.registerField 'number',
   repeatable: true
   view: """
-    <input type='text' />
+    <input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />
     <% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>
       <%= units %>
     <% } %>

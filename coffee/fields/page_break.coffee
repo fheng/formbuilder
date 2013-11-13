@@ -3,12 +3,16 @@ Formbuilder.registerField 'page_break',
   type: 'non_input'
 
   view: """
-        <label class='section-name'>Page Break</label>
+        <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
+        <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
         <hr>
         """
 
   edit: """
-
+        <div class='fb-edit-section-header'>Label</div>
+        <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
+        <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'
+        placeholder='Add a longer description to this field'></textarea>
         """
 
   addButton: """

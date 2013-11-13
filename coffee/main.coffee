@@ -269,6 +269,7 @@ class Formbuilder
       render: ->
         @options.editStructure = if @options.hasOwnProperty('editStructure') then @options.editStructure else true
         @options.fields = if @options.hasOwnProperty('fields') then @options.fields else []
+        @options.addAt = if @options.hasOwnProperty('addAt') then @options.addAt else 'last';
 
         if Formbuilder.options.mappings.TYPE_ALIASES
           for orig,alias of Formbuilder.options.mappings.TYPE_ALIASES
@@ -383,6 +384,8 @@ class Formbuilder
         @createField Formbuilder.helpers.defaultFieldAttrs(field_type)
 
       createField: (attrs, options) ->
+        options = options || {}
+        options.at = if @options.addAt=="last" then @collection.length else 0
         rf = @collection.create attrs, options
         @createAndShowEditView(rf)
         @handleFormUpdate()
@@ -460,6 +463,7 @@ class Formbuilder
   constructor: (selector, opts = {}) ->
     _.extend @, Backbone.Events
     @mainView = new Formbuilder.views.main _.extend({ selector: selector }, opts, { formBuilder: @ })
+    @collection = @mainView.collection
 
 window.Formbuilder = Formbuilder
 

@@ -5,6 +5,7 @@ Formbuilder.registerField 'section_break',
   view: """
     <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
     <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+    <hr>
   """
 
   edit: """

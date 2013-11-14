@@ -10,7 +10,7 @@
 
   <div class='fb-tab-content'>
     <% if(editStructure){ %>
-      <%= Formbuilder.templates['partials/add_field']( { fieldsEnabled : fieldsEnabled } ) %>
+      <%= Formbuilder.templates['partials/add_field']( { fieldsEnabledNonInput : fieldsEnabledNonInput, fieldsEnabled : fieldsEnabled } ) %>
     <% } %>
     <%= Formbuilder.templates['partials/edit_field']() %>
   </div>

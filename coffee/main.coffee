@@ -271,14 +271,28 @@ class Formbuilder
 
       render: ->
         @options.editStructure = if @options.hasOwnProperty('editStructure') then @options.editStructure else true
-        @options.fields = if @options.hasOwnProperty('fields') then @options.fields else []
         @options.addAt = if @options.hasOwnProperty('addAt') then @options.addAt else 'last';
 
         if Formbuilder.options.mappings.TYPE_ALIASES
           for orig,alias of Formbuilder.options.mappings.TYPE_ALIASES
             Formbuilder.fields[alias] = Formbuilder.fields[orig]
 
-        @$el.html Formbuilder.templates['page']({ editStructure : @options.editStructure, fieldsEnabled : @options.fields })
+        $fields = {};
+        $fieldsNonInput = {};
+        
+        if @options.hasOwnProperty('fields')
+          for fieldName in @options.fields
+            field = Formbuilder.inputFields[fieldName] || Formbuilder.nonInputFields[fieldName];
+            if !field
+              throw new Error("No field found with name" + fieldName)
+
+            if field.type == "non_input" then $fieldsNonInput[fieldName] = field else $fields[fieldName] = field
+        else
+          $fields = Formbuilder.inputFields;
+          $fieldsNonInput = Formbuilder.nonInputFields;
+
+
+        @$el.html Formbuilder.templates['page']({ editStructure : @options.editStructure, fieldsEnabled : $fields, fieldsEnabledNonInput : $fieldsNonInput })
 
         # Save jQuery objects for easy use
         @$fbLeft = @$el.find('.fb-left') || @$el.find('.span6.middle')

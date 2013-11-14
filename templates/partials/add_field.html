@@ -1,22 +1,18 @@
 <div class='fb-tab-pane active' id='addField'>
   <div class='fb-add-field-types'>
     <div class='section'>
-      <% for (i in Formbuilder.inputFields) { %>
-        <% if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { %>
-          <a data-field-type="<%= i %>" class="btn btn-primary btn-<%= i %>">
-            <%= Formbuilder.inputFields[i].addButton %>
-          </a>
-        <% } %>
+      <% for (i in fieldsEnabled) { %>
+        <a data-field-type="<%= i %>" class="btn btn-primary btn-<%= i %>">
+          <%= fieldsEnabled[i].addButton %>
+        </a>
       <% } %>
     </div>
 
     <div class='section'>
-      <% for (i in Formbuilder.nonInputFields) { %>
-        <% if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { %>
+      <% for (i in fieldsEnabledNonInput) { %>
         <a data-field-type="<%= i %>" class="btn btn-primary btn-<%= i %>">
-          <%= Formbuilder.nonInputFields[i].addButton %>
+          <%= fieldsEnabledNonInput[i].addButton %>
         </a>
-        <% } %>
       <% } %>
     </div>
   </div>

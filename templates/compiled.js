@@ -241,7 +241,7 @@ __p +=
 '\n' +
 ((__t = ( Formbuilder.templates['partials/left_side']({ editStructure : editStructure }) )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['partials/right_side']({ editStructure : editStructure, fieldsEnabled : fieldsEnabled }) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['partials/right_side']({ editStructure : editStructure, fieldsEnabled : fieldsEnabled, fieldsEnabledNonInput : fieldsEnabledNonInput}) )) == null ? '' : __t) +
 '\n<div class=\'fb-clear\'></div>';
 
 }
@@ -254,32 +254,24 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-tab-pane active\' id=\'addField\'>\n  <div class=\'fb-add-field-types\'>\n    <div class=\'section\'>\n      ';
- for (i in Formbuilder.inputFields) { ;
-__p += '\n        ';
- if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { ;
-__p += '\n          <a data-field-type="' +
-((__t = ( i )) == null ? '' : __t) +
-'" class="btn btn-primary btn-' +
-((__t = ( i )) == null ? '' : __t) +
-'">\n            ' +
-((__t = ( Formbuilder.inputFields[i].addButton )) == null ? '' : __t) +
-'\n          </a>\n        ';
- } ;
-__p += '\n      ';
- } ;
-__p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
- for (i in Formbuilder.nonInputFields) { ;
-__p += '\n        ';
- if (fieldsEnabled.length === 0 || (fieldsEnabled.length >0 && fieldsEnabled.indexOf(i)>-1) ) { ;
+ for (i in fieldsEnabled) { ;
 __p += '\n        <a data-field-type="' +
 ((__t = ( i )) == null ? '' : __t) +
 '" class="btn btn-primary btn-' +
 ((__t = ( i )) == null ? '' : __t) +
 '">\n          ' +
-((__t = ( Formbuilder.nonInputFields[i].addButton )) == null ? '' : __t) +
-'\n        </a>\n        ';
+((__t = ( fieldsEnabled[i].addButton )) == null ? '' : __t) +
+'\n        </a>\n      ';
  } ;
-__p += '\n      ';
+__p += '\n    </div>\n\n    <div class=\'section\'>\n      ';
+ for (i in fieldsEnabledNonInput) { ;
+__p += '\n        <a data-field-type="' +
+((__t = ( i )) == null ? '' : __t) +
+'" class="btn btn-primary btn-' +
+((__t = ( i )) == null ? '' : __t) +
+'">\n          ' +
+((__t = ( fieldsEnabledNonInput[i].addButton )) == null ? '' : __t) +
+'\n        </a>\n      ';
  } ;
 __p += '\n    </div>\n  </div>\n</div>';
 
@@ -321,7 +313,7 @@ __p += '\n      <li class="active configurefield"><a data-target=\'#editField\'>
 __p += '\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ';
  if(editStructure){ ;
 __p += '\n      ' +
-((__t = ( Formbuilder.templates['partials/add_field']( { fieldsEnabled : fieldsEnabled } ) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['partials/add_field']( { fieldsEnabledNonInput : fieldsEnabledNonInput, fieldsEnabled : fieldsEnabled } ) )) == null ? '' : __t) +
 '\n    ';
  } ;
 __p += '\n    ' +

@@ -765,6 +765,20 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('map', {
+    repeatable: true,
+    valueField: false,
+    view: "<h1><span class='icon-map-marker'></span></h1>",
+    edit: "",
+    addButton: "<span class='symbol'><span class='icon-map-marker'></span></span> Map",
+    defaultAttributes: function(attrs) {
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
   Formbuilder.registerField('number', {
     repeatable: true,
     view: "<input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",

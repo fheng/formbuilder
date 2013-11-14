@@ -85,6 +85,7 @@
         INCLUDE_OTHER: 'field_options.include_other_option',
         INCLUDE_BLANK: 'field_options.include_blank_option',
         INTEGER_ONLY: 'field_options.integer_only',
+        LOCATION_UNIT: 'field_options.location_unit',
         MIN: 'field_options.min',
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
@@ -740,9 +741,25 @@
 (function() {
   Formbuilder.registerField('file', {
     repeatable: true,
+    valueField: false,
     view: "<div class=\"file_container\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
     edit: "",
     addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('location', {
+    repeatable: true,
+    valueField: false,
+    view: "<% if (rf.get(Formbuilder.options.mappings.LOCATION_UNIT)===\"latlong\"){ %>\nLatitude/Longitude\n<% } else { %>\nEastings/Northings\n<% } %>\n<br />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />",
+    edit: "<div class='fb-edit-section-header'>Location Unit</div>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.LOCATION_UNIT %>\" style=\"width: auto;\">\n  <option value=\"latlong\">Latitude / Longitude</option>\n  <option value=\"eastnorth\">Eastings / Northings</option>\n</select>",
+    addButton: "<span class='symbol'><span class='icon-location-arrow'></span></span> Location",
+    defaultAttributes: function(attrs) {
+      attrs[Formbuilder.options.mappings.LOCATION_UNIT] = 'latlong';
+      return attrs;
+    }
   });
 
 }).call(this);

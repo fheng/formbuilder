@@ -1,5 +1,6 @@
 Formbuilder.registerField 'radio',
   repeatable: true
+  valueField: false
   view: """
     <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
       <div>
@@ -27,17 +28,18 @@ Formbuilder.registerField 'radio',
   """
 
   addButton: """
-    <span class="symbol"><span class="icon-circle-blank"></span></span> Multiple Choice
+    <span class="symbol"><span class="icon-circle-blank"></span></span> Radio Buttons
   """
 
   defaultAttributes: (attrs) ->
     # @todo
-    attrs.field_options.options = [
+    attrs = new Backbone.Model(attrs)
+    attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'radio');
+    attrs.set(Formbuilder.options.mappings.OPTIONS, [
       label: "",
       checked: false
     ,
       label: "",
       checked: false
-    ]
-
-    attrs
+    ])
+    attrs.toJSON()

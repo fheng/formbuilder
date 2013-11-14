@@ -50,9 +50,8 @@
         if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]) {
           field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type];
         }
-        attrs = {
-          field_options: {}
-        };
+        attrs = {};
+        attrs[Formbuilder.options.mappings.FIELD_OPTIONS] = {};
         attrs[Formbuilder.options.mappings.REQUIRED] = true;
         attrs[Formbuilder.options.mappings.REPEATING] = false;
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
@@ -78,6 +77,7 @@
         REQUIRED: 'required',
         REPEATING: 'repeating',
         ADMIN_ONLY: 'admin_only',
+        FIELD_OPTIONS: 'field_options',
         OPTIONS: 'field_options.options',
         DESCRIPTION: 'field_options.description',
         DESCRIPTION_PLACEHOLDER: 'Add a longer description to this field',
@@ -92,6 +92,7 @@
         MINREPITIONS: 'field_options.minRepeat',
         MAXREPITIONS: 'field_options.maxRepeat',
         LENGTH_UNITS: 'field_options.min_max_length_units',
+        SINGLE_CHECKED: 'field_options.checked',
         TYPE_ALIASES: false
       },
       unAliasType: function(type) {
@@ -633,8 +634,25 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('checkboxes', {
+  Formbuilder.registerField('checkbox', {
     repeatable: true,
+    valueField: false,
+    view: "<input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> onclick=\"javascript: return false;\" />",
+    edit: "<div class='fb-edit-section-header'>Checked</div>\n<input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> data-rv-checked='model.<%= Formbuilder.options.mappings.SINGLE_CHECKED%>' />",
+    addButton: "<span class=\"symbol\"><span class=\"icon-check-empty\"></span></span> Checkbox",
+    defaultAttributes: function(attrs) {
+      attrs = new Backbone.Model(attrs);
+      attrs.set(Formbuilder.options.mappings.SINGLE_CHECKED, true);
+      attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkbox');
+      return attrs.toJSON();
+    }
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('checkboxes', {
+    repeatable: false,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-check-empty\"></span></span> Checkboxes",
@@ -667,11 +685,14 @@
 (function() {
   Formbuilder.registerField('dropdown', {
     repeatable: false,
+    valueField: false,
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> Dropdown",
     defaultAttributes: function(attrs) {
-      attrs.field_options.options = [
+      attrs = new Backbone.Model(attrs);
+      attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'dropdown');
+      attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
           label: "",
           checked: false
@@ -679,9 +700,18 @@
           label: "",
           checked: false
         }
-      ];
-      attrs.field_options.include_blank_option = false;
-      return attrs;
+      ]);
+      attrs.set(Formbuilder.options.mappings.OPTIONS, [
+        {
+          label: "",
+          checked: false
+        }, {
+          label: "",
+          checked: false
+        }
+      ]);
+      attrs.set(Formbuilder.options.mappings.INCLUDE_BLANK, false);
+      return attrs.toJSON();
     }
   });
 
@@ -764,11 +794,14 @@
 (function() {
   Formbuilder.registerField('radio', {
     repeatable: true,
+    valueField: false,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Multiple Choice",
+    addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Radio Buttons",
     defaultAttributes: function(attrs) {
-      attrs.field_options.options = [
+      attrs = new Backbone.Model(attrs);
+      attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'radio');
+      attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
           label: "",
           checked: false
@@ -776,8 +809,8 @@
           label: "",
           checked: false
         }
-      ];
-      return attrs;
+      ]);
+      return attrs.toJSON();
     }
   });
 
@@ -832,15 +865,22 @@ this["Formbuilder"]["templates"] = this["Formbuilder"]["templates"] || {};
 
 this["Formbuilder"]["templates"]["edit/base"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p +=
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
 '\n' +
-((__t = ( Formbuilder.templates['edit/common']({ editStructure : editStructure, commonCheckboxes : commonCheckboxes, repeatable : repeatable, repeating : repeating }) )) == null ? '' : __t) +
-'\n' +
+((__t = ( Formbuilder.templates['edit/common']({ rf : rf, editStructure : editStructure, commonCheckboxes : commonCheckboxes, repeatable : repeatable, repeating : repeating }) )) == null ? '' : __t) +
+'\n';
+ // We only show the custom edit stuff at the bottom if we havent explicitly disabled the value box ;
+__p += '\n';
+ if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { ;
+__p += '\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
 '\n';
+ } ;
+__p += '\n';
 
 }
 return __p
@@ -911,7 +951,7 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-common-wrapper\'>\n  <div class=\'fb-label-description\'>\n    ' +
-((__t = ( Formbuilder.templates['edit/label_description']({ editStructure : editStructure }) )) == null ? '' : __t) +
+((__t = ( Formbuilder.templates['edit/label_description']({ rf : rf, editStructure : editStructure }) )) == null ? '' : __t) +
 '\n  </div>\n  ';
  if (commonCheckboxes){ ;
 __p += '\n  <div class=\'fb-common-checkboxes\'>\n    ' +
@@ -947,9 +987,17 @@ __p += '\n  <div class=\'fb-edit-section-header\'>Name</div>\n  <input type=\'te
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '\' />\n';
  } ;
-__p += '\n<div class=\'fb-edit-section-header\'>Value</div>\n<input type=\'text\' data-rv-input=\'model.' +
+__p += '\n';
+ if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { ;
+__p += '\n  <div class=\'fb-edit-section-header\'>Value</div>\n  <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALUE )) == null ? '' : __t) +
-'\' />\n<div class="fb-field-description">\n  <div class=\'fb-edit-section-header\'>' +
+'\' />\n';
+ }else{ ;
+__p += '\n  ' +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
+'\n';
+ } ;
+__p += '\n<div class="fb-field-description">\n  <div class=\'fb-edit-section-header\'>' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION_TITLE )) == null ? '' : __t) +
 '</div>\n  <textarea data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +

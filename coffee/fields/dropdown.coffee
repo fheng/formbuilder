@@ -1,5 +1,6 @@
 Formbuilder.registerField 'dropdown',
   repeatable: false
+  valueField: false
   view: """
     <select>
       <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>
@@ -23,14 +24,21 @@ Formbuilder.registerField 'dropdown',
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.options = [
+    attrs = new Backbone.Model(attrs)
+    attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'dropdown');
+    attrs.set(Formbuilder.options.mappings.OPTIONS, [
       label: "",
       checked: false
     ,
       label: "",
       checked: false
-    ]
-
-    attrs.field_options.include_blank_option = false
-
-    attrs
+    ])
+    attrs.set(Formbuilder.options.mappings.OPTIONS, [
+      label: "",
+      checked: false
+    ,
+      label: "",
+      checked: false
+    ])
+    attrs.set(Formbuilder.options.mappings.INCLUDE_BLANK, false)
+    attrs.toJSON()

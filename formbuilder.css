@@ -41,6 +41,7 @@
 .fb-edit-field-wrapper .fb-bottom-add{margin-top:8px}
 .fb-common-wrapper .fb-label-description{float:left;width:180px;}
 .fb-common-wrapper .fb-label-description input,.fb-common-wrapper .fb-label-description textarea{width:100%}
+.fb-common-wrapper .fb-label-description .option input{width:auto}
 .fb-common-wrapper .fb-common-checkboxes{margin-left:190px}
 .response-field-draggable-helper{border:1px dashed #ddd;background:#eee}
 .response-field-text input.rf-size-small{width:130px}

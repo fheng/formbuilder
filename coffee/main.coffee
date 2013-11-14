@@ -4,8 +4,8 @@ class Formbuilder
       if Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]
         field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type]
 
-      attrs =
-        field_options: {}
+      attrs = {}
+      attrs[Formbuilder.options.mappings.FIELD_OPTIONS] = {}
       attrs[Formbuilder.options.mappings.REQUIRED] = true
       attrs[Formbuilder.options.mappings.REPEATING] = false
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
@@ -30,6 +30,7 @@ class Formbuilder
       REQUIRED: 'required'
       REPEATING: 'repeating'
       ADMIN_ONLY: 'admin_only'
+      FIELD_OPTIONS : 'field_options'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'
       DESCRIPTION_PLACEHOLDER: 'Add a longer description to this field'
@@ -44,6 +45,7 @@ class Formbuilder
       MINREPITIONS: 'field_options.minRepeat'
       MAXREPITIONS: 'field_options.maxRepeat'
       LENGTH_UNITS: 'field_options.min_max_length_units'
+      SINGLE_CHECKED: 'field_options.checked'
       TYPE_ALIASES: false
     unAliasType: (type) ->
       if Formbuilder.options.mappings.TYPE_ALIASES

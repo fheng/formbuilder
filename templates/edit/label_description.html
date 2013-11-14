@@ -2,8 +2,12 @@
   <div class='fb-edit-section-header'>Name</div>
   <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
 <% } %>
-<div class='fb-edit-section-header'>Value</div>
-<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.VALUE %>' />
+<% if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { %>
+  <div class='fb-edit-section-header'>Value</div>
+  <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.VALUE %>' />
+<% }else{ %>
+  <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) %>
+<% } %>
 <div class="fb-field-description">
   <div class='fb-edit-section-header'><%= Formbuilder.options.mappings.DESCRIPTION_TITLE %></div>
   <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'

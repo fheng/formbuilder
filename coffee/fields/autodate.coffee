@@ -1,24 +1,32 @@
 Formbuilder.registerField 'autodate',
+  icon: 'icon-calendar'
   repeatable: true
   valueField: false
   view: """
-        <h1><span class='icon-calendar'></span></h1>
-        Automatic
         <% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)==="date"){ %>
-        Date
+          <input disabled value="YYYY-MM-DD">
+          <span class='icon icon-calendar'></span>
         <% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)==="time"){ %>
-        Time
+          <input disabled value="HH:MM">
+          <span class='icon icon-time'></span>
         <% }else{ %>
-        Date &amp; Time
-        <% } %> stamp
+          <input disabled value="YYYY-MM-DD HH:MM">
+          <span class='icon icon-calendar'></span><span class='icon icon-time'></span>
+
+        <% } %>
         """
   edit: """
         <div class='fb-edit-section-header'>Time Stamp Options</div>
-        <select data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>" style="width: auto;">
-        <option value="time">Time Only</option>
-        <option value="date">Date Only</option>
-        <option value="datetime">Date &amp; Time</option
-        </select>
+        <div class="inline-labels">
+          <label>Field type:</label>
+          <select data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>" style="width: auto;">
+            <option value="datetime">Date &amp; Time</option>
+            <option value="time">Time Only</option>
+            <option value="date">Date Only</option>
+          </select>
+          <label>Auto-populate:</label>
+          <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.TIME_AUTOPOPULATE  %>' />
+        </div>
         """
 
   addButton: """

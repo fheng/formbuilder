@@ -1,11 +1,10 @@
 Formbuilder.registerField 'page_break',
-
+  icon: 'icon-file'
   type: 'non_input'
-
   view: """
-        <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
+        <label class='section-name'>&nbsp; <%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
         <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
-        <hr>
+        <hr style="border-bottom: 2px solid #bbb">
         """
 
   edit: """
@@ -16,5 +15,5 @@ Formbuilder.registerField 'page_break',
         """
 
   addButton: """
-             <span class='symbol'><span class='icon-minus'></span></span> Page Break
+             <span class='symbol'><span class='icon-file'></span></span> Page Break
              """

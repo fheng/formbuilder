@@ -1,4 +1,5 @@
 Formbuilder.registerField 'radio',
+  icon: 'icon-circle-blank'
   repeatable: true
   valueField: false
   view: """

@@ -1,5 +1,5 @@
 Formbuilder.registerField 'list',
-
+  icon : 'icon-info-sign'
   type: 'non_input'
 
   view: """

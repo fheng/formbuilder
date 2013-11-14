@@ -1,5 +1,6 @@
 Formbuilder.registerField 'checkbox',
   repeatable: true
+  icon : 'icon-check'
   valueField: false
   view: """
         <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> onclick="javascript: return false;" />
@@ -11,7 +12,7 @@ Formbuilder.registerField 'checkbox',
         """
 
   addButton: """
-             <span class="symbol"><span class="icon-check-empty"></span></span> Checkbox
+             <span class="symbol"><span class="icon-check"></span></span> Checkbox
              """
 
   defaultAttributes: (attrs) ->

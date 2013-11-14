@@ -1,4 +1,6 @@
 Formbuilder.registerField 'paragraph',
+  icon : 'icon-align-justify'
+
   repeatable: true
   view: """
     <textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' ><%= rf.get(Formbuilder.options.mappings.VALUE) %></textarea>
@@ -10,9 +12,8 @@ Formbuilder.registerField 'paragraph',
   """
 
   addButton: """
-    <span class="symbol">&#182;</span> Paragraph
+    <span class="icon icon-align-justify"></span> Paragraph
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.size = 'large'
     attrs

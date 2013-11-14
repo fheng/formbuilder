@@ -3,6 +3,7 @@
   <% if(editStructure){  %>
   <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>
   <% } %>
+  <span class="icon icon-inline <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].icon %>"><%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].iconText %></span>
   <%= Formbuilder.templates['view/label']({rf: rf}) %>
 
   <%= Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) %>

@@ -1,6 +1,7 @@
 Formbuilder.registerField 'location',
   repeatable: true
   valueField: false
+  icon : 'icon-location-arrow'
   view: """
     <% if (rf.get(Formbuilder.options.mappings.LOCATION_UNIT)==="latlong"){ %>
     Latitude/Longitude

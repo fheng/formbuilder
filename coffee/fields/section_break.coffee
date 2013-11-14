@@ -1,11 +1,11 @@
 Formbuilder.registerField 'section_break',
 
   type: 'non_input'
-
+  icon: 'icon-minus'
   view: """
     <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
     <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
-    <hr>
+    <hr style="border-bottom: 2px dashed #bbb">
   """
 
   edit: """

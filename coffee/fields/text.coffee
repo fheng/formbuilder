@@ -1,4 +1,5 @@
 Formbuilder.registerField 'text',
+  icon: 'icon-font'
   repeatable: true
   view: """
     <% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>
@@ -15,5 +16,4 @@ Formbuilder.registerField 'text',
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.size = 'large'
     attrs

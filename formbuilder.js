@@ -94,7 +94,12 @@
         MINREPITIONS: 'field_options.minRepeat',
         MAXREPITIONS: 'field_options.maxRepeat',
         LENGTH_UNITS: 'field_options.min_max_length_units',
+        FILE_SIZE: 'field_options.definition.file_size',
+        PHOTO_HEIGHT: 'field_options.definition.photo_height',
+        PHOTO_WIDTH: 'field_options.definition.photo_width',
+        PHOTO_QUALITY: 'field_options.definition.photo_quality',
         SINGLE_CHECKED: 'field_options.checked',
+        TIME_AUTOPOPULATE: 'field_options.definition.time_autopopulate',
         TYPE_ALIASES: false
       },
       unAliasType: function(type) {
@@ -657,10 +662,11 @@
 
 (function() {
   Formbuilder.registerField('autodate', {
+    icon: 'icon-calendar',
     repeatable: true,
     valueField: false,
-    view: "<h1><span class='icon-calendar'></span></h1>\nAutomatic\n<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\nDate\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\nTime\n<% }else{ %>\nDate &amp; Time\n<% } %> stamp",
-    edit: "<div class='fb-edit-section-header'>Time Stamp Options</div>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n<option value=\"time\">Time Only</option>\n<option value=\"date\">Date Only</option>\n<option value=\"datetime\">Date &amp; Time</option\n</select>",
+    view: "<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\n  <input disabled value=\"YYYY-MM-DD\">\n  <span class='icon icon-calendar'></span>\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\n  <input disabled value=\"HH:MM\">\n  <span class='icon icon-time'></span>\n<% }else{ %>\n  <input disabled value=\"YYYY-MM-DD HH:MM\">\n  <span class='icon icon-calendar'></span><span class='icon icon-time'></span>\n\n<% } %>",
+    edit: "<div class='fb-edit-section-header'>Time Stamp Options</div>\n<div class=\"inline-labels\">\n  <label>Field type:</label>\n  <select data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n    <option value=\"datetime\">Date &amp; Time</option>\n    <option value=\"time\">Time Only</option>\n    <option value=\"date\">Date Only</option>\n  </select>\n  <label>Auto-populate:</label>\n  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.TIME_AUTOPOPULATE  %>' />\n</div>",
     addButton: "<span class='symbol'><span class='icon-calendar'></span></span> Datestamp",
     defaultAttributes: function(attrs) {
       attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime';
@@ -673,10 +679,11 @@
 (function() {
   Formbuilder.registerField('checkbox', {
     repeatable: true,
+    icon: 'icon-check',
     valueField: false,
     view: "<input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> onclick=\"javascript: return false;\" />",
     edit: "<div class='fb-edit-section-header'>Checked</div>\n<input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> data-rv-checked='model.<%= Formbuilder.options.mappings.SINGLE_CHECKED%>' />",
-    addButton: "<span class=\"symbol\"><span class=\"icon-check-empty\"></span></span> Checkbox",
+    addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkbox",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.SINGLE_CHECKED, true);
@@ -723,6 +730,7 @@
   Formbuilder.registerField('dropdown', {
     repeatable: false,
     valueField: false,
+    icon: 'icon-caret-down',
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> Dropdown",
@@ -757,6 +765,7 @@
 (function() {
   Formbuilder.registerField('email', {
     repeatable: true,
+    icon: 'icon-envelope-alt',
     view: "<input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' placeholder=\"email@example.com\" class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "",
     addButton: "<span class=\"symbol\"><span class=\"icon-envelope-alt\"></span></span> Email"
@@ -766,6 +775,7 @@
 
 (function() {
   Formbuilder.registerField('list', {
+    icon: 'icon-info-sign',
     type: 'non_input',
     view: "<div class=\"btn-group pull-right\">\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<div class=\"fieldlist_table\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\">\n<p class=\"instructions\"><i class=\"icon-info-sign\"></i>Empty list - to add contents: </p><br />\n&nbsp; &nbsp;  1) Use \"Edit Structure\" to add fields to the list <br />\n&nbsp;  &nbsp;  2) Use \"Edit Data\" to add rows\n</div>",
     edit: "<div class=\"btn-group\">\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n\n<div class='fb-edit-section-header'>List Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n",
@@ -777,9 +787,10 @@
 (function() {
   Formbuilder.registerField('file', {
     repeatable: true,
+    icon: 'icon-cloud-upload',
     valueField: false,
     view: "<div class=\"file_container\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
-    edit: "",
+    edit: "Max. File Size\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %>\" style=\"width: 60px\" /> KB",
     addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
   });
 
@@ -789,6 +800,7 @@
   Formbuilder.registerField('location', {
     repeatable: true,
     valueField: false,
+    icon: 'icon-location-arrow',
     view: "<% if (rf.get(Formbuilder.options.mappings.LOCATION_UNIT)===\"latlong\"){ %>\nLatitude/Longitude\n<% } else { %>\nEastings/Northings\n<% } %>\n<br />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />",
     edit: "<div class='fb-edit-section-header'>Location Unit</div>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.LOCATION_UNIT %>\" style=\"width: auto;\">\n  <option value=\"latlong\">Latitude / Longitude</option>\n  <option value=\"eastnorth\">Eastings / Northings</option>\n</select>",
     addButton: "<span class='symbol'><span class='icon-location-arrow'></span></span> Location",
@@ -804,6 +816,7 @@
   Formbuilder.registerField('map', {
     repeatable: true,
     valueField: false,
+    icon: 'icon-map-marker',
     view: "<h1><span class='icon-map-marker'></span></h1>",
     edit: "",
     addButton: "<span class='symbol'><span class='icon-map-marker'></span></span> Map",
@@ -817,6 +830,8 @@
 (function() {
   Formbuilder.registerField('number', {
     repeatable: true,
+    icon: 'icon-number',
+    iconText: '123',
     view: "<input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max']() %>\n<%= Formbuilder.templates['edit/units']() %>\n<%= Formbuilder.templates['edit/integer_only']() %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> Number"
@@ -826,22 +841,23 @@
 
 (function() {
   Formbuilder.registerField('page_break', {
+    icon: 'icon-file',
     type: 'non_input',
-    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr>",
+    view: "<label class='section-name'>&nbsp; <%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px solid #bbb\">",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\nplaceholder='Add a longer description to this field'></textarea>",
-    addButton: "<span class='symbol'><span class='icon-minus'></span></span> Page Break"
+    addButton: "<span class='symbol'><span class='icon-file'></span></span> Page Break"
   });
 
 }).call(this);
 
 (function() {
   Formbuilder.registerField('paragraph', {
+    icon: 'icon-align-justify',
     repeatable: true,
     view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' ><%= rf.get(Formbuilder.options.mappings.VALUE) %></textarea>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class=\"symbol\">&#182;</span> Paragraph",
+    addButton: "<span class=\"icon icon-align-justify\"></span> Paragraph",
     defaultAttributes: function(attrs) {
-      attrs.field_options.size = 'large';
       return attrs;
     }
   });
@@ -850,10 +866,11 @@
 
 (function() {
   Formbuilder.registerField('photo', {
+    icon: 'icon-camera',
     repeatable: true,
     valueField: false,
     view: "<h1><span class='icon-camera'></span></h1>",
-    edit: "",
+    edit: "<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %>\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %>\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %>\" style=\"width: 60px\" /> %<br />\n</div>",
     addButton: "<span class='symbol'><span class='icon-camera'></span></span> Photo Capture",
     defaultAttributes: function(attrs) {
       return attrs;
@@ -874,6 +891,7 @@
 
 (function() {
   Formbuilder.registerField('radio', {
+    icon: 'icon-circle-blank',
     repeatable: true,
     valueField: false,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
@@ -900,7 +918,8 @@
 (function() {
   Formbuilder.registerField('section_break', {
     type: 'non_input',
-    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr>",
+    icon: 'icon-minus',
+    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px dashed #bbb\">",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
     addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
   });
@@ -911,6 +930,7 @@
   Formbuilder.registerField('signature', {
     repeatable: true,
     valueField: false,
+    icon: 'icon-pencil',
     view: "<h1 style=\"border: 1px solid #bbb; padding: 10px; border-radius: 6px;\"><span class='icon-pencil'></span></h1>",
     edit: "",
     addButton: "<span class='symbol'><span class='icon-pencil'></span></span> Signature Capture",
@@ -923,12 +943,12 @@
 
 (function() {
   Formbuilder.registerField('text', {
+    icon: 'icon-font',
     repeatable: true,
     view: "<% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>\n<input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
     addButton: "<span class='symbol'><span class='icon-font'></span></span> Text",
     defaultAttributes: function(attrs) {
-      attrs.field_options.size = 'large';
       return attrs;
     }
   });
@@ -948,6 +968,7 @@
 (function() {
   Formbuilder.registerField('website', {
     repeatable: true,
+    icon: 'icon-link',
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />",
     edit: "<%= Formbuilder.templates['edit/size']() %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-link\"></span></span> Website"
@@ -965,17 +986,15 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p +=
 ((__t = ( Formbuilder.templates['edit/base_header']() )) == null ? '' : __t) +
-'\n' +
+'\n<div class="well">\n  ' +
 ((__t = ( Formbuilder.templates['edit/common']({ rf : rf, editStructure : editStructure, commonCheckboxes : commonCheckboxes, repeatable : repeatable, repeating : repeating }) )) == null ? '' : __t) +
-'\n';
- // We only show the custom edit stuff at the bottom if we havent explicitly disabled the value box ;
-__p += '\n';
- if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { ;
-__p += '\n  ' +
+'\n</div>\n';
+ if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf})){ ;
+__p += '\n  <div class="well">\n    ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
-'\n';
+'\n  </div>\n';
  } ;
-__p += '\n';
+__p += '\n\n';
 
 }
 return __p
@@ -987,9 +1006,7 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'fb-field-label\'>\n  <span data-rv-text="model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
-'"></span>\n  <code class=\'field-type\' data-rv-text=\'model.' +
-((__t = ( Formbuilder.options.mappings.FIELD_TYPE )) == null ? '' : __t) +
-'\'></code>\n  <span class=\'icon-arrow-right pull-right\'></span>\n</div>';
+'"></span>\n</div>';
 
 }
 return __p
@@ -1087,10 +1104,6 @@ __p += '\n';
 __p += '\n  <div class=\'fb-edit-section-header\'>Value</div>\n  <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALUE )) == null ? '' : __t) +
 '\' />\n';
- }else{ ;
-__p += '\n  ' +
-((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].edit({rf: rf}) )) == null ? '' : __t) +
-'\n';
  } ;
 __p += '\n<div class="fb-field-description">\n  <div class=\'fb-edit-section-header\'>' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION_TITLE )) == null ? '' : __t) +
@@ -1304,7 +1317,11 @@ __p += '\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
 '\n  ';
  } ;
-__p += '\n  ' +
+__p += '\n  <span class="icon icon-inline ' +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].icon )) == null ? '' : __t) +
+'">' +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].iconText )) == null ? '' : __t) +
+'</span>\n  ' +
 ((__t = ( Formbuilder.templates['view/label']({rf: rf}) )) == null ? '' : __t) +
 '\n\n  ' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) )) == null ? '' : __t) +
@@ -1322,7 +1339,9 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +
-'\n  ' +
+'\n  <span class="icon icon-inline ' +
+((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].icon )) == null ? '' : __t) +
+'"></span>' +
 ((__t = ( Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].view({rf: rf}) )) == null ? '' : __t) +
 '\n</div>\n';
 

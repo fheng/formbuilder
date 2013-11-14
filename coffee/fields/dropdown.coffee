@@ -1,6 +1,7 @@
 Formbuilder.registerField 'dropdown',
   repeatable: false
   valueField: false
+  icon : 'icon-caret-down'
   view: """
     <select>
       <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>

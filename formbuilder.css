@@ -33,8 +33,8 @@
 .fb-field-wrapper .input-line > span > label{display:block;font-size:13px;margin-left:3px}
 .fb-field-wrapper .help-block{display:block;font-size:12px;margin-top:5px}
 .fb-edit-field-wrapper{font-size:13px;}
-.fb-edit-field-wrapper .fb-field-label{font-weight:bold;font-size:16px}
-.fb-edit-field-wrapper .fb-edit-section-header{font-weight:bold;border-bottom:1px solid #ccc;margin-top:15px;margin-bottom:5px;clear:both}
+.fb-edit-field-wrapper .fb-field-label{font-weight:bold;font-size:16px;margin-top:-10px;margin-bottom:6px}
+.fb-edit-field-wrapper .fb-edit-section-header{font-weight:bold;border-bottom:1px solid #ccc;margin-top:5px;margin-bottom:5px;clear:both}
 .fb-edit-field-wrapper .js-add-option,.fb-edit-field-wrapper .js-remove-option{padding:3px 6px}
 .fb-edit-field-wrapper .js-add-option{background-color:#008000}
 .fb-edit-field-wrapper .js-remove-option{background-color:#f00}
@@ -55,3 +55,7 @@
 .response-field-date .month,.response-field-date .day,.response-field-date .year{width:50px}
 .response-field-time .hours,.response-field-time .minutes,.response-field-time .seconds{width:50px}
 .response-field-checkboxes .fb-option,.response-field-radio .fb-option{margin-bottom:5px;display:inline-block}
+.response-field-autodate .icon{margin-left:6px;font-size:1.2em;font-weight:bold;display:inline-block}
+.fb-field-wrapper .icon-inline{float:left;font-size:1.2em;margin-right:4px;padding-top:1px}
+.edit-response-field .well{margin-top:0;padding:3px}
+.inline-labels label{display:inline-block;width:100px}

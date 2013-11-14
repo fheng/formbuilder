@@ -86,6 +86,7 @@
         INCLUDE_BLANK: 'field_options.include_blank_option',
         INTEGER_ONLY: 'field_options.integer_only',
         LOCATION_UNIT: 'field_options.location_unit',
+        DATETIME_UNIT: 'field_options.datetime_unit',
         MIN: 'field_options.min',
         MAX: 'field_options.max',
         MINLENGTH: 'field_options.minlength',
@@ -655,6 +656,21 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('autodate', {
+    repeatable: true,
+    valueField: false,
+    view: "<h1><span class='icon-calendar'></span></h1>\nAutomatic\n<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\nDate\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\nTime\n<% }else{ %>\nDate &amp; Time\n<% } %> stamp",
+    edit: "<div class='fb-edit-section-header'>Time Stamp Options</div>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n<option value=\"time\">Time Only</option>\n<option value=\"date\">Date Only</option>\n<option value=\"datetime\">Date &amp; Time</option\n</select>",
+    addButton: "<span class='symbol'><span class='icon-calendar'></span></span> Datestamp",
+    defaultAttributes: function(attrs) {
+      attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime';
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
   Formbuilder.registerField('checkbox', {
     repeatable: true,
     valueField: false,
@@ -836,7 +852,7 @@
   Formbuilder.registerField('photo', {
     repeatable: true,
     valueField: false,
-    view: "<h1 style=\"border: 1px solid #bbb; padding: 10px; border-radius: 6px;\"><span class='icon-camera'></span></h1>",
+    view: "<h1><span class='icon-camera'></span></h1>",
     edit: "",
     addButton: "<span class='symbol'><span class='icon-camera'></span></span> Photo Capture",
     defaultAttributes: function(attrs) {

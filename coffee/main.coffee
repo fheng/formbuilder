@@ -39,6 +39,7 @@ class Formbuilder
       INCLUDE_BLANK: 'field_options.include_blank_option'
       INTEGER_ONLY: 'field_options.integer_only'
       LOCATION_UNIT: 'field_options.location_unit'
+      DATETIME_UNIT: 'field_options.datetime_unit'
       MIN: 'field_options.min'
       MAX: 'field_options.max'
       MINLENGTH: 'field_options.minlength'
@@ -279,7 +280,7 @@ class Formbuilder
 
         $fields = {};
         $fieldsNonInput = {};
-        
+
         if @options.hasOwnProperty('fields')
           for fieldName in @options.fields
             field = Formbuilder.inputFields[fieldName] || Formbuilder.nonInputFields[fieldName];

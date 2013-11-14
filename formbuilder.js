@@ -813,6 +813,20 @@
 }).call(this);
 
 (function() {
+  Formbuilder.registerField('photo', {
+    repeatable: true,
+    valueField: false,
+    view: "<h1 style=\"border: 1px solid #bbb; padding: 10px; border-radius: 6px;\"><span class='icon-camera'></span></h1>",
+    edit: "",
+    addButton: "<span class='symbol'><span class='icon-camera'></span></span> Photo Capture",
+    defaultAttributes: function(attrs) {
+      return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
   Formbuilder.registerField('price', {
     repeatable: true,
     view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
@@ -853,6 +867,20 @@
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr>",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
     addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('signature', {
+    repeatable: true,
+    valueField: false,
+    view: "<h1 style=\"border: 1px solid #bbb; padding: 10px; border-radius: 6px;\"><span class='icon-pencil'></span></h1>",
+    edit: "",
+    addButton: "<span class='symbol'><span class='icon-pencil'></span></span> Signature Capture",
+    defaultAttributes: function(attrs) {
+      return attrs;
+    }
   });
 
 }).call(this);

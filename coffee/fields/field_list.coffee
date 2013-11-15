@@ -1,4 +1,4 @@
-Formbuilder.registerField 'list',
+Formbuilder.registerField 'field_list',
   icon : 'icon-info-sign'
   type: 'non_input'
 

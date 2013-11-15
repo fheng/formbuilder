@@ -775,7 +775,7 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('list', {
+  Formbuilder.registerField('field_list', {
     icon: 'icon-info-sign',
     type: 'non_input',
     view: "<div class=\"btn-group pull-right\">\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<div class=\"fieldlist_table\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\">\n<p class=\"instructions\"><i class=\"icon-info-sign\"></i>Empty list - to add contents: </p><br />\n&nbsp; &nbsp;  1) Use \"Edit Structure\" to add fields to the list <br />\n&nbsp;  &nbsp;  2) Use \"Edit Data\" to add rows\n</div>",

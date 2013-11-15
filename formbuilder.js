@@ -493,6 +493,9 @@
           $addFieldButtons = this.$el.find("[data-field-type]");
           return $addFieldButtons.draggable({
             connectToSortable: this.$responseFields,
+            start: function() {
+              return _this.$responseFields.sortable("refresh");
+            },
             helper: function() {
               var $helper;
               $helper = $("<div class='response-field-draggable-helper' />");

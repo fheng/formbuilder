@@ -1,5 +1,5 @@
-Formbuilder.registerField 'field_list',
-  icon : 'icon-info-sign'
+Formbuilder.registerField 'list',
+  icon : 'icon-list'
   type: 'non_input'
 
   view: """

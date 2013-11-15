@@ -47,12 +47,13 @@ class Formbuilder
       MINREPITIONS: 'field_options.minRepeat'
       MAXREPITIONS: 'field_options.maxRepeat'
       LENGTH_UNITS: 'field_options.min_max_length_units'
-      FILE_SIZE : 'field_options.definition.file_size'
-      PHOTO_HEIGHT: 'field_options.definition.photo_height'
-      PHOTO_WIDTH: 'field_options.definition.photo_width'
-      PHOTO_QUALITY: 'field_options.definition.photo_quality'
+      FILE_SIZE : 'field_options.file_size'
+      PHOTO_HEIGHT: 'field_options.photo_height'
+      PHOTO_WIDTH: 'field_options.photo_width'
+      PHOTO_QUALITY: 'field_options.photo_quality'
       SINGLE_CHECKED: 'field_options.checked'
-      TIME_AUTOPOPULATE: 'field_options.definition.time_autopopulate'
+      TIME_AUTOPOPULATE: 'field_options.time_autopopulate'
+      VALUE_HEADER : 'Value'
       TYPE_ALIASES: false
     unAliasType: (type) ->
       if Formbuilder.options.mappings.TYPE_ALIASES

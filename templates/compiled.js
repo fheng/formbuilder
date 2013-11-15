@@ -123,7 +123,9 @@ __p += '\n  <div class=\'fb-edit-section-header\'>Name</div>\n  <input type=\'te
  } ;
 __p += '\n';
  if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { ;
-__p += '\n  <div class=\'fb-edit-section-header\'>Value</div>\n  <input type=\'text\' data-rv-input=\'model.' +
+__p += '\n  <div class=\'fb-edit-section-header\'>' +
+((__t = ( Formbuilder.options.mappings.VALUE_HEADER )) == null ? '' : __t) +
+'</div>\n  <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALUE )) == null ? '' : __t) +
 '\' />\n';
  } ;

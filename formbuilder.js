@@ -94,12 +94,13 @@
         MINREPITIONS: 'field_options.minRepeat',
         MAXREPITIONS: 'field_options.maxRepeat',
         LENGTH_UNITS: 'field_options.min_max_length_units',
-        FILE_SIZE: 'field_options.definition.file_size',
-        PHOTO_HEIGHT: 'field_options.definition.photo_height',
-        PHOTO_WIDTH: 'field_options.definition.photo_width',
-        PHOTO_QUALITY: 'field_options.definition.photo_quality',
+        FILE_SIZE: 'field_options.file_size',
+        PHOTO_HEIGHT: 'field_options.photo_height',
+        PHOTO_WIDTH: 'field_options.photo_width',
+        PHOTO_QUALITY: 'field_options.photo_quality',
         SINGLE_CHECKED: 'field_options.checked',
-        TIME_AUTOPOPULATE: 'field_options.definition.time_autopopulate',
+        TIME_AUTOPOPULATE: 'field_options.time_autopopulate',
+        VALUE_HEADER: 'Value',
         TYPE_ALIASES: false
       },
       unAliasType: function(type) {
@@ -1101,7 +1102,9 @@ __p += '\n  <div class=\'fb-edit-section-header\'>Name</div>\n  <input type=\'te
  } ;
 __p += '\n';
  if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { ;
-__p += '\n  <div class=\'fb-edit-section-header\'>Value</div>\n  <input type=\'text\' data-rv-input=\'model.' +
+__p += '\n  <div class=\'fb-edit-section-header\'>' +
+((__t = ( Formbuilder.options.mappings.VALUE_HEADER )) == null ? '' : __t) +
+'</div>\n  <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALUE )) == null ? '' : __t) +
 '\' />\n';
  } ;

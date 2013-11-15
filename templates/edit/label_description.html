@@ -3,7 +3,7 @@
   <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
 <% } %>
 <% if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { %>
-  <div class='fb-edit-section-header'>Value</div>
+  <div class='fb-edit-section-header'><%= Formbuilder.options.mappings.VALUE_HEADER %></div>
   <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.VALUE %>' />
 <% } %>
 <div class="fb-field-description">

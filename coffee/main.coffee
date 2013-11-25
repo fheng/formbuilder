@@ -29,6 +29,7 @@ class Formbuilder
       FIELD_TYPE: 'field_type'
       REQUIRED: 'required'
       REPEATING: 'repeating'
+      VALIDATE_IMMEDIATELY: 'validate_immediately'
       ADMIN_ONLY: 'admin_only'
       FIELD_OPTIONS : 'field_options'
       OPTIONS: 'field_options.options'

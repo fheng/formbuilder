@@ -76,6 +76,7 @@
         FIELD_TYPE: 'field_type',
         REQUIRED: 'required',
         REPEATING: 'repeating',
+        VALIDATE_IMMEDIATELY: 'validate_immediately',
         ADMIN_ONLY: 'admin_only',
         FIELD_OPTIONS: 'field_options',
         OPTIONS: 'field_options.options',
@@ -1037,7 +1038,9 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<label class="fb-required">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REQUIRED )) == null ? '' : __t) +
-'\' />\n  Required\n</label>\n\n';
+'\' />\n  Required\n</label>\n<label class="fb-immediately">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.VALIDATE_IMMEDIATELY )) == null ? '' : __t) +
+'\' />\n  Validate Immediately\n</label>\n';
  if (repeatable){ ;
 __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
@@ -1084,9 +1087,9 @@ this["Formbuilder"]["templates"]["edit/integer_only"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Integer only</div>\n<label>\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+__p += '<!--<div class=\'fb-edit-section-header\'>Integer only</div>-->\n<!--<label>-->\n  <!--<input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INTEGER_ONLY )) == null ? '' : __t) +
-'\' />\n  Only accept integers\n</label>\n';
+'\' />-->\n  <!--Only accept integers-->\n<!--</label>-->\n';
 
 }
 return __p
@@ -1127,11 +1130,13 @@ this["Formbuilder"]["templates"]["edit/min_max"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nAbove\n<input type="text" data-rv-input="model.' +
+__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nMin\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-'" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nBelow\n<input type="text" data-rv-input="model.' +
+'" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
-'" style="width: 30px" />\n';
+'" style="width: 30px" />\n\n<select data-rv-value="model.' +
+((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
+'" style="width: auto;">\n  <option value="value">Value</option>\n  <option value="digits">Digits</option>\n</select>';
 
 }
 return __p
@@ -1200,9 +1205,9 @@ this["Formbuilder"]["templates"]["edit/units"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Units</div>\n<input type="text" data-rv-input="model.' +
+__p += '<!--<div class=\'fb-edit-section-header\'>Units</div>\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.UNITS )) == null ? '' : __t) +
-'" />\n';
+'" />\n-->';
 
 }
 return __p

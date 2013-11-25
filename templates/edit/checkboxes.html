@@ -2,7 +2,10 @@
   <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REQUIRED %>' />
   Required
 </label>
-
+<label class="fb-immediately">
+  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.VALIDATE_IMMEDIATELY %>' />
+  Validate Immediately
+</label>
 <% if (repeatable){ %>
   <label class="fb-repeating">
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REPEATING %>' />

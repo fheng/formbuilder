@@ -16,7 +16,7 @@ Formbuilder.registerField 'autodate',
         <% } %>
         """
   edit: """
-        <div class='fb-edit-section-header'>Time Stamp Options</div>
+        <div class='fb-edit-section-header'>Date Stamp Options</div>
         <div class="inline-labels">
           <label>Field type:</label>
           <select data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>" style="width: auto;">

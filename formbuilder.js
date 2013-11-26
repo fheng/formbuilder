@@ -671,7 +671,7 @@
     repeatable: true,
     valueField: false,
     view: "<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\n  <input disabled value=\"YYYY-MM-DD\">\n  <span class='icon icon-calendar'></span>\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\n  <input disabled value=\"HH:MM\">\n  <span class='icon icon-time'></span>\n<% }else{ %>\n  <input disabled value=\"YYYY-MM-DD HH:MM\">\n  <span class='icon icon-calendar'></span><span class='icon icon-time'></span>\n\n<% } %>",
-    edit: "<div class='fb-edit-section-header'>Time Stamp Options</div>\n<div class=\"inline-labels\">\n  <label>Field type:</label>\n  <select data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n    <option value=\"datetime\">Date &amp; Time</option>\n    <option value=\"time\">Time Only</option>\n    <option value=\"date\">Date Only</option>\n  </select>\n  <label>Auto-populate:</label>\n  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.TIME_AUTOPOPULATE  %>' />\n</div>",
+    edit: "<div class='fb-edit-section-header'>Date Stamp Options</div>\n<div class=\"inline-labels\">\n  <label>Field type:</label>\n  <select data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n    <option value=\"datetime\">Date &amp; Time</option>\n    <option value=\"time\">Time Only</option>\n    <option value=\"date\">Date Only</option>\n  </select>\n  <label>Auto-populate:</label>\n  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.TIME_AUTOPOPULATE  %>' />\n</div>",
     addButton: "<span class='symbol'><span class='icon-calendar'></span></span> Datestamp",
     defaultAttributes: function(attrs) {
       attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime';
@@ -795,7 +795,7 @@
     icon: 'icon-cloud-upload',
     valueField: false,
     view: "<div class=\"file_container\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
-    edit: "Max. File Size\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %>\" style=\"width: 60px\" /> KB",
+    edit: "<div class='fb-edit-section-header'>File Settings</div>\nMax. File Size\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %>\" style=\"width: 60px\" /> KB",
     addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
   });
 
@@ -875,7 +875,7 @@
     repeatable: true,
     valueField: false,
     view: "<h1><span class='icon-camera'></span></h1>",
-    edit: "<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %>\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %>\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %>\" style=\"width: 60px\" /> %<br />\n</div>",
+    edit: "<div class='fb-edit-section-header'>Photo Settings</div>\n<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %>\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %>\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %>\" style=\"width: 60px\" /> %<br />\n</div>",
     addButton: "<span class='symbol'><span class='icon-camera'></span></span> Photo Capture",
     defaultAttributes: function(attrs) {
       return attrs;
@@ -975,7 +975,7 @@
     repeatable: true,
     icon: 'icon-link',
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />",
-    edit: "<%= Formbuilder.templates['edit/size']() %>",
+    edit: "",
     addButton: "<span class=\"symbol\"><span class=\"icon-link\"></span></span> Website"
   });
 
@@ -1044,13 +1044,13 @@ __p += '<label class="fb-required">\n  <input type=\'checkbox\' data-rv-checked=
  if (repeatable){ ;
 __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
-'\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min. Repititions\n    ';
+'\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min\n    ';
  var disabled = (repeating===true) ? "" : "disabled"; ;
 __p += '\n    <input type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
-'" style="width: 30px" />\n    Max. Repititions\n    <input type="text" ' +
+'" style="width: 30px" />\n    Max\n    <input type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
@@ -1147,9 +1147,9 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\'>Length Limit</div>\n\n  Min\n  <input type="text" data-rv-input="model.' +
-((__t = ( Formbuilder.options.mappings.MINLENGTH )) == null ? '' : __t) +
+((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
 '" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
-((__t = ( Formbuilder.options.mappings.MAXLENGTH )) == null ? '' : __t) +
+((__t = ( Formbuilder.options.mappings.MAX)) == null ? '' : __t) +
 '" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
 '" style="width: auto;">\n    <option value="characters">characters</option>\n    <option value="words">words</option>\n  </select>\n</div>';
@@ -1165,19 +1165,15 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
-__p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+__p += '\n  <label class="includeBlank">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_BLANK )) == null ? '' : __t) +
 '\' />\n    Include blank\n  </label>\n';
  } ;
 __p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
-'\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <a class="js-add-option ' +
-((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-remove-option ' +
-((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n</div>\n\n';
+'\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <div class="btn-group">\n    <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n    <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n  </div>\n</div>\n\n';
  if (typeof includeOther !== 'undefined'){ ;
-__p += '\n  <label>\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+__p += '\n  <label class="includeOther">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
 '\' />\n    Include "other"\n  </label>\n';
  } ;

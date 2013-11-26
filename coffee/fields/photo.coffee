@@ -6,6 +6,7 @@ Formbuilder.registerField 'photo',
     <h1><span class='icon-camera'></span></h1>
   """
   edit: """
+          <div class='fb-edit-section-header'>Photo Settings</div>
           <div class="inline-labels">
           <label>Max Height</label>
           <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %>" style="width: 60px" /> px<br />

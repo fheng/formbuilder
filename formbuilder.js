@@ -309,13 +309,22 @@
           return this.forceRender();
         },
         forceRender: function() {
-          return this.model.trigger('change');
+          return this.model.trigger('change', this.model);
         },
         toggleRepititionsInputs: function(e) {
-          var $el;
+          var $el, $max, $min;
           $el = $(e.target);
           if ($el.prop('checked') === true) {
-            return this.$el.find('.fb-repititions input').prop('disabled', false);
+            this.$el.find('.fb-repititions input').prop('disabled', false);
+            $min = this.$el.find('.fb-repititions input.minReps');
+            $max = this.$el.find('.fb-repititions input.maxReps');
+            if ($min.val() === "") {
+              $min.val(1);
+            }
+            if ($max.val() === "") {
+              $max.val(5);
+            }
+            return this.model.set(Formbuilder.options.mappings.REQUIRED, true);
           } else {
             return this.$el.find('.fb-repititions input').prop('disabled', true);
           }
@@ -702,11 +711,14 @@
 (function() {
   Formbuilder.registerField('checkboxes', {
     repeatable: false,
+    icon: 'icon-check',
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeOther: true }) %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-check-empty\"></span></span> Checkboxes",
+    addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkboxes",
     defaultAttributes: function(attrs) {
-      attrs.field_options.options = [
+      attrs = new Backbone.Model(attrs);
+      attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
+      attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
           label: "",
           checked: false
@@ -714,8 +726,8 @@
           label: "",
           checked: false
         }
-      ];
-      return attrs;
+      ]);
+      return attrs.toJSON();
     }
   });
 
@@ -1046,11 +1058,11 @@ __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-c
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
 '\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min\n    ';
  var disabled = (repeating===true) ? "" : "disabled"; ;
-__p += '\n    <input type="text" ' +
+__p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
-'" style="width: 30px" />\n    Max\n    <input type="text" ' +
+'" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +

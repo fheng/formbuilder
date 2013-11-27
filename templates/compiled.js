@@ -63,11 +63,11 @@ __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-c
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
 '\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min\n    ';
  var disabled = (repeating===true) ? "" : "disabled"; ;
-__p += '\n    <input type="text" ' +
+__p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
-'" style="width: 30px" />\n    Max\n    <input type="text" ' +
+'" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +

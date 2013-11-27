@@ -1,5 +1,6 @@
 Formbuilder.registerField 'checkboxes',
   repeatable: false
+  icon : 'icon-check'
   view: """
     <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
       <div>
@@ -27,16 +28,17 @@ Formbuilder.registerField 'checkboxes',
   """
 
   addButton: """
-    <span class="symbol"><span class="icon-check-empty"></span></span> Checkboxes
+    <span class="symbol"><span class="icon-check"></span></span> Checkboxes
   """
 
   defaultAttributes: (attrs) ->
-    attrs.field_options.options = [
+    attrs = new Backbone.Model(attrs)
+    attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
+    attrs.set(Formbuilder.options.mappings.OPTIONS, [
       label: "",
       checked: false
     ,
       label: "",
       checked: false
-    ]
-
-    attrs
+    ])
+    attrs.toJSON()

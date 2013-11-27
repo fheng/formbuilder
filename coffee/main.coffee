@@ -228,13 +228,23 @@ class Formbuilder
         @forceRender()
 
       forceRender: ->
-        @model.trigger('change')
+        @model.trigger('change', @model)
       toggleRepititionsInputs: (e) ->
         $el = $(e.target)
         if $el.prop('checked')==true
           @$el.find('.fb-repititions input').prop('disabled', false)
+          $min = @$el.find('.fb-repititions input.minReps')
+          $max = @$el.find('.fb-repititions input.maxReps')
+          if ($min.val()=="")
+            $min.val(1)
+          if ($max.val()=="")
+            $max.val(5)
+
+          # Repeating fields must be required
+          @model.set(Formbuilder.options.mappings.REQUIRED, true)
         else
           @$el.find('.fb-repititions input').prop('disabled', true)
+          
     main: Backbone.View.extend
       SUBVIEWS: []
 

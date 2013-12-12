@@ -319,10 +319,10 @@
             $min = this.$el.find('.fb-repititions input.minReps');
             $max = this.$el.find('.fb-repititions input.maxReps');
             if ($min.val() === "") {
-              $min.val(1);
+              this.model.set(Formbuilder.options.mappings.MINREPITIONS, 1);
             }
             if ($max.val() === "") {
-              $max.val(5);
+              this.model.set(Formbuilder.options.mappings.MAXREPITIONS, 5);
             }
             return this.model.set(Formbuilder.options.mappings.REQUIRED, true);
           } else {

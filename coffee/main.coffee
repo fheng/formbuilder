@@ -236,15 +236,15 @@ class Formbuilder
           $min = @$el.find('.fb-repititions input.minReps')
           $max = @$el.find('.fb-repititions input.maxReps')
           if ($min.val()=="")
-            $min.val(1)
+            @model.set(Formbuilder.options.mappings.MINREPITIONS, 1)
           if ($max.val()=="")
-            $max.val(5)
+            @model.set(Formbuilder.options.mappings.MAXREPITIONS, 5)
 
           # Repeating fields must be required
           @model.set(Formbuilder.options.mappings.REQUIRED, true)
         else
           @$el.find('.fb-repititions input').prop('disabled', true)
-          
+
     main: Backbone.View.extend
       SUBVIEWS: []
 

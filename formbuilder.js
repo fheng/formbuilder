@@ -96,6 +96,8 @@
         MAXREPITIONS: 'field_options.maxRepeat',
         LENGTH_UNITS: 'field_options.min_max_length_units',
         FILE_SIZE: 'field_options.file_size',
+        FIELD_FORMAT_MODE: 'field_options.field_format_mode',
+        FIELD_FORMAT_STRING: 'field_options.field_format_string',
         PHOTO_HEIGHT: 'field_options.photo_height',
         PHOTO_WIDTH: 'field_options.photo_width',
         PHOTO_QUALITY: 'field_options.photo_quality',
@@ -236,7 +238,8 @@
           'click .js-remove-option': 'removeOption',
           'click .js-default-updated': 'defaultUpdated',
           'input .option-label-input': 'forceRender',
-          'change .fb-repeating input[type=checkbox]': 'toggleRepititionsInputs'
+          'change .fb-repeating input[type=checkbox]': 'toggleRepititionsInputs',
+          'change .fieldFormatMode': 'changeFieldFormatHelpText'
         },
         initialize: function() {
           this.listenTo(this.model, "destroy", this.remove);
@@ -327,6 +330,17 @@
             return this.model.set(Formbuilder.options.mappings.REQUIRED, true);
           } else {
             return this.$el.find('.fb-repititions input').prop('disabled', true);
+          }
+        },
+        changeFieldFormatHelpText: function(e) {
+          var $value;
+          $value = $(e.target).val();
+          if ($value === "regex") {
+            this.$el.find('.simpleFormat').hide();
+            return this.$el.find('.advancedFormat').show();
+          } else {
+            this.$el.find('.simpleFormat').show();
+            return this.$el.find('.advancedFormat').hide();
           }
         }
       }),
@@ -963,7 +977,7 @@
     icon: 'icon-font',
     repeatable: true,
     view: "<% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>\n<input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />",
-    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
+    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>\n<div class='fb-edit-section-header'>Field Format</div>\n<div class=\"inline-labels\">\n\n<label>Type</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.FIELD_FORMAT_MODE %>\" class=\"fieldFormatMode\" style=\"width: auto;\">\n  <option value=\"simple\">Simple</option>\n  <option value=\"regex\">Advanced (Regex)</option>\n</select><br />\n<label>Format</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FIELD_FORMAT_STRING %>\" class=\"fieldFormatString\" style=\"width: 150px;\" /><br />\n</div>\n<div class=\"simpleFormat\">\n  <strong>c</strong> = alphanumeric character<br />\n  <strong>n</strong> = number<br />\n  <strong>e.g.</strong> ccnn-nnnn matches ab12-5432, but not 0000-0000\n</div>\n<div class=\"advancedFormat\">\nUse javascript-friendly regular expressions to validate - no need to include surrounding / characters <br />\n<strong>e.g.</strong> .+ but not /.+/\n\n</div>\n",
     addButton: "<span class='symbol'><span class='icon-font'></span></span> Text",
     defaultAttributes: function(attrs) {
       return attrs;

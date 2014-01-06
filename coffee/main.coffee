@@ -49,6 +49,8 @@ class Formbuilder
       MAXREPITIONS: 'field_options.maxRepeat'
       LENGTH_UNITS: 'field_options.min_max_length_units'
       FILE_SIZE : 'field_options.file_size'
+      FIELD_FORMAT_MODE : 'field_options.field_format_mode'
+      FIELD_FORMAT_STRING : 'field_options.field_format_string'
       PHOTO_HEIGHT: 'field_options.photo_height'
       PHOTO_WIDTH: 'field_options.photo_width'
       PHOTO_QUALITY: 'field_options.photo_quality'
@@ -168,6 +170,7 @@ class Formbuilder
         'click .js-default-updated': 'defaultUpdated'
         'input .option-label-input': 'forceRender'
         'change .fb-repeating input[type=checkbox]' : 'toggleRepititionsInputs'
+        'change .fieldFormatMode' : 'changeFieldFormatHelpText'
 
       initialize: ->
         @listenTo @model, "destroy", @remove
@@ -244,6 +247,14 @@ class Formbuilder
           @model.set(Formbuilder.options.mappings.REQUIRED, true)
         else
           @$el.find('.fb-repititions input').prop('disabled', true)
+      changeFieldFormatHelpText: (e) ->
+        $value = $(e.target).val();
+        if ($value == "regex")
+          @$el.find('.simpleFormat').hide()
+          @$el.find('.advancedFormat').show();
+        else
+          @$el.find('.simpleFormat').show();
+          @$el.find('.advancedFormat').hide();
 
     main: Backbone.View.extend
       SUBVIEWS: []

@@ -398,6 +398,7 @@ class Formbuilder
               @createAndShowEditView(rf)
 
             @handleFormUpdate()
+            @trigger('reorder');
             return true
           update: (e, ui) =>
             # ensureEditViewScrolled, unless we're updating from the draggable

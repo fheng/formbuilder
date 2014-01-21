@@ -501,6 +501,7 @@
                 _this.createAndShowEditView(rf);
               }
               _this.handleFormUpdate();
+              _this.trigger('reorder');
               return true;
             },
             update: function(e, ui) {

@@ -460,7 +460,23 @@ class Formbuilder
         @$el.find(".fb-edit-field-wrapper").html $newEditEl
         @$el.find(".fb-tabs a[data-target=\"#editField\"]").click() unless @options.noEditOnDrop
         @scrollLeftWrapper($responseFieldEl)
+        @$el.find('input.minReps').change(@checkMinRep)
         return @
+
+      checkMinRep : (e) ->
+        console.log("checkmin rep")
+        $target = $(e.target);
+        $parent = $target.parent();
+        $maxRep = $target.parent().find('input.maxReps');
+        $minVal = Number($target.val());
+        $maxVal = Number($maxRep.val());
+
+        if $minVal and $minVal < 0 or $minVal > $maxVal
+          $target.css("background-color","red")
+        else
+          $target.css("background-color","")
+
+
 
       ensureEditViewScrolled: ->
         return unless @editView

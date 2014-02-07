@@ -94,7 +94,7 @@ __p += '\n  <div class=\'fb-common-checkboxes\'>\n    ' +
 ((__t = ( Formbuilder.templates['edit/checkboxes']({repeatable : repeatable, repeating : repeating}) )) == null ? '' : __t) +
 '\n  </div>\n  ';
  } ;
-__p += '\n  <div class=\'fb-clear\'></div>\n</div>\n';
+__p += '\n\n  <div class=\'fb-clear\'></div>\n</div>\n';
 
 }
 return __p
@@ -153,7 +153,7 @@ __p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nMin\n<i
 ((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
 '" style="width: 30px" />\n\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
-'" style="width: auto;">\n  <option value="value">Value</option>\n  <option value="digits">Digits</option>\n</select>';
+'" style="width: auto;">\n  <option value="value">Value</option>\n</select>';
 
 }
 return __p
@@ -169,7 +169,7 @@ __p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header
 ((__t = ( Formbuilder.options.mappings.MAX)) == null ? '' : __t) +
 '" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
-'" style="width: auto;">\n    <option value="characters">characters</option>\n    <option value="words">words</option>\n  </select>\n</div>';
+'" style="width: auto;">\n    <option value="characters">characters</option>\n  </select>\n</div>';
 
 }
 return __p

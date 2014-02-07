@@ -55,7 +55,7 @@
 .response-field-autodate .icon{margin-left:6px;font-size:1.2em;font-weight:bold;display:inline-block}
 .fb-field-wrapper .icon-inline{float:left;font-size:1.2em;margin-right:4px;padding-top:1px}
 .edit-response-field .well{margin-top:0;padding:3px}
-.edit-response-field .option-label-input{width:195px}
+.edit-response-field input[type=text].option-label-input{width:195px}
 .edit-response-field .btn-group{display:inline}
 .inline-labels label{display:inline-block;width:100px}
 .edit-response-field .includeBlank{margin-bottom:15px}

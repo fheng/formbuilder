@@ -1,4 +1,9 @@
 <div class='subtemplate-wrapper'>
+  <% if (rf.get(Formbuilder.options.mappings.FIELD_ERROR)){ %>
+    <p class="text-error">
+      <%= rf.get(Formbuilder.options.mappings.FIELD_ERROR) %>
+    </p>
+  <% } %>
   <div class='cover'></div>
   <% if(editStructure){  %>
   <%= Formbuilder.templates['view/duplicate_remove']({rf: rf}) %>

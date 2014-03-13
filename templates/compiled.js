@@ -335,7 +335,13 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'subtemplate-wrapper\'>\n  <div class=\'cover\'></div>\n  ';
+__p += '<div class=\'subtemplate-wrapper\'>\n  ';
+ if (rf.get(Formbuilder.options.mappings.FIELD_ERROR)){ ;
+__p += '\n    <p class="text-error">\n      ' +
+((__t = ( rf.get(Formbuilder.options.mappings.FIELD_ERROR) )) == null ? '' : __t) +
+'\n    </p>\n  ';
+ } ;
+__p += '\n  <div class=\'cover\'></div>\n  ';
  if(editStructure){  ;
 __p += '\n  ' +
 ((__t = ( Formbuilder.templates['view/duplicate_remove']({rf: rf}) )) == null ? '' : __t) +

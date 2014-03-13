@@ -58,6 +58,7 @@ class Formbuilder
       TIME_AUTOPOPULATE: 'field_options.time_autopopulate'
       VALUE_HEADER : 'Value'
       TYPE_ALIASES: false
+      FIELD_ERROR : 'field_error'
     unAliasType: (type) ->
       if Formbuilder.options.mappings.TYPE_ALIASES
         $idx = _.values(Formbuilder.options.mappings.TYPE_ALIASES).indexOf(type)

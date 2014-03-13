@@ -25,3 +25,8 @@ rivets.configure
         obj.set(keypath, value);
       else
         obj[keypath] = value
+rivets.formatters.number =
+  read: (value) ->
+    if value then return parseInt(value) else return "";
+  publish: (value) ->
+    if value then return parseInt(value) else return "";

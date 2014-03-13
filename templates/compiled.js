@@ -67,15 +67,15 @@ __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
-'" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
+' | number" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
-'" style="width: 30px" />\n  </label>\n';
+' | number" style="width: 30px" />\n  </label>\n';
  } ;
 __p += '\n<label class="fb-adminonly">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
-'\' />\n  Admin only\n</label>';
+'\' />\n  Admin only\n</label>\n';
 
 }
 return __p

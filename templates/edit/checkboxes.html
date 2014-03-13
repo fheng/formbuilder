@@ -14,9 +14,9 @@
   <label class="fb-repititions">
     Min
     <% var disabled = (repeating===true) ? "" : "disabled"; %>
-    <input class="minReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MINREPITIONS %>" style="width: 30px" />
+    <input class="minReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MINREPITIONS %> | number" style="width: 30px" />
     Max
-    <input class="maxReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MAXREPITIONS%>" style="width: 30px" />
+    <input class="maxReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MAXREPITIONS%> | number" style="width: 30px" />
   </label>
 <% } %>
 <label class="fb-adminonly">

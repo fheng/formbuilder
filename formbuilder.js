@@ -38,6 +38,23 @@
     }
   });
 
+  rivets.formatters.number = {
+    read: function(value) {
+      if (value) {
+        return parseInt(value);
+      } else {
+        return "";
+      }
+    },
+    publish: function(value) {
+      if (value) {
+        return parseInt(value);
+      } else {
+        return "";
+      }
+    }
+  };
+
 }).call(this);
 
 (function() {
@@ -349,7 +366,9 @@
         SUBVIEWS: [],
         events: {
           'click .js-save-form': 'saveForm',
-          'click .fb-add-field-types a': 'addField'
+          'click .fb-add-field-types a': 'addField',
+          'blur input.minReps': 'checkReps',
+          'blur input.maxReps': 'checkReps'
         },
         initialize: function() {
           if (!this.options.eventFix) {
@@ -581,21 +600,31 @@
             this.$el.find(".fb-tabs a[data-target=\"#editField\"]").click();
           }
           this.scrollLeftWrapper($responseFieldEl);
-          this.$el.find('input.minReps').change(this.checkMinRep);
           return this;
         },
-        checkMinRep: function(e) {
-          var $maxRep, $maxVal, $minVal, $parent, $target;
-          console.log("checkmin rep");
+        checkReps: function(e) {
+          var $active, $maxRep, $maxVal, $minRep, $minVal, $parent, $target;
           $target = $(e.target);
+          $active = $target.hasClass('maxReps') === true ? 'max' : 'min';
           $parent = $target.parent();
           $maxRep = $target.parent().find('input.maxReps');
-          $minVal = Number($target.val());
+          $minRep = $target.parent().find('input.minReps');
+          $minVal = Number($minRep.val());
           $maxVal = Number($maxRep.val());
-          if ($minVal && $minVal < 0 || $minVal > $maxVal) {
-            return $target.css("background-color", "red");
+          if ($active === 'min') {
+            if ($minVal && $minVal < 0 || $minVal > $maxVal) {
+              $minRep.addClass('error');
+            } else {
+              $minRep.removeClass('error');
+            }
+            return $minRep.val(parseInt($minVal));
           } else {
-            return $target.css("background-color", "");
+            if ($maxVal && $maxVal < 0 || $minVal > $maxVal) {
+              $maxRep.addClass('error');
+            } else {
+              $maxRep.removeClass('error');
+            }
+            return $maxRep.val(parseInt($maxVal));
           }
         },
         ensureEditViewScrolled: function() {
@@ -1094,15 +1123,15 @@ __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
-'" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
+' | number" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
-'" style="width: 30px" />\n  </label>\n';
+' | number" style="width: 30px" />\n  </label>\n';
  } ;
 __p += '\n<label class="fb-adminonly">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
-'\' />\n  Admin only\n</label>';
+'\' />\n  Admin only\n</label>\n';
 
 }
 return __p

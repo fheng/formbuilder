@@ -243,7 +243,6 @@ class Formbuilder
             @model.set(Formbuilder.options.mappings.MINREPITIONS, 1)
           if ($max.val()=="")
             @model.set(Formbuilder.options.mappings.MAXREPITIONS, 5)
-
           # Repeating fields must be required
           @model.set(Formbuilder.options.mappings.REQUIRED, true)
         else
@@ -263,6 +262,8 @@ class Formbuilder
       events:
         'click .js-save-form': 'saveForm'
         'click .fb-add-field-types a': 'addField'
+        'blur input.minReps' : 'checkReps'
+        'blur input.maxReps' : 'checkReps'
 
       initialize: ->
         if !@options.eventFix
@@ -462,23 +463,29 @@ class Formbuilder
         @$el.find(".fb-edit-field-wrapper").html $newEditEl
         @$el.find(".fb-tabs a[data-target=\"#editField\"]").click() unless @options.noEditOnDrop
         @scrollLeftWrapper($responseFieldEl)
-        @$el.find('input.minReps').change(@checkMinRep)
         return @
 
-      checkMinRep : (e) ->
-        console.log("checkmin rep")
+      checkReps : (e) ->
         $target = $(e.target);
+        $active = if $target.hasClass('maxReps')==true then 'max' else 'min'
         $parent = $target.parent();
         $maxRep = $target.parent().find('input.maxReps');
-        $minVal = Number($target.val());
+        $minRep = $target.parent().find('input.minReps');
+        $minVal = Number($minRep.val());
         $maxVal = Number($maxRep.val());
 
-        if $minVal and $minVal < 0 or $minVal > $maxVal
-          $target.css("background-color","red")
+        if ($active == 'min')
+          if $minVal and $minVal < 0 or $minVal > $maxVal
+            $minRep.addClass('error');
+          else
+            $minRep.removeClass('error');
+          $minRep.val(parseInt($minVal)); # ensure numeric type, not string
         else
-          $target.css("background-color","")
-
-
+          if $maxVal and $maxVal < 0 or $minVal > $maxVal
+            $maxRep.addClass('error');
+          else
+            $maxRep.removeClass('error');
+          $maxRep.val(parseInt($maxVal)); # ensure numeric type, not string
 
       ensureEditViewScrolled: ->
         return unless @editView

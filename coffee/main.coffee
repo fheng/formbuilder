@@ -392,6 +392,7 @@ class Formbuilder
         @$responseFields.sortable
           forcePlaceholderSize: true
           placeholder: 'sortable-placeholder'
+          cancel: '.fb-field-wrapper.response-field-page_break:first-of-type'
           stop: (e, ui) =>
             if ui.item.data('field-type')
               rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}

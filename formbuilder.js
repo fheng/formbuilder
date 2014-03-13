@@ -496,27 +496,24 @@
           this.$responseFields.sortable({
             forcePlaceholderSize: true,
             placeholder: 'sortable-placeholder',
-            stop: (function(_this) {
-              return function(e, ui) {
-                var rf;
-                if (ui.item.data('field-type')) {
-                  rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
-                    $replaceEl: ui.item
-                  });
-                  _this.createAndShowEditView(rf);
-                }
-                _this.handleFormUpdate();
-                _this.trigger('reorder');
-                return true;
-              };
-            })(this),
-            update: (function(_this) {
-              return function(e, ui) {
-                if (!ui.item.data('field-type')) {
-                  return _this.ensureEditViewScrolled();
-                }
-              };
-            })(this)
+            cancel: '.fb-field-wrapper.response-field-page_break:first-of-type',
+            stop: function(e, ui) {
+              var rf;
+              if (ui.item.data('field-type')) {
+                rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
+                  $replaceEl: ui.item
+                });
+                _this.createAndShowEditView(rf);
+              }
+              _this.handleFormUpdate();
+              _this.trigger('reorder');
+              return true;
+            },
+            update: function(e, ui) {
+              if (!ui.item.data('field-type')) {
+                return _this.ensureEditViewScrolled();
+              }
+            }
           });
           return this.setDraggable();
         },

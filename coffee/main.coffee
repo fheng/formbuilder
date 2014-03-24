@@ -399,8 +399,8 @@ class Formbuilder
             if ui.item.data('field-type')
               rf = @collection.create Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {$replaceEl: ui.item}
               @createAndShowEditView(rf)
-            if ui.item.next().is('div.response-field-page_break:first')
-              # Dragged below the first page break - prevent
+            if ui.item.is('div:first-of-type')
+              # Dragged below the first page break - can't drag stuff to be first. prevent.
               @$responseFields.sortable('cancel')
             @handleFormUpdate()
             @trigger('reorder');

@@ -521,7 +521,7 @@
                 });
                 _this.createAndShowEditView(rf);
               }
-              if (ui.item.next().is('div.response-field-page_break:first')) {
+              if (ui.item.is('div:first-of-type')) {
                 _this.$responseFields.sortable('cancel');
               }
               _this.handleFormUpdate();

@@ -512,7 +512,7 @@
           this.$responseFields.sortable({
             forcePlaceholderSize: true,
             placeholder: 'sortable-placeholder',
-            cancel: '.fb-field-wrapper.response-field-page_break:first-of-type',
+            cancel: '.fb-field-wrapper.response-field-page_break',
             stop: function(e, ui) {
               var rf;
               if (ui.item.data('field-type')) {

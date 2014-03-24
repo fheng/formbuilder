@@ -150,12 +150,11 @@
     Formbuilder.model = Backbone.DeepModel.extend({
       sync: function() {},
       indexInDOM: function() {
-        var $wrapper;
-        $wrapper = $(".fb-field-wrapper").filter(((function(_this) {
-          return function(_, el) {
-            return $(el).data('cid') === _this.cid;
-          };
-        })(this)));
+        var $wrapper,
+          _this = this;
+        $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
+          return $(el).data('cid') === _this.cid;
+        }));
         return $(".fb-field-wrapper").index($wrapper);
       },
       is_input: function() {
@@ -388,23 +387,20 @@
           return this.initAutosave();
         },
         initAutosave: function() {
+          var _this = this;
           this.formSaved = true;
           this.saveFormButton = this.$el.find(".js-save-form");
           this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
-          setInterval((function(_this) {
-            return function() {
-              return _this.saveForm.call(_this);
-            };
-          })(this), 5000);
-          return $(window).bind('beforeunload', (function(_this) {
-            return function() {
-              if (_this.formSaved) {
-                return void 0;
-              } else {
-                return Formbuilder.options.dict.UNSAVED_CHANGES;
-              }
-            };
-          })(this));
+          setInterval(function() {
+            return _this.saveForm.call(_this);
+          }, 5000);
+          return $(window).bind('beforeunload', function() {
+            if (_this.formSaved) {
+              return void 0;
+            } else {
+              return Formbuilder.options.dict.UNSAVED_CHANGES;
+            }
+          });
         },
         reset: function() {
           this.$responseFields.html('');
@@ -464,19 +460,18 @@
           return this;
         },
         bindWindowScrollEvent: function() {
-          return $(window).on('scroll', (function(_this) {
-            return function() {
-              var maxMargin, newMargin;
-              if (_this.$fbLeft.data('locked') === true) {
-                return;
-              }
-              newMargin = Math.max(0, $(window).scrollTop());
-              maxMargin = _this.$responseFields.height();
-              return _this.$fbLeft.css({
-                'margin-top': Math.min(maxMargin, newMargin)
-              });
-            };
-          })(this));
+          var _this = this;
+          return $(window).on('scroll', function() {
+            var maxMargin, newMargin;
+            if (_this.$fbLeft.data('locked') === true) {
+              return;
+            }
+            newMargin = Math.max(0, $(window).scrollTop());
+            maxMargin = _this.$responseFields.height();
+            return _this.$fbLeft.css({
+              'margin-top': Math.min(maxMargin, newMargin)
+            });
+          });
         },
         showTab: function(e) {
           var $el, first_model, target;
@@ -510,6 +505,7 @@
           }
         },
         setSortable: function() {
+          var _this = this;
           if (this.$responseFields.hasClass('ui-sortable')) {
             this.$responseFields.sortable('destroy');
           }
@@ -517,51 +513,44 @@
             forcePlaceholderSize: true,
             placeholder: 'sortable-placeholder',
             cancel: '.fb-field-wrapper.response-field-page_break:first-of-type',
-            stop: (function(_this) {
-              return function(e, ui) {
-                var rf;
-                if (ui.item.data('field-type')) {
-                  rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
-                    $replaceEl: ui.item
-                  });
-                  _this.createAndShowEditView(rf);
-                }
-                _this.handleFormUpdate();
-                _this.trigger('reorder');
-                return true;
-              };
-            })(this),
-            update: (function(_this) {
-              return function(e, ui) {
-                if (!ui.item.data('field-type')) {
-                  return _this.ensureEditViewScrolled();
-                }
-              };
-            })(this)
+            stop: function(e, ui) {
+              var rf;
+              if (ui.item.data('field-type')) {
+                rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
+                  $replaceEl: ui.item
+                });
+                _this.createAndShowEditView(rf);
+              }
+              _this.handleFormUpdate();
+              _this.trigger('reorder');
+              return true;
+            },
+            update: function(e, ui) {
+              if (!ui.item.data('field-type')) {
+                return _this.ensureEditViewScrolled();
+              }
+            }
           });
           return this.setDraggable();
         },
         setDraggable: function() {
-          var $addFieldButtons;
+          var $addFieldButtons,
+            _this = this;
           $addFieldButtons = this.$el.find("[data-field-type]");
           return $addFieldButtons.draggable({
             connectToSortable: this.$responseFields,
-            start: (function(_this) {
-              return function() {
-                return _this.$responseFields.sortable("refresh");
-              };
-            })(this),
-            helper: (function(_this) {
-              return function() {
-                var $helper;
-                $helper = $("<div class='response-field-draggable-helper' />");
-                $helper.css({
-                  width: _this.$responseFields.width(),
-                  height: '80px'
-                });
-                return $helper;
-              };
-            })(this)
+            start: function() {
+              return _this.$responseFields.sortable("refresh");
+            },
+            helper: function() {
+              var $helper;
+              $helper = $("<div class='response-field-draggable-helper' />");
+              $helper.css({
+                width: _this.$responseFields.width(),
+                height: '80px'
+              });
+              return $helper;
+            }
           });
         },
         addAll: function() {
@@ -645,15 +634,14 @@
           return this.scrollLeftWrapper($(".fb-field-wrapper.editing"));
         },
         scrollLeftWrapper: function($responseFieldEl) {
+          var _this = this;
           if (this.options.noScroll) {
             return;
           }
           this.unlockLeftWrapper();
-          return $.scrollWindowTo($responseFieldEl.offset().top - this.$responseFields.offset().top, 200, (function(_this) {
-            return function() {
-              return _this.lockLeftWrapper();
-            };
-          })(this));
+          return $.scrollWindowTo($responseFieldEl.offset().top - this.$responseFields.offset().top, 200, function() {
+            return _this.lockLeftWrapper();
+          });
         },
         lockLeftWrapper: function() {
           return this.$fbLeft.data('locked', true);
@@ -685,27 +673,26 @@
           return this.formBuilder.trigger('save', payload);
         },
         doAjaxSave: function(payload) {
+          var _this = this;
           return $.ajax({
             url: Formbuilder.options.HTTP_ENDPOINT,
             type: Formbuilder.options.HTTP_METHOD,
             data: payload,
             contentType: "application/json",
-            success: (function(_this) {
-              return function(data) {
-                var datum, _i, _len, _ref;
-                _this.updatingBatch = true;
-                for (_i = 0, _len = data.length; _i < _len; _i++) {
-                  datum = data[_i];
-                  if ((_ref = _this.collection.get(datum.cid)) != null) {
-                    _ref.set({
-                      id: datum.id
-                    });
-                  }
-                  _this.collection.trigger('sync');
+            success: function(data) {
+              var datum, _i, _len, _ref;
+              _this.updatingBatch = true;
+              for (_i = 0, _len = data.length; _i < _len; _i++) {
+                datum = data[_i];
+                if ((_ref = _this.collection.get(datum.cid)) != null) {
+                  _ref.set({
+                    id: datum.id
+                  });
                 }
-                return _this.updatingBatch = void 0;
-              };
-            })(this)
+                _this.collection.trigger('sync');
+              }
+              return _this.updatingBatch = void 0;
+            }
           });
         }
       })
@@ -1218,11 +1205,11 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nMin\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-'" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.' +
+' | number" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
-'" style="width: 30px" />\n\n<select data-rv-value="model.' +
+' | number" style="width: 30px" />\n\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
-'" style="width: auto;">\n  <option value="value">Value</option>\n</select>';
+'" style="width: auto;">\n  <option value="value">Value</option>\n</select>\n';
 
 }
 return __p
@@ -1234,11 +1221,11 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\'>Length Limit</div>\n\n  Min\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-'" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
+' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAX)) == null ? '' : __t) +
-'" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <select data-rv-value="model.' +
+' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
-'" style="width: auto;">\n    <option value="characters">characters</option>\n  </select>\n</div>';
+'" style="width: auto;">\n    <option value="characters">characters</option>\n  </select>\n</div>\n';
 
 }
 return __p

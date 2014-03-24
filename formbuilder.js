@@ -521,6 +521,9 @@
                 });
                 _this.createAndShowEditView(rf);
               }
+              if (ui.item.next().is('div.response-field-page_break:first')) {
+                _this.$responseFields.sortable('cancel');
+              }
               _this.handleFormUpdate();
               _this.trigger('reorder');
               return true;

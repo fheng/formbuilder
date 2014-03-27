@@ -267,6 +267,8 @@ class Formbuilder
           if $el.prop('checked')==false
             @model.unset(Formbuilder.options.mappings.MIN)
             @model.unset(Formbuilder.options.mappings.MAX)
+          else
+            @model.set(Formbuilder.options.mappings.MIN, 1)
     main: Backbone.View.extend
       SUBVIEWS: []
 

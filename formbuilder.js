@@ -375,6 +375,8 @@
             if ($el.prop('checked') === false) {
               this.model.unset(Formbuilder.options.mappings.MIN);
               return this.model.unset(Formbuilder.options.mappings.MAX);
+            } else {
+              return this.model.set(Formbuilder.options.mappings.MIN, 1);
             }
           }
         }

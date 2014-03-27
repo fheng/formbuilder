@@ -1,5 +1,6 @@
 Formbuilder.registerField 'checkboxes',
   repeatable: false
+  valueField: false
   icon : 'icon-check'
   view: """
     <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>

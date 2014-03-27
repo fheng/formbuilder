@@ -40,14 +40,14 @@
 
   rivets.formatters.number = {
     read: function(value) {
-      if (value) {
+      if (value && value !== '') {
         return parseInt(value);
       } else {
         return void 0;
       }
     },
     publish: function(value) {
-      if (value) {
+      if (value && value !== '') {
         return parseInt(value);
       } else {
         return void 0;

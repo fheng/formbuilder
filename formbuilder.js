@@ -891,7 +891,7 @@
     icon: 'icon-cloud-upload',
     valueField: false,
     view: "<div class=\"file_container\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
-    edit: "<div class='fb-edit-section-header'>File Settings</div>\nMax. File Size\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %>\" style=\"width: 60px\" /> KB",
+    edit: "<div class='fb-edit-section-header'>File Settings</div>\nMax. File Size\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %> | number\" style=\"width: 60px\" /> KB",
     addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
   });
 
@@ -971,7 +971,7 @@
     repeatable: true,
     valueField: false,
     view: "<h1><span class='icon-camera'></span></h1>",
-    edit: "<div class='fb-edit-section-header'>Photo Settings</div>\n<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %>\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %>\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %>\" style=\"width: 60px\" /> %<br />\n</div>",
+    edit: "<div class='fb-edit-section-header'>Photo Settings</div>\n<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %> | number\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %> | number\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %> | number\" style=\"width: 60px\" /> %<br />\n</div>",
     addButton: "<span class='symbol'><span class='icon-camera'></span></span> Photo Capture",
     defaultAttributes: function(attrs) {
       return attrs;

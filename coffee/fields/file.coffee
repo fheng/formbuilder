@@ -10,7 +10,7 @@ Formbuilder.registerField 'file',
   edit: """
         <div class='fb-edit-section-header'>File Settings</div>
         Max. File Size
-        <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.FILE_SIZE %>" style="width: 60px" /> KB
+        <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.FILE_SIZE %> | number" style="width: 60px" /> KB
         """
 
   addButton: """

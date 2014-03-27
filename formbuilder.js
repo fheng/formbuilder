@@ -96,6 +96,7 @@
         VALIDATE_IMMEDIATELY: 'validate_immediately',
         ADMIN_ONLY: 'admin_only',
         FIELD_OPTIONS: 'field_options',
+        ID_FIELD: 'cid',
         OPTIONS: 'field_options.options',
         DESCRIPTION: 'field_options.description',
         DESCRIPTION_PLACEHOLDER: 'Add a longer description to this field',
@@ -220,7 +221,7 @@
           if (Formbuilder.options.mappings.TYPE_ALISES) {
             $type = Formbuilder.options.mappings.TYPE_ALISES[$type];
           }
-          this.$el.addClass('response-field-' + $type).data('cid', this.model.cid).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
+          this.$el.addClass('response-field-' + $type).attr('data-cid', this.model.get(Formbuilder.options.mappings.ID_FIELD)).html(Formbuilder.templates["view/base" + (!this.model.is_input() ? '_non_input' : '')]({
             editStructure: editStructure,
             rf: this.model
           }));

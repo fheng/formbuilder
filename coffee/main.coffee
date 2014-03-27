@@ -173,6 +173,7 @@ class Formbuilder
         'input .option-label-input': 'forceRender'
         'change .fb-repeating input[type=checkbox]' : 'toggleRepititionsInputs'
         'change .fieldFormatMode' : 'changeFieldFormatHelpText'
+        'change .fb-required input[type=checkbox]' : 'requiredChanged'
 
       initialize: ->
         @listenTo @model, "destroy", @remove
@@ -256,7 +257,16 @@ class Formbuilder
         else
           @$el.find('.simpleFormat').show();
           @$el.find('.advancedFormat').hide();
-
+      requiredChanged: (e) ->
+        $el = $(e.target)
+        $checkboxType = 'checkboxes'
+        if Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[$checkboxType]
+          $checkboxType = Formbuilder.options.mappings.TYPE_ALIASES['checkboxes']
+        if (@model.get(Formbuilder.options.mappings.FIELD_TYPE) == $checkboxType)
+          @render()
+          if $el.prop('checked')==false
+            @model.unset(Formbuilder.options.mappings.MIN)
+            @model.unset(Formbuilder.options.mappings.MAX)
     main: Backbone.View.extend
       SUBVIEWS: []
 

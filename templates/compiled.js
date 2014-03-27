@@ -175,6 +175,25 @@ __p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header
 return __p
 };
 
+this["Formbuilder"]["templates"]["edit/min_max_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (rf.get(Formbuilder.options.mappings.REQUIRED) === true){ ;
+__p += '\n<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\'>Selected Options Limit</div>\n\n  Min\n  <input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
+' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MAX)) == null ? '' : __t) +
+' | number" style="width: 30px" />\n</div>\n';
+ } ;
+__p += '\n';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/options"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;

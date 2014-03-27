@@ -1,0 +1,13 @@
+<% if (rf.get(Formbuilder.options.mappings.REQUIRED) === true){ %>
+<div class="fb-configure-length">
+  <div class='fb-edit-section-header'>Selected Options Limit</div>
+
+  Min
+  <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.MIN %> | number" style="width: 30px" />
+
+  &nbsp;&nbsp;
+
+  Max
+  <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.MAX%> | number" style="width: 30px" />
+</div>
+<% } %>

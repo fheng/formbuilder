@@ -258,7 +258,8 @@
           'click .js-default-updated': 'defaultUpdated',
           'input .option-label-input': 'forceRender',
           'change .fb-repeating input[type=checkbox]': 'toggleRepititionsInputs',
-          'change .fieldFormatMode': 'changeFieldFormatHelpText'
+          'change .fieldFormatMode': 'changeFieldFormatHelpText',
+          'change .fb-required input[type=checkbox]': 'requiredChanged'
         },
         initialize: function() {
           this.listenTo(this.model, "destroy", this.remove);
@@ -360,6 +361,21 @@
           } else {
             this.$el.find('.simpleFormat').show();
             return this.$el.find('.advancedFormat').hide();
+          }
+        },
+        requiredChanged: function(e) {
+          var $checkboxType, $el;
+          $el = $(e.target);
+          $checkboxType = 'checkboxes';
+          if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[$checkboxType]) {
+            $checkboxType = Formbuilder.options.mappings.TYPE_ALIASES['checkboxes'];
+          }
+          if (this.model.get(Formbuilder.options.mappings.FIELD_TYPE) === $checkboxType) {
+            this.render();
+            if ($el.prop('checked') === false) {
+              this.model.unset(Formbuilder.options.mappings.MIN);
+              return this.model.unset(Formbuilder.options.mappings.MAX);
+            }
           }
         }
       }),
@@ -779,7 +795,7 @@
     valueField: false,
     icon: 'icon-check',
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({}) %>",
+    edit: "<%= Formbuilder.templates['edit/options']({}) %>\n<%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
@@ -1231,6 +1247,25 @@ __p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header
 ' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
 '" style="width: auto;">\n    <option value="characters">characters</option>\n  </select>\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/min_max_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (rf.get(Formbuilder.options.mappings.REQUIRED) === true){ ;
+__p += '\n<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\'>Selected Options Limit</div>\n\n  Min\n  <input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
+' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MAX)) == null ? '' : __t) +
+' | number" style="width: 30px" />\n</div>\n';
+ } ;
+__p += '\n';
 
 }
 return __p

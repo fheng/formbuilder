@@ -43,14 +43,14 @@
       if (value) {
         return parseInt(value);
       } else {
-        return "";
+        return void 0;
       }
     },
     publish: function(value) {
       if (value) {
         return parseInt(value);
       } else {
-        return "";
+        return void 0;
       }
     }
   };

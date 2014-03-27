@@ -32,7 +32,6 @@ class Formbuilder
       VALIDATE_IMMEDIATELY: 'validate_immediately'
       ADMIN_ONLY: 'admin_only'
       FIELD_OPTIONS : 'field_options'
-      ID_FIELD : 'cid'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'
       DESCRIPTION_PLACEHOLDER: 'Add a longer description to this field'
@@ -139,7 +138,7 @@ class Formbuilder
         if Formbuilder.options.mappings.TYPE_ALISES
           $type = Formbuilder.options.mappings.TYPE_ALISES[$type]
         @$el.addClass('response-field-'+$type)
-            .attr('data-cid', @model.get(Formbuilder.options.mappings.ID_FIELD))
+            .data('cid', @model.cid)
             .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({ editStructure : editStructure, rf: @model}))
 
         return @

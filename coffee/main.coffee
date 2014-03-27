@@ -10,6 +10,7 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.REPEATING] = false
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
       attrs[Formbuilder.options.mappings.LABEL] = "Untitled"
+      attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
     simple_format: (x) ->

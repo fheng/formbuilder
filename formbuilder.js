@@ -73,6 +73,7 @@
         attrs[Formbuilder.options.mappings.REPEATING] = false;
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
         attrs[Formbuilder.options.mappings.LABEL] = "Untitled";
+        attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
         return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {

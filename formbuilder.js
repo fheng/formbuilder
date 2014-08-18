@@ -151,11 +151,12 @@
     Formbuilder.model = Backbone.DeepModel.extend({
       sync: function() {},
       indexInDOM: function() {
-        var $wrapper,
-          _this = this;
-        $wrapper = $(".fb-field-wrapper").filter((function(_, el) {
-          return $(el).data('cid') === _this.cid;
-        }));
+        var $wrapper;
+        $wrapper = $(".fb-field-wrapper").filter(((function(_this) {
+          return function(_, el) {
+            return $(el).data('cid') === _this.cid;
+          };
+        })(this)));
         return $(".fb-field-wrapper").index($wrapper);
       },
       is_input: function() {
@@ -406,20 +407,23 @@
           return this.initAutosave();
         },
         initAutosave: function() {
-          var _this = this;
           this.formSaved = true;
           this.saveFormButton = this.$el.find(".js-save-form");
           this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
-          setInterval(function() {
-            return _this.saveForm.call(_this);
-          }, 5000);
-          return $(window).bind('beforeunload', function() {
-            if (_this.formSaved) {
-              return void 0;
-            } else {
-              return Formbuilder.options.dict.UNSAVED_CHANGES;
-            }
-          });
+          setInterval((function(_this) {
+            return function() {
+              return _this.saveForm.call(_this);
+            };
+          })(this), 5000);
+          return $(window).bind('beforeunload', (function(_this) {
+            return function() {
+              if (_this.formSaved) {
+                return void 0;
+              } else {
+                return Formbuilder.options.dict.UNSAVED_CHANGES;
+              }
+            };
+          })(this));
         },
         reset: function() {
           this.$responseFields.html('');
@@ -479,18 +483,19 @@
           return this;
         },
         bindWindowScrollEvent: function() {
-          var _this = this;
-          return $(window).on('scroll', function() {
-            var maxMargin, newMargin;
-            if (_this.$fbLeft.data('locked') === true) {
-              return;
-            }
-            newMargin = Math.max(0, $(window).scrollTop());
-            maxMargin = _this.$responseFields.height();
-            return _this.$fbLeft.css({
-              'margin-top': Math.min(maxMargin, newMargin)
-            });
-          });
+          return $(window).on('scroll', (function(_this) {
+            return function() {
+              var maxMargin, newMargin;
+              if (_this.$fbLeft.data('locked') === true) {
+                return;
+              }
+              newMargin = Math.max(0, $(window).scrollTop());
+              maxMargin = _this.$responseFields.height();
+              return _this.$fbLeft.css({
+                'margin-top': Math.min(maxMargin, newMargin)
+              });
+            };
+          })(this));
         },
         showTab: function(e) {
           var $el, first_model, target;
@@ -524,7 +529,6 @@
           }
         },
         setSortable: function() {
-          var _this = this;
           if (this.$responseFields.hasClass('ui-sortable')) {
             this.$responseFields.sortable('destroy');
           }
@@ -532,47 +536,54 @@
             forcePlaceholderSize: true,
             placeholder: 'sortable-placeholder',
             cancel: '.fb-field-wrapper.response-field-page_break',
-            stop: function(e, ui) {
-              var rf;
-              if (ui.item.data('field-type')) {
-                rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
-                  $replaceEl: ui.item
-                });
-                _this.createAndShowEditView(rf);
-              }
-              if (ui.item.is('div:first-of-type')) {
-                _this.$responseFields.sortable('cancel');
-              }
-              _this.handleFormUpdate();
-              _this.trigger('reorder');
-              return true;
-            },
-            update: function(e, ui) {
-              if (!ui.item.data('field-type')) {
-                return _this.ensureEditViewScrolled();
-              }
-            }
+            stop: (function(_this) {
+              return function(e, ui) {
+                var rf;
+                if (ui.item.data('field-type')) {
+                  rf = _this.collection.create(Formbuilder.helpers.defaultFieldAttrs(ui.item.data('field-type')), {
+                    $replaceEl: ui.item
+                  });
+                  _this.createAndShowEditView(rf);
+                }
+                if (ui.item.is('div:first-of-type')) {
+                  _this.$responseFields.sortable('cancel');
+                }
+                _this.handleFormUpdate();
+                _this.trigger('reorder');
+                return true;
+              };
+            })(this),
+            update: (function(_this) {
+              return function(e, ui) {
+                if (!ui.item.data('field-type')) {
+                  return _this.ensureEditViewScrolled();
+                }
+              };
+            })(this)
           });
           return this.setDraggable();
         },
         setDraggable: function() {
-          var $addFieldButtons,
-            _this = this;
+          var $addFieldButtons;
           $addFieldButtons = this.$el.find("[data-field-type]");
           return $addFieldButtons.draggable({
             connectToSortable: this.$responseFields,
-            start: function() {
-              return _this.$responseFields.sortable("refresh");
-            },
-            helper: function() {
-              var $helper;
-              $helper = $("<div class='response-field-draggable-helper' />");
-              $helper.css({
-                width: _this.$responseFields.width(),
-                height: '80px'
-              });
-              return $helper;
-            }
+            start: (function(_this) {
+              return function() {
+                return _this.$responseFields.sortable("refresh");
+              };
+            })(this),
+            helper: (function(_this) {
+              return function() {
+                var $helper;
+                $helper = $("<div class='response-field-draggable-helper' />");
+                $helper.css({
+                  width: _this.$responseFields.width(),
+                  height: '80px'
+                });
+                return $helper;
+              };
+            })(this)
           });
         },
         addAll: function() {
@@ -656,14 +667,15 @@
           return this.scrollLeftWrapper($(".fb-field-wrapper.editing"));
         },
         scrollLeftWrapper: function($responseFieldEl) {
-          var _this = this;
           if (this.options.noScroll) {
             return;
           }
           this.unlockLeftWrapper();
-          return $.scrollWindowTo($responseFieldEl.offset().top - this.$responseFields.offset().top, 200, function() {
-            return _this.lockLeftWrapper();
-          });
+          return $.scrollWindowTo($responseFieldEl.offset().top - this.$responseFields.offset().top, 200, (function(_this) {
+            return function() {
+              return _this.lockLeftWrapper();
+            };
+          })(this));
         },
         lockLeftWrapper: function() {
           return this.$fbLeft.data('locked', true);
@@ -695,26 +707,27 @@
           return this.formBuilder.trigger('save', payload);
         },
         doAjaxSave: function(payload) {
-          var _this = this;
           return $.ajax({
             url: Formbuilder.options.HTTP_ENDPOINT,
             type: Formbuilder.options.HTTP_METHOD,
             data: payload,
             contentType: "application/json",
-            success: function(data) {
-              var datum, _i, _len, _ref;
-              _this.updatingBatch = true;
-              for (_i = 0, _len = data.length; _i < _len; _i++) {
-                datum = data[_i];
-                if ((_ref = _this.collection.get(datum.cid)) != null) {
-                  _ref.set({
-                    id: datum.id
-                  });
+            success: (function(_this) {
+              return function(data) {
+                var datum, _i, _len, _ref;
+                _this.updatingBatch = true;
+                for (_i = 0, _len = data.length; _i < _len; _i++) {
+                  datum = data[_i];
+                  if ((_ref = _this.collection.get(datum.cid)) != null) {
+                    _ref.set({
+                      id: datum.id
+                    });
+                  }
+                  _this.collection.trigger('sync');
                 }
-                _this.collection.trigger('sync');
-              }
-              return _this.updatingBatch = void 0;
-            }
+                return _this.updatingBatch = void 0;
+              };
+            })(this)
           });
         }
       })
@@ -971,10 +984,14 @@
     repeatable: true,
     valueField: false,
     view: "<h1><span class='icon-camera'></span></h1>",
-    edit: "<div class='fb-edit-section-header'>Photo Settings</div>\n<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %> | number\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %> | number\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %> | number\" style=\"width: 60px\" /> %<br />\n</div>",
+    edit: "<div class='fb-edit-section-header'>Photo Settings</div>\n<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %> | number\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %> | number\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %> | number\" style=\"width: 60px\" /> %<br />\n<label>Photo Source</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_SOURCE %>\" style=\"width: auto;\">\n<option value=\"both\">Camera &amp; Library</option>\n<option value=\"camera\">Camera Only</option>\n<option value=\"library\">Library Only</option>\n</select> <br />\n<label>Photo Type</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_TYPE %>\" style=\"width: auto;\">\n<option value=\"jpeg\">JPEG</option>\n<option value=\"png\">PNG</option>\n</select> <br />\n<label>Save To Photo Album?</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_SAVE %>\" style=\"width: auto;\">\n<option value=\"true\">Yes</option>\n<option value=\"false\">No</option>\n</select>\n</div>",
     addButton: "<span class='symbol'><span class='icon-camera'></span></span> Photo Capture",
     defaultAttributes: function(attrs) {
-      return attrs;
+      attrs = new Backbone.Model(attrs);
+      attrs.set(Formbuilder.options.mappings.PHOTO_SOURCE, "both");
+      attrs.set(Formbuilder.options.mappings.PHOTO_TYPE, "jpeg");
+      attrs.set(Formbuilder.options.mappings.PHOTO_SAVE, "true");
+      return attrs.toJSON();
     }
   });
 

@@ -25,8 +25,8 @@ Formbuilder.registerField 'checkboxes',
   """
 
   edit: """
-    <%= Formbuilder.templates['edit/options']({}) %>
     <%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>
+    <%= Formbuilder.templates['edit/options']({}) %>
   """
 
   addButton: """

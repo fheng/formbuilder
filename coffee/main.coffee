@@ -11,6 +11,7 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
       attrs[Formbuilder.options.mappings.LABEL] = "Untitled"
       attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true
+      attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false
       Formbuilder.fields[field_type].defaultAttributes?(attrs) || attrs
 
     simple_format: (x) ->
@@ -31,7 +32,7 @@ class Formbuilder
       REQUIRED: 'required'
       REPEATING: 'repeating'
       VALIDATE_IMMEDIATELY: 'validate_immediately'
-      ADMIN_ONLY: 'admin_only'
+      ADMIN_ONLY: 'adminOnly'
       FIELD_OPTIONS : 'field_options'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'

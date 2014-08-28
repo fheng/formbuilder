@@ -73,7 +73,7 @@ __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
 ' | number" style="width: 30px" />\n  </label>\n';
  } ;
-__p += '\n<label class="fb-adminonly">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+__p += '\n<label class="fb-admin_only">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
 '\' />\n  Admin only\n</label>\n';
 

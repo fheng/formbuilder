@@ -74,6 +74,7 @@
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
         attrs[Formbuilder.options.mappings.LABEL] = "Untitled";
         attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
+        attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false;
         return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
@@ -95,7 +96,7 @@
         REQUIRED: 'required',
         REPEATING: 'repeating',
         VALIDATE_IMMEDIATELY: 'validate_immediately',
-        ADMIN_ONLY: 'admin_only',
+        ADMIN_ONLY: 'adminOnly',
         FIELD_OPTIONS: 'field_options',
         OPTIONS: 'field_options.options',
         DESCRIPTION: 'field_options.description',
@@ -1169,7 +1170,7 @@ __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
 ' | number" style="width: 30px" />\n  </label>\n';
  } ;
-__p += '\n<label class="fb-adminonly">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+__p += '\n<label class="fb-admin_only">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
 '\' />\n  Admin only\n</label>\n';
 

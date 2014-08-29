@@ -1161,7 +1161,7 @@ __p += '<label class="fb-required">\n  <input type=\'checkbox\' data-rv-checked=
 ((__t = ( Formbuilder.options.mappings.VALIDATE_IMMEDIATELY )) == null ? '' : __t) +
 '\' />\n  Validate Immediately\n</label>\n<label class="fb-admin_only">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
-'\' />\n    Admin only\n</label>\n';
+'\' />\n    Admin only (Note: Admin fields will not appear in the client app.)\n</label>\n';
  if (repeatable){ ;
 __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +

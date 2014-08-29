@@ -6,6 +6,10 @@
   <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.VALIDATE_IMMEDIATELY %>' />
   Validate Immediately
 </label>
+<label class="fb-admin_only">
+    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.ADMIN_ONLY %>' />
+    Admin only
+</label>
 <% if (repeatable){ %>
   <label class="fb-repeating">
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REPEATING %>' />
@@ -19,7 +23,3 @@
     <input class="maxReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MAXREPITIONS%> | number" style="width: 30px" />
   </label>
 <% } %>
-<label class="fb-admin_only">
-  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.ADMIN_ONLY %>' />
-  Admin only
-</label>

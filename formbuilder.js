@@ -220,6 +220,11 @@
           }
           editStructure = this.parentView.options.hasOwnProperty('editStructure') ? this.parentView.options.editStructure : true;
           $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
+          if (this.model.get(Formbuilder.options.mappings.ADMIN_ONLY)) {
+            this.$el.addClass('admin-field');
+          } else {
+            this.$el.removeClass('admin-field');
+          }
           if (Formbuilder.options.mappings.TYPE_ALISES) {
             $type = Formbuilder.options.mappings.TYPE_ALISES[$type];
           }
@@ -1154,7 +1159,9 @@ __p += '<label class="fb-required">\n  <input type=\'checkbox\' data-rv-checked=
 ((__t = ( Formbuilder.options.mappings.REQUIRED )) == null ? '' : __t) +
 '\' />\n  Required\n</label>\n<label class="fb-immediately">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALIDATE_IMMEDIATELY )) == null ? '' : __t) +
-'\' />\n  Validate Immediately\n</label>\n';
+'\' />\n  Validate Immediately\n</label>\n<label class="fb-admin_only">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
+'\' />\n    Admin only\n</label>\n';
  if (repeatable){ ;
 __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
@@ -1170,9 +1177,7 @@ __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
 ' | number" style="width: 30px" />\n  </label>\n';
  } ;
-__p += '\n<label class="fb-admin_only">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
-((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
-'\' />\n  Admin only\n</label>\n';
+__p += '\n';
 
 }
 return __p
@@ -1522,7 +1527,7 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<label>\n  <span>' +
+__p += '<label class="fb-field-title">\n  <span>' +
 ((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
 '\n  ';
  if (rf.get(Formbuilder.options.mappings.REQUIRED)) { ;

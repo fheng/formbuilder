@@ -136,7 +136,16 @@ class Formbuilder
 
         editStructure = if @parentView.options.hasOwnProperty('editStructure') then @parentView.options.editStructure else true
 
+        #If the field is an admin field, the add the admin class
+
+
         $type = @model.get(Formbuilder.options.mappings.FIELD_TYPE)
+
+        if @model.get(Formbuilder.options.mappings.ADMIN_ONLY)
+          @$el.addClass('admin-field')
+        else
+          @$el.removeClass('admin-field')
+
         if Formbuilder.options.mappings.TYPE_ALISES
           $type = Formbuilder.options.mappings.TYPE_ALISES[$type]
         @$el.addClass('response-field-'+$type)

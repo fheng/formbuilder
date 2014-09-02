@@ -149,6 +149,10 @@
 
     Formbuilder.nonInputFields = {};
 
+    Formbuilder.fieldRuleConfirmationFunction = function(field, cb) {
+      return typeof cb === "function" ? cb(true) : void 0;
+    };
+
     Formbuilder.model = Backbone.DeepModel.extend({
       sync: function() {},
       indexInDOM: function() {
@@ -196,6 +200,10 @@
       }
     };
 
+    Formbuilder.registerFieldRuleConfirmation = function(fn) {
+      return Formbuilder.fieldRuleConfirmationFunction = fn;
+    };
+
     Formbuilder.views = {
       view_field: Backbone.View.extend({
         className: "fb-field-wrapper",
@@ -221,6 +229,7 @@
           editStructure = this.parentView.options.hasOwnProperty('editStructure') ? this.parentView.options.editStructure : true;
           $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
           if (this.model.get(Formbuilder.options.mappings.ADMIN_ONLY)) {
+            Formbuilder.fieldRuleConfirmationFunction(this.model, "adminChange", "Admin Only fields cannot be the subject of rules. Changing this field to Admin Only will remove any references of this field from page/field rules. Do you wish to keep the updated rules?");
             this.$el.addClass('admin-field');
           } else {
             this.$el.removeClass('admin-field');
@@ -245,7 +254,11 @@
         },
         clear: function() {
           this.parentView.handleFormUpdate();
-          return this.model.destroy();
+          return Formbuilder.fieldRuleConfirmationFunction(this.model, "deleteChange", "Deleting this field will remove any references of this field from page/field rules. Do you wish to keep the updated rules?", (function(_this) {
+            return function(confirmed) {
+              return _this.model.destroy();
+            };
+          })(this));
         },
         duplicate: function() {
           var attrs;

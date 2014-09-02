@@ -75,6 +75,8 @@ class Formbuilder
   @fields: {}
   @inputFields: {}
   @nonInputFields: {}
+  @fieldRuleConfirmationFunction: (field, cb) ->
+    cb? true
 
   @model: Backbone.DeepModel.extend
     sync: -> # noop
@@ -109,6 +111,9 @@ class Formbuilder
     else
       Formbuilder.inputFields[name] = opts
 
+  @registerFieldRuleConfirmation: (fn) ->
+    Formbuilder.fieldRuleConfirmationFunction = fn
+
   @views:
     view_field: Backbone.View.extend
       className: "fb-field-wrapper"
@@ -137,11 +142,11 @@ class Formbuilder
         editStructure = if @parentView.options.hasOwnProperty('editStructure') then @parentView.options.editStructure else true
 
         #If the field is an admin field, the add the admin class
-
-
         $type = @model.get(Formbuilder.options.mappings.FIELD_TYPE)
 
         if @model.get(Formbuilder.options.mappings.ADMIN_ONLY)
+          Formbuilder.fieldRuleConfirmationFunction @model, "adminChange", "Admin Only fields cannot be the subject of rules. Changing this field to Admin Only will remove any references of this field from page/field rules. Do you wish to keep the updated rules?"
+
           @$el.addClass('admin-field')
         else
           @$el.removeClass('admin-field')
@@ -166,8 +171,8 @@ class Formbuilder
         return
       clear: ->
         @parentView.handleFormUpdate()
-        @model.destroy()
-
+        Formbuilder.fieldRuleConfirmationFunction @model, "deleteChange", "Deleting this field will remove any references of this field from page/field rules. Do you wish to keep the updated rules?", (confirmed) =>
+            @model.destroy()
       duplicate: ->
         attrs = _.clone(@model.attributes)
         delete attrs['id']

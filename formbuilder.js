@@ -75,6 +75,7 @@
         attrs[Formbuilder.options.mappings.LABEL] = "Untitled";
         attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
         attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false;
+        attrs[Formbuilder.options.mappings.FIELD_CODE] = null;
         return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
@@ -97,6 +98,7 @@
         REPEATING: 'repeating',
         VALIDATE_IMMEDIATELY: 'validate_immediately',
         ADMIN_ONLY: 'adminOnly',
+        FIELD_CODE: 'fieldCode',
         FIELD_OPTIONS: 'field_options',
         OPTIONS: 'field_options.options',
         DESCRIPTION: 'field_options.description',
@@ -1252,7 +1254,9 @@ __p += '\n<div class="fb-field-description">\n  <div class=\'fb-edit-section-hea
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
 '\'\n    placeholder=\'' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER )) == null ? '' : __t) +
-'\'></textarea>\n</div>';
+'\'></textarea>\n</div>\n<label class="fb-field-description">\n    <div class=\'fb-edit-section-header\'>Field Code</div>\n    <input type=\'text\' data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.FIELD_CODE )) == null ? '' : __t) +
+'\' />\n</label>';
 
 }
 return __p

@@ -137,7 +137,9 @@ __p += '\n<div class="fb-field-description">\n  <div class=\'fb-edit-section-hea
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
 '\'\n    placeholder=\'' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER )) == null ? '' : __t) +
-'\'></textarea>\n</div>';
+'\'></textarea>\n</div>\n<label class="fb-field-description">\n    <div class=\'fb-edit-section-header\'>Field Code</div>\n    <input type=\'text\' data-rv-input=\'model.' +
+((__t = ( Formbuilder.options.mappings.FIELD_CODE )) == null ? '' : __t) +
+'\' />\n</label>';
 
 }
 return __p

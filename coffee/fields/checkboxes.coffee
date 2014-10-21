@@ -37,10 +37,10 @@ Formbuilder.registerField 'checkboxes',
     attrs = new Backbone.Model(attrs)
     attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
     attrs.set(Formbuilder.options.mappings.OPTIONS, [
-      label: "",
+      label: "Option 1",
       checked: false
     ,
-      label: "",
+      label: "Option 2",
       checked: false
     ])
     attrs.toJSON()

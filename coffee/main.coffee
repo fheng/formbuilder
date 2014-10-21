@@ -47,6 +47,7 @@ class Formbuilder
       DATETIME_UNIT: 'field_options.datetime_unit'
       MIN: 'field_options.min'
       MAX: 'field_options.max'
+      STEP_SIZE: 'field_options.stepSize'
       MINLENGTH: 'field_options.minlength'
       MAXLENGTH: 'field_options.maxlength'
       MINREPITIONS: 'field_options.minRepeat'

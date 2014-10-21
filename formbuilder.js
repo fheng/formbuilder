@@ -111,6 +111,7 @@
         DATETIME_UNIT: 'field_options.datetime_unit',
         MIN: 'field_options.min',
         MAX: 'field_options.max',
+        STEP_SIZE: 'field_options.stepSize',
         MINLENGTH: 'field_options.minlength',
         MAXLENGTH: 'field_options.maxlength',
         MINREPITIONS: 'field_options.minRepeat',
@@ -853,10 +854,10 @@
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
       attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
-          label: "",
+          label: "Option 1",
           checked: false
         }, {
-          label: "",
+          label: "Option 2",
           checked: false
         }
       ]);
@@ -889,19 +890,10 @@
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'dropdown');
       attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
-          label: "",
+          label: "Option 1",
           checked: false
         }, {
-          label: "",
-          checked: false
-        }
-      ]);
-      attrs.set(Formbuilder.options.mappings.OPTIONS, [
-        {
-          label: "",
-          checked: false
-        }, {
-          label: "",
+          label: "Option 2",
           checked: false
         }
       ]);
@@ -1090,6 +1082,44 @@
     addButton: "<span class='symbol'><span class='icon-pencil'></span></span> Signature Capture",
     defaultAttributes: function(attrs) {
       return attrs;
+    }
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('sliderNumber', {
+    repeatable: true,
+    icon: 'icon-number',
+    iconText: '123',
+    view: "<input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n<%= units %>\n<% } %>",
+    edit: "<%= Formbuilder.templates['edit/min_max_step']() %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> Slider (Number)"
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('sliderOptions', {
+    icon: 'icon-circle-blank',
+    repeatable: true,
+    valueField: false,
+    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n<div>\n<label class='fb-option'>\n<input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n</label>\n</div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n<div class='other-option'>\n<label class='fb-option'>\n<input type='radio' />\nOther\n</label>\n\n<input type='text' />\n</div>\n<% } %>",
+    edit: "<%= Formbuilder.templates['edit/options']({}) %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Slider (Options)",
+    defaultAttributes: function(attrs) {
+      attrs = new Backbone.Model(attrs);
+      attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'sliderOptions');
+      attrs.set(Formbuilder.options.mappings.OPTIONS, [
+        {
+          label: "Option 1",
+          checked: false
+        }, {
+          label: "Option 2",
+          checked: false
+        }
+      ]);
+      return attrs.toJSON();
     }
   });
 
@@ -1323,6 +1353,22 @@ __p += '\n<div class="fb-configure-length">\n  <div class=\'fb-edit-section-head
 ' | number" style="width: 30px" />\n</div>\n';
  } ;
 __p += '\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/min_max_step"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nMin\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
+' | number" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
+' | number" style="width: 30px" />\n\nStep Size\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.STEP_SIZE )) == null ? '' : __t) +
+' | number" style="width: 30px" />';
 
 }
 return __p

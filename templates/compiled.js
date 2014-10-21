@@ -196,6 +196,22 @@ __p += '\n';
 return __p
 };
 
+this["Formbuilder"]["templates"]["edit/min_max_step"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nMin\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
+' | number" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
+' | number" style="width: 30px" />\n\nStep Size\n<input type="text" data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.STEP_SIZE )) == null ? '' : __t) +
+' | number" style="width: 30px" />';
+
+}
+return __p
+};
+
 this["Formbuilder"]["templates"]["edit/options"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;

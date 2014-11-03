@@ -1100,32 +1100,6 @@
 }).call(this);
 
 (function() {
-  Formbuilder.registerField('sliderOptions', {
-    icon: 'icon-circle-blank',
-    repeatable: true,
-    valueField: false,
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n<div>\n<label class='fb-option'>\n<input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n<%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n</label>\n</div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n<div class='other-option'>\n<label class='fb-option'>\n<input type='radio' />\nOther\n</label>\n\n<input type='text' />\n</div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({}) %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Slider (Options)",
-    defaultAttributes: function(attrs) {
-      attrs = new Backbone.Model(attrs);
-      attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'sliderOptions');
-      attrs.set(Formbuilder.options.mappings.OPTIONS, [
-        {
-          label: "Option 1",
-          checked: false
-        }, {
-          label: "Option 2",
-          checked: false
-        }
-      ]);
-      return attrs.toJSON();
-    }
-  });
-
-}).call(this);
-
-(function() {
   Formbuilder.registerField('text', {
     icon: 'icon-font',
     repeatable: true,

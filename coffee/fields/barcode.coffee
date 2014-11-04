@@ -3,6 +3,8 @@ Formbuilder.registerField 'barcode',
   repeatable: true
   valueField: false
   view: """
+        <label>Value: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  /><br/>
+        <label>Format: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />
         """
 
   edit: """

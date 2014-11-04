@@ -3,10 +3,7 @@ Formbuilder.registerField 'sliderNumber',
   icon : 'icon-number'
   iconText : '123'
   view: """
-        <input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />
-        <% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>
-        <%= units %>
-        <% } %>
+        <h1 style="border: 1px solid #bbb; padding: 10px; border-radius: 6px;"><span class='icon-exchange'></span></h1>
         """
 
   edit: """

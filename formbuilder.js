@@ -813,7 +813,7 @@
     icon: 'icon-barcode',
     repeatable: true,
     valueField: false,
-    view: "",
+    view: "<label>Value: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  /><br/>\n<label>Format: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />",
     edit: "",
     addButton: "<span class='symbol'><span class='icon-barcode'></span></span> Barcode",
     defaultAttributes: function(attrs) {
@@ -1092,7 +1092,7 @@
     repeatable: true,
     icon: 'icon-number',
     iconText: '123',
-    view: "<input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n<%= units %>\n<% } %>",
+    view: "<h1 style=\"border: 1px solid #bbb; padding: 10px; border-radius: 6px;\"><span class='icon-exchange'></span></h1>",
     edit: "<%= Formbuilder.templates['edit/min_max_step']() %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> Slider (Number)"
   });

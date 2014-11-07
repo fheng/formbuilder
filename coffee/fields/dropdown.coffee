@@ -1,5 +1,5 @@
 Formbuilder.registerField 'dropdown',
-  repeatable: false
+  repeatable: true
   valueField: false
   icon : 'icon-caret-down'
   view: """

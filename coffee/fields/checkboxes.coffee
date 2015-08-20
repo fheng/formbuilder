@@ -36,6 +36,7 @@ Formbuilder.registerField 'checkboxes',
   defaultAttributes: (attrs) ->
     attrs = new Backbone.Model(attrs)
     attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
+    attrs.set(Formbuilder.options.mappings.MIN, 1);
     attrs.set(Formbuilder.options.mappings.OPTIONS, [
       label: "Option 1",
       checked: false

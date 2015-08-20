@@ -13,3 +13,9 @@ Formbuilder.registerField 'sliderNumber',
   addButton: """
              <span class="symbol"><span class="icon-number">123</span></span> Slider (Number)
              """
+  defaultAttributes: (attrs) ->
+    attrs = new Backbone.Model(attrs)
+    attrs.set(Formbuilder.options.mappings.MIN, 1);
+    attrs.set(Formbuilder.options.mappings.MAX, 10);
+    attrs.set(Formbuilder.options.mappings.STEP_SIZE, 1);
+    attrs.toJSON()

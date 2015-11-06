@@ -63,7 +63,7 @@
   Formbuilder = (function() {
     Formbuilder.helpers = {
       defaultFieldAttrs: function(field_type) {
-        var attrs, _base;
+        var attrs, base;
         if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]) {
           field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type];
         }
@@ -71,12 +71,13 @@
         attrs[Formbuilder.options.mappings.FIELD_OPTIONS] = {};
         attrs[Formbuilder.options.mappings.REQUIRED] = true;
         attrs[Formbuilder.options.mappings.REPEATING] = false;
+        attrs[Formbuilder.options.mappings.INCLUDE_DATA_SOURCE] = false;
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
         attrs[Formbuilder.options.mappings.LABEL] = "Untitled";
         attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
         attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false;
         attrs[Formbuilder.options.mappings.FIELD_CODE] = null;
-        return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
+        return (typeof (base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
@@ -106,6 +107,7 @@
         DESCRIPTION_TITLE: 'Description',
         INCLUDE_OTHER: 'field_options.include_other_option',
         INCLUDE_BLANK: 'field_options.include_blank_option',
+        INCLUDE_DATA_SOURCE: 'field_options.include_datasource_option',
         INTEGER_ONLY: 'field_options.integer_only',
         LOCATION_UNIT: 'field_options.location_unit',
         DATETIME_UNIT: 'field_options.datetime_unit',
@@ -189,10 +191,10 @@
     });
 
     Formbuilder.registerField = function(name, opts) {
-      var x, _i, _len, _ref;
-      _ref = ['view', 'edit'];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        x = _ref[_i];
+      var j, len, ref, x;
+      ref = ['view', 'edit'];
+      for (j = 0, len = ref.length; j < len; j++) {
+        x = ref[j];
         opts[x] = _.template(opts[x]);
       }
       Formbuilder.fields[name] = opts;
@@ -282,7 +284,8 @@
           'input .option-label-input': 'forceRender',
           'change .fb-repeating input[type=checkbox]': 'toggleRepititionsInputs',
           'change .fieldFormatMode': 'changeFieldFormatHelpText',
-          'change .fb-required input[type=checkbox]': 'requiredChanged'
+          'change .fb-required input[type=checkbox]': 'requiredChanged',
+          'change .includeDataSource input[type=checkbox]': 'toggleDSView'
         },
         initialize: function() {
           this.listenTo(this.model, "destroy", this.remove);
@@ -356,6 +359,19 @@
         },
         forceRender: function() {
           return this.model.trigger('change', this.model);
+        },
+        toggleDSView: function(e) {
+          var $el, $select;
+          $el = $(e.target);
+          $select = this.$el.find('.ds-dd select');
+          if ($el.prop('checked') === true) {
+            $select.prop('disabled', false);
+            return $select.html(Formbuilder.templates["partials/ds_options"]({
+              datasources: this.parentView.options.datasources
+            }));
+          } else {
+            return $select.prop('disabled', true);
+          }
         },
         toggleRepititionsInputs: function(e) {
           var $el, $max, $min;
@@ -452,22 +468,22 @@
           return this.addAll();
         },
         render: function() {
-          var $fields, $fieldsNonInput, alias, field, fieldName, orig, subview, _i, _j, _len, _len1, _ref, _ref1, _ref2;
+          var $fields, $fieldsNonInput, alias, field, fieldName, j, k, len, len1, orig, ref, ref1, ref2, subview;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
           this.options.addAt = this.options.hasOwnProperty('addAt') ? this.options.addAt : 'last';
           if (Formbuilder.options.mappings.TYPE_ALIASES) {
-            _ref = Formbuilder.options.mappings.TYPE_ALIASES;
-            for (orig in _ref) {
-              alias = _ref[orig];
+            ref = Formbuilder.options.mappings.TYPE_ALIASES;
+            for (orig in ref) {
+              alias = ref[orig];
               Formbuilder.fields[alias] = Formbuilder.fields[orig];
             }
           }
           $fields = {};
           $fieldsNonInput = {};
           if (this.options.hasOwnProperty('fields')) {
-            _ref1 = this.options.fields;
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              fieldName = _ref1[_i];
+            ref1 = this.options.fields;
+            for (j = 0, len = ref1.length; j < len; j++) {
+              fieldName = ref1[j];
               field = Formbuilder.inputFields[fieldName] || Formbuilder.nonInputFields[fieldName];
               if (!field) {
                 throw new Error("No field found with name" + fieldName);
@@ -492,9 +508,9 @@
           this.$responseFields = this.$el.find('.fb-response-fields');
           this.bindWindowScrollEvent();
           this.hideShowNoResponseFields();
-          _ref2 = this.SUBVIEWS;
-          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-            subview = _ref2[_j];
+          ref2 = this.SUBVIEWS;
+          for (k = 0, len1 = ref2.length; k < len1; k++) {
+            subview = ref2[k];
             new subview({
               parentView: this
             }).render();
@@ -736,12 +752,12 @@
             contentType: "application/json",
             success: (function(_this) {
               return function(data) {
-                var datum, _i, _len, _ref;
+                var datum, j, len, ref;
                 _this.updatingBatch = true;
-                for (_i = 0, _len = data.length; _i < _len; _i++) {
-                  datum = data[_i];
-                  if ((_ref = _this.collection.get(datum.cid)) != null) {
-                    _ref.set({
+                for (j = 0, len = data.length; j < len; j++) {
+                  datum = data[j];
+                  if ((ref = _this.collection.get(datum.cid)) != null) {
+                    ref.set({
                       id: datum.id
                     });
                   }
@@ -847,11 +863,12 @@
     valueField: false,
     icon: 'icon-check',
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>\n<%= Formbuilder.templates['edit/options']({}) %>",
+    edit: "<%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>\n<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
+      attrs.set(Formbuilder.options.mappings.MIN, 1);
       attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
           label: "Option 1",
@@ -883,7 +900,7 @@
     valueField: false,
     icon: 'icon-caret-down',
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
-    edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
+    edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true, includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> Dropdown",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
@@ -1041,7 +1058,7 @@
     repeatable: true,
     valueField: false,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({}) %>",
+    edit: "<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Radio Buttons",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
@@ -1049,8 +1066,7 @@
       attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
           label: "",
-          checked: false
-        }, {
+          checked: false,
           label: "",
           checked: false
         }
@@ -1361,6 +1377,16 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
+ if (typeof includeDatasource !== 'undefined'){ ;
+__p += '\n  <label class="includeDataSource">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.INCLUDE_DATA_SOURCE )) == null ? '' : __t) +
+'\' />\n    Use a Data Source to populate field options?\n  </label>\n\n ';
+ var disabled = (rf.get(Formbuilder.options.mappings.INCLUDE_DATA_SOURCE)===true) ? "" : "disabled"; ;
+__p += '\n  <div class=\'ds-dd\'>\n    <select ' +
+((__t = (disabled)) == null ? '' : __t) +
+'></select>\n  </div>\n';
+ } ;
+__p += '\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
 __p += '\n  <label class="includeBlank">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_BLANK )) == null ? '' : __t) +
@@ -1448,6 +1474,25 @@ __p += '\n        <a data-field-type="' +
 '\n        </a>\n      ';
  } ;
 __p += '\n    </div>\n  </div>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["partials/ds_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ for (i in datasources) { ;
+__p += '\n    <option value="' +
+((__t = (datasources[i]._id)) == null ? '' : __t) +
+'">' +
+((__t = (datasources[i].name)) == null ? '' : __t) +
+'</option>\n';
+ };
+__p += '\n';
 
 }
 return __p

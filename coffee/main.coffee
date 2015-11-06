@@ -8,6 +8,7 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.FIELD_OPTIONS] = {}
       attrs[Formbuilder.options.mappings.REQUIRED] = true
       attrs[Formbuilder.options.mappings.REPEATING] = false
+      attrs[Formbuilder.options.mappings.INCLUDE_DATA_SOURCE] = false
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
       attrs[Formbuilder.options.mappings.LABEL] = "Untitled"
       attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true
@@ -42,6 +43,7 @@ class Formbuilder
       DESCRIPTION_TITLE: 'Description'
       INCLUDE_OTHER: 'field_options.include_other_option'
       INCLUDE_BLANK: 'field_options.include_blank_option'
+      INCLUDE_DATA_SOURCE: 'field_options.include_datasource_option'
       INTEGER_ONLY: 'field_options.integer_only'
       LOCATION_UNIT: 'field_options.location_unit'
       DATETIME_UNIT: 'field_options.datetime_unit'
@@ -191,7 +193,8 @@ class Formbuilder
         'input .option-label-input': 'forceRender'
         'change .fb-repeating input[type=checkbox]' : 'toggleRepititionsInputs'
         'change .fieldFormatMode' : 'changeFieldFormatHelpText'
-        'change .fb-required input[type=checkbox]' : 'requiredChanged'
+        'change .fb-required input[type=checkbox]' : 'requiredChanged',
+        'change .includeDataSource input[type=checkbox]': 'toggleDSView'
 
       initialize: ->
         @listenTo @model, "destroy", @remove
@@ -253,6 +256,16 @@ class Formbuilder
 
       forceRender: ->
         @model.trigger('change', @model)
+      toggleDSView: (e) ->
+        $el = $(e.target);
+        $select = @$el.find('.ds-dd select');
+        if $el.prop('checked')==true
+          #show the datasource thing and load
+          $select.prop('disabled', false);
+          $select.html(Formbuilder.templates["partials/ds_options"]({datasources: @parentView.options.datasources}))
+        else
+          #hide the ds stuff
+         $select.prop('disabled', true);
       toggleRepititionsInputs: (e) ->
         $el = $(e.target)
         if $el.prop('checked')==true

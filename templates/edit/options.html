@@ -1,5 +1,17 @@
 <div class='fb-edit-section-header'>Options</div>
 
+<% if (typeof includeDatasource !== 'undefined'){ %>
+  <label class="includeDataSource">
+    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_DATA_SOURCE %>' />
+    Use a Data Source to populate field options?
+  </label>
+
+ <% var disabled = (rf.get(Formbuilder.options.mappings.INCLUDE_DATA_SOURCE)===true) ? "" : "disabled"; %>
+  <div class='ds-dd'>
+    <select <%=disabled%>></select>
+  </div>
+<% } %>
+
 <% if (typeof includeBlank !== 'undefined'){ %>
   <label class="includeBlank">
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_BLANK %>' />

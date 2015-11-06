@@ -25,7 +25,7 @@ Formbuilder.registerField 'radio',
   """
 
   edit: """
-    <%= Formbuilder.templates['edit/options']({}) %>
+    <%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>
   """
 
   addButton: """
@@ -38,8 +38,7 @@ Formbuilder.registerField 'radio',
     attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'radio');
     attrs.set(Formbuilder.options.mappings.OPTIONS, [
       label: "",
-      checked: false
-    ,
+      checked: false,
       label: "",
       checked: false
     ])

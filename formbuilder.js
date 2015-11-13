@@ -108,6 +108,8 @@
         INCLUDE_OTHER: 'field_options.include_other_option',
         INCLUDE_BLANK: 'field_options.include_blank_option',
         INCLUDE_DATA_SOURCE: 'field_options.include_datasource_option',
+        DATASOURCE: 'dataSource',
+        DATASOURCE_TYPE: 'dataSourceType',
         INTEGER_ONLY: 'field_options.integer_only',
         LOCATION_UNIT: 'field_options.location_unit',
         DATETIME_UNIT: 'field_options.datetime_unit',
@@ -285,7 +287,8 @@
           'change .fb-repeating input[type=checkbox]': 'toggleRepititionsInputs',
           'change .fieldFormatMode': 'changeFieldFormatHelpText',
           'change .fb-required input[type=checkbox]': 'requiredChanged',
-          'change .includeDataSource input[type=checkbox]': 'toggleDSView'
+          'change .includeDataSource input[type=checkbox]': 'toggleDSView',
+          'change .ds-select': 'onDSSelect'
         },
         initialize: function() {
           this.listenTo(this.model, "destroy", this.remove);
@@ -371,6 +374,15 @@
             }));
           } else {
             return $select.prop('disabled', true);
+          }
+        },
+        onDSSelect: function(e) {
+          var $dsId, $el;
+          $el = $(e.target);
+          $dsId = $el.val();
+          if ($dsId !== 'prompt') {
+            this.model.set(Formbuilder.options.mappings.DATASOURCE, $dsId);
+            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, 'dataSource');
           }
         },
         toggleRepititionsInputs: function(e) {
@@ -1381,10 +1393,10 @@ __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
 __p += '\n  <label class="includeDataSource">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_DATA_SOURCE )) == null ? '' : __t) +
 '\' />\n    Use a Data Source to populate field options?\n  </label>\n\n ';
- var disabled = (rf.get(Formbuilder.options.mappings.INCLUDE_DATA_SOURCE)===true) ? "" : "disabled"; ;
+ var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
 __p += '\n  <div class=\'ds-dd\'>\n    <select ' +
 ((__t = (disabled)) == null ? '' : __t) +
-'></select>\n  </div>\n';
+' class=\'ds-select\'></select>\n  </div>\n';
  } ;
 __p += '\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
@@ -1484,7 +1496,7 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-
+__p += '<option value="prompt">Select a Data Source</option>\n';
  for (i in datasources) { ;
 __p += '\n    <option value="' +
 ((__t = (datasources[i]._id)) == null ? '' : __t) +

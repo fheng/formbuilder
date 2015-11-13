@@ -6,9 +6,9 @@
     Use a Data Source to populate field options?
   </label>
 
- <% var disabled = (rf.get(Formbuilder.options.mappings.INCLUDE_DATA_SOURCE)===true) ? "" : "disabled"; %>
+ <% var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; %>
   <div class='ds-dd'>
-    <select <%=disabled%>></select>
+    <select <%=disabled%> class='ds-select'></select>
   </div>
 <% } %>
 

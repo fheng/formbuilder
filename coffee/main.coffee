@@ -43,7 +43,9 @@ class Formbuilder
       DESCRIPTION_TITLE: 'Description'
       INCLUDE_OTHER: 'field_options.include_other_option'
       INCLUDE_BLANK: 'field_options.include_blank_option'
-      INCLUDE_DATA_SOURCE: 'field_options.include_datasource_option'
+      INCLUDE_DATA_SOURCE: 'field_options.include_datasource_option',
+      DATASOURCE: 'dataSource',
+      DATASOURCE_TYPE: 'dataSourceType',
       INTEGER_ONLY: 'field_options.integer_only'
       LOCATION_UNIT: 'field_options.location_unit'
       DATETIME_UNIT: 'field_options.datetime_unit'
@@ -194,7 +196,8 @@ class Formbuilder
         'change .fb-repeating input[type=checkbox]' : 'toggleRepititionsInputs'
         'change .fieldFormatMode' : 'changeFieldFormatHelpText'
         'change .fb-required input[type=checkbox]' : 'requiredChanged',
-        'change .includeDataSource input[type=checkbox]': 'toggleDSView'
+        'change .includeDataSource input[type=checkbox]': 'toggleDSView',
+        'change .ds-select': 'onDSSelect'
 
       initialize: ->
         @listenTo @model, "destroy", @remove
@@ -266,6 +269,14 @@ class Formbuilder
         else
           #hide the ds stuff
          $select.prop('disabled', true);
+      onDSSelect: (e) ->
+        $el = $(e.target)
+        $dsId = $el.val()
+
+        if ($dsId != 'prompt')
+          @model.set(Formbuilder.options.mappings.DATASOURCE, $dsId)
+          @model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, 'dataSource')
+
       toggleRepititionsInputs: (e) ->
         $el = $(e.target)
         if $el.prop('checked')==true

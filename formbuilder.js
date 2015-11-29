@@ -63,7 +63,7 @@
   Formbuilder = (function() {
     Formbuilder.helpers = {
       defaultFieldAttrs: function(field_type) {
-        var attrs, base;
+        var attrs, _base;
         if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]) {
           field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type];
         }
@@ -71,13 +71,12 @@
         attrs[Formbuilder.options.mappings.FIELD_OPTIONS] = {};
         attrs[Formbuilder.options.mappings.REQUIRED] = true;
         attrs[Formbuilder.options.mappings.REPEATING] = false;
-        attrs[Formbuilder.options.mappings.INCLUDE_DATA_SOURCE] = false;
         attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type;
         attrs[Formbuilder.options.mappings.LABEL] = "Untitled";
         attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
         attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false;
         attrs[Formbuilder.options.mappings.FIELD_CODE] = null;
-        return (typeof (base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? base.defaultAttributes(attrs) : void 0) || attrs;
+        return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
@@ -107,9 +106,10 @@
         DESCRIPTION_TITLE: 'Description',
         INCLUDE_OTHER: 'field_options.include_other_option',
         INCLUDE_BLANK: 'field_options.include_blank_option',
-        INCLUDE_DATA_SOURCE: 'field_options.include_datasource_option',
         DATASOURCE: 'dataSource',
         DATASOURCE_TYPE: 'dataSourceType',
+        DATASOURCE_TYPE_DATASOURCE: 'dataSource',
+        DATASOURCE_TYPE_STATIC: 'static',
         INTEGER_ONLY: 'field_options.integer_only',
         LOCATION_UNIT: 'field_options.location_unit',
         DATETIME_UNIT: 'field_options.datetime_unit',
@@ -193,10 +193,10 @@
     });
 
     Formbuilder.registerField = function(name, opts) {
-      var j, len, ref, x;
-      ref = ['view', 'edit'];
-      for (j = 0, len = ref.length; j < len; j++) {
-        x = ref[j];
+      var x, _i, _len, _ref;
+      _ref = ['view', 'edit'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        x = _ref[_i];
         opts[x] = _.template(opts[x]);
       }
       Formbuilder.fields[name] = opts;
@@ -295,7 +295,7 @@
           return this.parentView = this.options.parentView;
         },
         render: function() {
-          var $repeatable, $type, commonCheckboxes;
+          var $dsSelect, $repeatable, $type, commonCheckboxes;
           commonCheckboxes = this.parentView.options.hasOwnProperty('commonCheckboxes') ? this.parentView.options.commonCheckboxes : true;
           $repeatable = false;
           $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
@@ -310,6 +310,13 @@
             repeatable: $repeatable,
             repeating: this.model.get(Formbuilder.options.mappings.REPEATING)
           }));
+          $dsSelect = this.$el.find('.ds-dd select');
+          if ($dsSelect) {
+            $dsSelect.html(Formbuilder.templates["partials/ds_options"]({
+              datasources: this.parentView.options.datasources,
+              datasource: this.model.get(Formbuilder.options.mappings.DATASOURCE)
+            }));
+          }
           rivets.bind(this.$el, {
             model: this.model
           });
@@ -369,11 +376,10 @@
           $select = this.$el.find('.ds-dd select');
           if ($el.prop('checked') === true) {
             $select.prop('disabled', false);
-            return $select.html(Formbuilder.templates["partials/ds_options"]({
-              datasources: this.parentView.options.datasources
-            }));
+            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE);
           } else {
-            return $select.prop('disabled', true);
+            $select.prop('disabled', true);
+            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_STATIC);
           }
         },
         onDSSelect: function(e) {
@@ -382,7 +388,7 @@
           $dsId = $el.val();
           if ($dsId !== 'prompt') {
             this.model.set(Formbuilder.options.mappings.DATASOURCE, $dsId);
-            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, 'dataSource');
+            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE);
           }
         },
         toggleRepititionsInputs: function(e) {
@@ -480,22 +486,22 @@
           return this.addAll();
         },
         render: function() {
-          var $fields, $fieldsNonInput, alias, field, fieldName, j, k, len, len1, orig, ref, ref1, ref2, subview;
+          var $fields, $fieldsNonInput, alias, field, fieldName, orig, subview, _i, _j, _len, _len1, _ref, _ref1, _ref2;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
           this.options.addAt = this.options.hasOwnProperty('addAt') ? this.options.addAt : 'last';
           if (Formbuilder.options.mappings.TYPE_ALIASES) {
-            ref = Formbuilder.options.mappings.TYPE_ALIASES;
-            for (orig in ref) {
-              alias = ref[orig];
+            _ref = Formbuilder.options.mappings.TYPE_ALIASES;
+            for (orig in _ref) {
+              alias = _ref[orig];
               Formbuilder.fields[alias] = Formbuilder.fields[orig];
             }
           }
           $fields = {};
           $fieldsNonInput = {};
           if (this.options.hasOwnProperty('fields')) {
-            ref1 = this.options.fields;
-            for (j = 0, len = ref1.length; j < len; j++) {
-              fieldName = ref1[j];
+            _ref1 = this.options.fields;
+            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+              fieldName = _ref1[_i];
               field = Formbuilder.inputFields[fieldName] || Formbuilder.nonInputFields[fieldName];
               if (!field) {
                 throw new Error("No field found with name" + fieldName);
@@ -520,9 +526,9 @@
           this.$responseFields = this.$el.find('.fb-response-fields');
           this.bindWindowScrollEvent();
           this.hideShowNoResponseFields();
-          ref2 = this.SUBVIEWS;
-          for (k = 0, len1 = ref2.length; k < len1; k++) {
-            subview = ref2[k];
+          _ref2 = this.SUBVIEWS;
+          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+            subview = _ref2[_j];
             new subview({
               parentView: this
             }).render();
@@ -764,12 +770,12 @@
             contentType: "application/json",
             success: (function(_this) {
               return function(data) {
-                var datum, j, len, ref;
+                var datum, _i, _len, _ref;
                 _this.updatingBatch = true;
-                for (j = 0, len = data.length; j < len; j++) {
-                  datum = data[j];
-                  if ((ref = _this.collection.get(datum.cid)) != null) {
-                    ref.set({
+                for (_i = 0, _len = data.length; _i < _len; _i++) {
+                  datum = data[_i];
+                  if ((_ref = _this.collection.get(datum.cid)) != null) {
+                    _ref.set({
                       id: datum.id
                     });
                   }
@@ -1390,9 +1396,11 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
  if (typeof includeDatasource !== 'undefined'){ ;
-__p += '\n  <label class="includeDataSource">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
-((__t = ( Formbuilder.options.mappings.INCLUDE_DATA_SOURCE )) == null ? '' : __t) +
-'\' />\n    Use a Data Source to populate field options?\n  </label>\n\n ';
+__p += '\n  <label class="includeDataSource">\n    ';
+ var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; ;
+__p += '\n      <input type=\'checkbox\' ' +
+((__t = (checked)) == null ? '' : __t) +
+' />\n      Use a Data Source to populate field options?\n  </label>\n\n ';
  var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
 __p += '\n  <div class=\'ds-dd\'>\n    <select ' +
 ((__t = (disabled)) == null ? '' : __t) +
@@ -1498,9 +1506,13 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<option value="prompt">Select a Data Source</option>\n';
  for (i in datasources) { ;
+__p += '\n    ';
+ var selected = datasources[i]._id == datasource ? "selected" : "";  ;
 __p += '\n    <option value="' +
 ((__t = (datasources[i]._id)) == null ? '' : __t) +
-'">' +
+'" ' +
+((__t = ( selected )) == null ? '' : __t) +
+'>' +
 ((__t = (datasources[i].name)) == null ? '' : __t) +
 '</option>\n';
  };

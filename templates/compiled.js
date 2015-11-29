@@ -219,9 +219,11 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
  if (typeof includeDatasource !== 'undefined'){ ;
-__p += '\n  <label class="includeDataSource">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
-((__t = ( Formbuilder.options.mappings.INCLUDE_DATA_SOURCE )) == null ? '' : __t) +
-'\' />\n    Use a Data Source to populate field options?\n  </label>\n\n ';
+__p += '\n  <label class="includeDataSource">\n    ';
+ var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; ;
+__p += '\n      <input type=\'checkbox\' ' +
+((__t = (checked)) == null ? '' : __t) +
+' />\n      Use a Data Source to populate field options?\n  </label>\n\n ';
  var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
 __p += '\n  <div class=\'ds-dd\'>\n    <select ' +
 ((__t = (disabled)) == null ? '' : __t) +
@@ -327,9 +329,13 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<option value="prompt">Select a Data Source</option>\n';
  for (i in datasources) { ;
+__p += '\n    ';
+ var selected = datasources[i]._id == datasource ? "selected" : "";  ;
 __p += '\n    <option value="' +
 ((__t = (datasources[i]._id)) == null ? '' : __t) +
-'">' +
+'" ' +
+((__t = ( selected )) == null ? '' : __t) +
+'>' +
 ((__t = (datasources[i].name)) == null ? '' : __t) +
 '</option>\n';
  };

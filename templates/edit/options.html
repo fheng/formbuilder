@@ -2,8 +2,9 @@
 
 <% if (typeof includeDatasource !== 'undefined'){ %>
   <label class="includeDataSource">
-    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_DATA_SOURCE %>' />
-    Use a Data Source to populate field options?
+    <% var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; %>
+      <input type='checkbox' <%=checked%> />
+      Use a Data Source to populate field options?
   </label>
 
  <% var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; %>

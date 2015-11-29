@@ -1,4 +1,5 @@
 <option value="prompt">Select a Data Source</option>
 <% for (i in datasources) { %>
-    <option value="<%=datasources[i]._id%>"><%=datasources[i].name%></option>
+    <% var selected = datasources[i]._id == datasource ? "selected" : "";  %>
+    <option value="<%=datasources[i]._id%>" <%= selected %>><%=datasources[i].name%></option>
 <% }%>

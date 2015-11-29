@@ -8,7 +8,6 @@ class Formbuilder
       attrs[Formbuilder.options.mappings.FIELD_OPTIONS] = {}
       attrs[Formbuilder.options.mappings.REQUIRED] = true
       attrs[Formbuilder.options.mappings.REPEATING] = false
-      attrs[Formbuilder.options.mappings.INCLUDE_DATA_SOURCE] = false
       attrs[Formbuilder.options.mappings.FIELD_TYPE] = field_type
       attrs[Formbuilder.options.mappings.LABEL] = "Untitled"
       attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true
@@ -43,9 +42,10 @@ class Formbuilder
       DESCRIPTION_TITLE: 'Description'
       INCLUDE_OTHER: 'field_options.include_other_option'
       INCLUDE_BLANK: 'field_options.include_blank_option'
-      INCLUDE_DATA_SOURCE: 'field_options.include_datasource_option',
       DATASOURCE: 'dataSource',
       DATASOURCE_TYPE: 'dataSourceType',
+      DATASOURCE_TYPE_DATASOURCE: 'dataSource',
+      DATASOURCE_TYPE_STATIC: 'static',
       INTEGER_ONLY: 'field_options.integer_only'
       LOCATION_UNIT: 'field_options.location_unit'
       DATETIME_UNIT: 'field_options.datetime_unit'
@@ -213,6 +213,11 @@ class Formbuilder
           $repeatable = true
 
         @$el.html(Formbuilder.templates["edit/base#{if !@model.is_input() then '_non_input' else ''}"]({rf: @model, editStructure : @parentView.options.editStructure, commonCheckboxes : commonCheckboxes, repeatable : $repeatable, repeating: @model.get(Formbuilder.options.mappings.REPEATING) }))
+
+        $dsSelect = @$el.find('.ds-dd select');
+
+        if $dsSelect
+          $dsSelect.html(Formbuilder.templates["partials/ds_options"]({datasources: @parentView.options.datasources, datasource: @model.get(Formbuilder.options.mappings.DATASOURCE)}))
         rivets.bind @$el, { model: @model }
         return @
 
@@ -265,17 +270,18 @@ class Formbuilder
         if $el.prop('checked')==true
           #show the datasource thing and load
           $select.prop('disabled', false);
-          $select.html(Formbuilder.templates["partials/ds_options"]({datasources: @parentView.options.datasources}))
+          @model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE)
         else
           #hide the ds stuff
-         $select.prop('disabled', true);
+          $select.prop('disabled', true);
+          @model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_STATIC)
       onDSSelect: (e) ->
         $el = $(e.target)
         $dsId = $el.val()
 
         if ($dsId != 'prompt')
           @model.set(Formbuilder.options.mappings.DATASOURCE, $dsId)
-          @model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, 'dataSource')
+          @model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE)
 
       toggleRepititionsInputs: (e) ->
         $el = $(e.target)

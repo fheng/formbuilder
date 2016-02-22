@@ -267,14 +267,27 @@ class Formbuilder
       toggleDSView: (e) ->
         $el = $(e.target);
         $select = @$el.find('.ds-dd select');
+        $optionWrapper = @$el.find('.option-wrapper');
+        $dataSourceTableView = @$el.find('.datasource-data-view');
         if $el.prop('checked')==true
           #show the datasource thing and load
           $select.prop('disabled', false);
           @model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE)
+
+          # show the "datasource view" div
+          # Hide the options stuff
+          $optionWrapper.addClass('hidden');
+          $dataSourceTableView.removeClass('hidden');
         else
           #hide the ds stuff
           $select.prop('disabled', true);
           @model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_STATIC)
+
+          # Show the options stuff
+          $optionWrapper.removeClass('hidden');
+
+          # show the "datasource view" div
+          $dataSourceTableView.addClass('hidden');
       onDSSelect: (e) ->
         $el = $(e.target)
         $dsId = $el.val()

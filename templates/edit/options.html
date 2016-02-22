@@ -11,6 +11,8 @@
   <div class='ds-dd'>
     <select <%=disabled%> class='ds-select'></select>
   </div>
+
+  <div class='datasource-data-view'></div>
 <% } %>
 
 <% if (typeof includeBlank !== 'undefined'){ %>
@@ -20,22 +22,24 @@
   </label>
 <% } %>
 
-<div class='option' data-rv-each-option='model.<%= Formbuilder.options.mappings.OPTIONS %>'>
-  <input type="checkbox" class='js-default-updated' data-rv-checked="option:checked" />
-  <input type="text" data-rv-input="option:label" class='option-label-input' />
-  <div class="btn-group">
-    <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class='icon-plus-sign'></i></a>
-    <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class='icon-minus-sign'></i></a>
+<% var isHidden = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "hidden" : "" %>
+<div class='option-wrapper <%=isHidden%>'>
+  <div class='option' data-rv-each-option='model.<%= Formbuilder.options.mappings.OPTIONS %>'>
+    <input type="checkbox" class='js-default-updated' data-rv-checked="option:checked" />
+    <input type="text" data-rv-input="option:label" class='option-label-input' />
+    <div class="btn-group">
+      <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class='icon-plus-sign'></i></a>
+      <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class='icon-minus-sign'></i></a>
+    </div>
   </div>
-</div>
 
-<% if (typeof includeOther !== 'undefined'){ %>
-  <label class="includeOther">
-    <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_OTHER %>' />
-    Include "other"
-  </label>
-<% } %>
-
-<div class='fb-bottom-add'>
-  <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>">Add option</a>
+  <% if (typeof includeOther !== 'undefined'){ %>
+    <label class="includeOther">
+      <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_OTHER %>' />
+      Include "other"
+    </label>
+  <% } %>
+  <div class='fb-bottom-add'>
+    <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>">Add option</a>
+  </div>
 </div>

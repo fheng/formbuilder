@@ -63,7 +63,7 @@
   Formbuilder = (function() {
     Formbuilder.helpers = {
       defaultFieldAttrs: function(field_type) {
-        var attrs, _base;
+        var attrs, base;
         if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]) {
           field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type];
         }
@@ -76,7 +76,7 @@
         attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
         attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false;
         attrs[Formbuilder.options.mappings.FIELD_CODE] = null;
-        return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
+        return (typeof (base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
@@ -193,10 +193,10 @@
     });
 
     Formbuilder.registerField = function(name, opts) {
-      var x, _i, _len, _ref;
-      _ref = ['view', 'edit'];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        x = _ref[_i];
+      var j, len, ref, x;
+      ref = ['view', 'edit'];
+      for (j = 0, len = ref.length; j < len; j++) {
+        x = ref[j];
         opts[x] = _.template(opts[x]);
       }
       Formbuilder.fields[name] = opts;
@@ -371,15 +371,21 @@
           return this.model.trigger('change', this.model);
         },
         toggleDSView: function(e) {
-          var $el, $select;
+          var $dataSourceTableView, $el, $optionWrapper, $select;
           $el = $(e.target);
           $select = this.$el.find('.ds-dd select');
+          $optionWrapper = this.$el.find('.option-wrapper');
+          $dataSourceTableView = this.$el.find('.datasource-data-view');
           if ($el.prop('checked') === true) {
             $select.prop('disabled', false);
-            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE);
+            this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE);
+            $optionWrapper.addClass('hidden');
+            return $dataSourceTableView.removeClass('hidden');
           } else {
             $select.prop('disabled', true);
-            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_STATIC);
+            this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_STATIC);
+            $optionWrapper.removeClass('hidden');
+            return $dataSourceTableView.addClass('hidden');
           }
         },
         onDSSelect: function(e) {
@@ -486,22 +492,22 @@
           return this.addAll();
         },
         render: function() {
-          var $fields, $fieldsNonInput, alias, field, fieldName, orig, subview, _i, _j, _len, _len1, _ref, _ref1, _ref2;
+          var $fields, $fieldsNonInput, alias, field, fieldName, j, k, len, len1, orig, ref, ref1, ref2, subview;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
           this.options.addAt = this.options.hasOwnProperty('addAt') ? this.options.addAt : 'last';
           if (Formbuilder.options.mappings.TYPE_ALIASES) {
-            _ref = Formbuilder.options.mappings.TYPE_ALIASES;
-            for (orig in _ref) {
-              alias = _ref[orig];
+            ref = Formbuilder.options.mappings.TYPE_ALIASES;
+            for (orig in ref) {
+              alias = ref[orig];
               Formbuilder.fields[alias] = Formbuilder.fields[orig];
             }
           }
           $fields = {};
           $fieldsNonInput = {};
           if (this.options.hasOwnProperty('fields')) {
-            _ref1 = this.options.fields;
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              fieldName = _ref1[_i];
+            ref1 = this.options.fields;
+            for (j = 0, len = ref1.length; j < len; j++) {
+              fieldName = ref1[j];
               field = Formbuilder.inputFields[fieldName] || Formbuilder.nonInputFields[fieldName];
               if (!field) {
                 throw new Error("No field found with name" + fieldName);
@@ -526,9 +532,9 @@
           this.$responseFields = this.$el.find('.fb-response-fields');
           this.bindWindowScrollEvent();
           this.hideShowNoResponseFields();
-          _ref2 = this.SUBVIEWS;
-          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-            subview = _ref2[_j];
+          ref2 = this.SUBVIEWS;
+          for (k = 0, len1 = ref2.length; k < len1; k++) {
+            subview = ref2[k];
             new subview({
               parentView: this
             }).render();
@@ -770,12 +776,12 @@
             contentType: "application/json",
             success: (function(_this) {
               return function(data) {
-                var datum, _i, _len, _ref;
+                var datum, j, len, ref;
                 _this.updatingBatch = true;
-                for (_i = 0, _len = data.length; _i < _len; _i++) {
-                  datum = data[_i];
-                  if ((_ref = _this.collection.get(datum.cid)) != null) {
-                    _ref.set({
+                for (j = 0, len = data.length; j < len; j++) {
+                  datum = data[j];
+                  if ((ref = _this.collection.get(datum.cid)) != null) {
+                    ref.set({
                       id: datum.id
                     });
                   }
@@ -1404,7 +1410,7 @@ __p += '\n      <input type=\'checkbox\' ' +
  var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
 __p += '\n  <div class=\'ds-dd\'>\n    <select ' +
 ((__t = (disabled)) == null ? '' : __t) +
-' class=\'ds-select\'></select>\n  </div>\n';
+' class=\'ds-select\'></select>\n  </div>\n\n  <div class=\'datasource-data-view\'></div>\n';
  } ;
 __p += '\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
@@ -1412,17 +1418,21 @@ __p += '\n  <label class="includeBlank">\n    <input type=\'checkbox\' data-rv-c
 ((__t = ( Formbuilder.options.mappings.INCLUDE_BLANK )) == null ? '' : __t) +
 '\' />\n    Include blank\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
+__p += '\n\n';
+ var isHidden = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "hidden" : "" ;
+__p += '\n<div class=\'option-wrapper ' +
+((__t = (isHidden)) == null ? '' : __t) +
+'\'>\n  <div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
-'\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <div class="btn-group">\n    <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n    <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n  </div>\n</div>\n\n';
+'\'>\n    <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n    <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n    <div class="btn-group">\n      <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n      <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n    </div>\n  </div>\n\n  ';
  if (typeof includeOther !== 'undefined'){ ;
-__p += '\n  <label class="includeOther">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+__p += '\n    <label class="includeOther">\n      <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
-'\' />\n    Include "other"\n  </label>\n';
+'\' />\n      Include "other"\n    </label>\n  ';
  } ;
-__p += '\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
+__p += '\n  <div class=\'fb-bottom-add\'>\n    <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'">Add option</a>\n</div>\n';
+'">Add option</a>\n  </div>\n</div>\n';
 
 }
 return __p

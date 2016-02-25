@@ -37,9 +37,10 @@ Formbuilder.registerField 'radio',
     attrs = new Backbone.Model(attrs)
     attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'radio');
     attrs.set(Formbuilder.options.mappings.OPTIONS, [
-      label: "",
-      checked: false,
-      label: "",
+      label: "Option 1",
+      checked: false
+    ,
+      label: "Option 2",
       checked: false
     ])
     attrs.toJSON()

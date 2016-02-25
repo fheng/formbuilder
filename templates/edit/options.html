@@ -25,7 +25,9 @@
 <% var isHidden = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "hidden" : "" %>
 <div class='option-wrapper <%=isHidden%>'>
   <div class='option' data-rv-each-option='model.<%= Formbuilder.options.mappings.OPTIONS %>'>
-    <input type="checkbox" class='js-default-updated' data-rv-checked="option:checked" />
+    <% if (typeof noCheckboxes === 'undefined'){ %>
+      <input type="checkbox" class='js-default-updated' data-rv-checked="option:checked" />
+    <% } %>
     <input type="text" data-rv-input="option:label" class='option-label-input' />
     <div class="btn-group">
       <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class='icon-plus-sign'></i></a>

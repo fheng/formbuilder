@@ -106,6 +106,10 @@
         DESCRIPTION_TITLE: 'Description',
         INCLUDE_OTHER: 'field_options.include_other_option',
         INCLUDE_BLANK: 'field_options.include_blank_option',
+        DATASOURCE: 'dataSource',
+        DATASOURCE_TYPE: 'dataSourceType',
+        DATASOURCE_TYPE_DATASOURCE: 'dataSource',
+        DATASOURCE_TYPE_STATIC: 'static',
         INTEGER_ONLY: 'field_options.integer_only',
         LOCATION_UNIT: 'field_options.location_unit',
         DATETIME_UNIT: 'field_options.datetime_unit',
@@ -282,14 +286,16 @@
           'input .option-label-input': 'forceRender',
           'change .fb-repeating input[type=checkbox]': 'toggleRepititionsInputs',
           'change .fieldFormatMode': 'changeFieldFormatHelpText',
-          'change .fb-required input[type=checkbox]': 'requiredChanged'
+          'change .fb-required input[type=checkbox]': 'requiredChanged',
+          'change .includeDataSource input[type=checkbox]': 'toggleDSView',
+          'change .ds-select': 'onDSSelect'
         },
         initialize: function() {
           this.listenTo(this.model, "destroy", this.remove);
           return this.parentView = this.options.parentView;
         },
         render: function() {
-          var $repeatable, $type, commonCheckboxes;
+          var $dsSelect, $repeatable, $type, commonCheckboxes;
           commonCheckboxes = this.parentView.options.hasOwnProperty('commonCheckboxes') ? this.parentView.options.commonCheckboxes : true;
           $repeatable = false;
           $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
@@ -304,6 +310,13 @@
             repeatable: $repeatable,
             repeating: this.model.get(Formbuilder.options.mappings.REPEATING)
           }));
+          $dsSelect = this.$el.find('.ds-dd select');
+          if ($dsSelect) {
+            $dsSelect.html(Formbuilder.templates["partials/ds_options"]({
+              datasources: this.parentView.options.datasources,
+              datasource: this.model.get(Formbuilder.options.mappings.DATASOURCE)
+            }));
+          }
           rivets.bind(this.$el, {
             model: this.model
           });
@@ -356,6 +369,33 @@
         },
         forceRender: function() {
           return this.model.trigger('change', this.model);
+        },
+        toggleDSView: function(e) {
+          var $dataSourceTableView, $el, $optionWrapper, $select;
+          $el = $(e.target);
+          $select = this.$el.find('.ds-dd select');
+          $optionWrapper = this.$el.find('.option-wrapper');
+          $dataSourceTableView = this.$el.find('.datasource-data-view');
+          if ($el.prop('checked') === true) {
+            $select.prop('disabled', false);
+            this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE);
+            $optionWrapper.addClass('hidden');
+            return $dataSourceTableView.removeClass('hidden');
+          } else {
+            $select.prop('disabled', true);
+            this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_STATIC);
+            $optionWrapper.removeClass('hidden');
+            return $dataSourceTableView.addClass('hidden');
+          }
+        },
+        onDSSelect: function(e) {
+          var $dsId, $el;
+          $el = $(e.target);
+          $dsId = $el.val();
+          if ($dsId !== 'prompt') {
+            this.model.set(Formbuilder.options.mappings.DATASOURCE, $dsId);
+            return this.model.set(Formbuilder.options.mappings.DATASOURCE_TYPE, Formbuilder.options.mappings.DATASOURCE_TYPE_DATASOURCE);
+          }
         },
         toggleRepititionsInputs: function(e) {
           var $el, $max, $min;
@@ -847,11 +887,12 @@
     valueField: false,
     icon: 'icon-check',
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>\n<%= Formbuilder.templates['edit/options']({}) %>",
+    edit: "<%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>\n<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkboxes",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
+      attrs.set(Formbuilder.options.mappings.MIN, 1);
       attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
           label: "Option 1",
@@ -883,7 +924,7 @@
     valueField: false,
     icon: 'icon-caret-down',
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
-    edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true }) %>",
+    edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true, includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> Dropdown",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
@@ -1041,18 +1082,41 @@
     repeatable: true,
     valueField: false,
     view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
-    edit: "<%= Formbuilder.templates['edit/options']({}) %>",
+    edit: "<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Radio Buttons",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'radio');
       attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
-          label: "",
+          label: "Option 1",
           checked: false
         }, {
-          label: "",
+          label: "Option 2",
           checked: false
+        }
+      ]);
+      return attrs.toJSON();
+    }
+  });
+
+}).call(this);
+
+(function() {
+  Formbuilder.registerField('readOnly', {
+    repeatable: false,
+    type: 'non_input',
+    icon: 'icon-comment',
+    view: "<label class='section-name'>&nbsp; <%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <div>\n      <label class='fb-option'>\n        <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n      </label>\n    </div>\n    <br/>\n  <% } %>\n\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n    <div class='other-option'>\n      <input type='text' />\n    </div>\n  <% } %>",
+    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n  <%= Formbuilder.templates['edit/readonly']({includeDatasource: true, rf: rf}) %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-comment\"></span></span> Read Only",
+    defaultAttributes: function(attrs) {
+      attrs = new Backbone.Model(attrs);
+      attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'readOnly');
+      attrs.set(Formbuilder.options.mappings.REQUIRED, false);
+      attrs.set(Formbuilder.options.mappings.OPTIONS, [
+        {
+          label: "Read Only Text Paragraph"
         }
       ]);
       return attrs.toJSON();
@@ -1361,22 +1425,67 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
+ if (typeof includeDatasource !== 'undefined'){ ;
+__p += '\n  <label class="includeDataSource">\n    ';
+ var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; ;
+__p += '\n      <input type=\'checkbox\' ' +
+((__t = (checked)) == null ? '' : __t) +
+' />\n      Use a Data Source to populate field options?\n  </label>\n\n ';
+ var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
+__p += '\n  <div class=\'ds-dd\'>\n    <select ' +
+((__t = (disabled)) == null ? '' : __t) +
+' class=\'ds-select\'></select>\n  </div>\n\n  <div class=\'datasource-data-view\'></div>\n';
+ } ;
+__p += '\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
 __p += '\n  <label class="includeBlank">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_BLANK )) == null ? '' : __t) +
 '\' />\n    Include blank\n  </label>\n';
  } ;
-__p += '\n\n<div class=\'option\' data-rv-each-option=\'model.' +
+__p += '\n\n';
+ var isHidden = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "hidden" : "" ;
+__p += '\n<div class=\'option-wrapper ' +
+((__t = (isHidden)) == null ? '' : __t) +
+'\'>\n  <div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
-'\'>\n  <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n  <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n  <div class="btn-group">\n    <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n    <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n  </div>\n</div>\n\n';
- if (typeof includeOther !== 'undefined'){ ;
-__p += '\n  <label class="includeOther">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
-((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
-'\' />\n    Include "other"\n  </label>\n';
+'\'>\n    ';
+ if (typeof noCheckboxes === 'undefined'){ ;
+__p += '\n      <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n    ';
  } ;
-__p += '\n\n<div class=\'fb-bottom-add\'>\n  <a class="js-add-option ' +
+__p += '\n    <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n    <div class="btn-group">\n      <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n      <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n    </div>\n  </div>\n\n  ';
+ if (typeof includeOther !== 'undefined'){ ;
+__p += '\n    <label class="includeOther">\n      <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
+'\' />\n      Include "other"\n    </label>\n  ';
+ } ;
+__p += '\n  <div class=\'fb-bottom-add\'>\n    <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'">Add option</a>\n</div>\n';
+'">Add option</a>\n  </div>\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/readonly"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n<label class="includeDataSource">\n  ';
+ var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; ;
+__p += '\n    <input type=\'checkbox\' ' +
+((__t = (checked)) == null ? '' : __t) +
+' />\n    Use a Data Source to populate field options?\n</label>\n\n';
+ var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
+__p += '\n<div class=\'ds-dd\'>\n  <select ' +
+((__t = (disabled)) == null ? '' : __t) +
+' class=\'ds-select\'></select>\n</div>\n\n<div class=\'datasource-data-view\'></div>\n\n';
+ var isHidden = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "hidden" : "" ;
+__p += '\n<div class=\'option-wrapper ' +
+((__t = (isHidden)) == null ? '' : __t) +
+'\'>\n  <div class=\'option\' data-rv-each-option=\'model.' +
+((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
+'\'>\n    <textarea type="text" data-rv-input="option:label" class=\'option-label-input\' /></textarea>\n  </div>\n</div>\n';
 
 }
 return __p
@@ -1448,6 +1557,29 @@ __p += '\n        <a data-field-type="' +
 '\n        </a>\n      ';
  } ;
 __p += '\n    </div>\n  </div>\n</div>';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["partials/ds_options"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<option value="prompt">Select a Data Source</option>\n';
+ for (i in datasources) { ;
+__p += '\n    ';
+ var selected = datasources[i]._id == datasource ? "selected" : "";  ;
+__p += '\n    <option value="' +
+((__t = (datasources[i]._id)) == null ? '' : __t) +
+'" ' +
+((__t = ( selected )) == null ? '' : __t) +
+'>' +
+((__t = (datasources[i].name)) == null ? '' : __t) +
+'</option>\n';
+ };
+__p += '\n';
 
 }
 return __p

@@ -268,7 +268,7 @@ __p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n<label class="inc
  var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; ;
 __p += '\n    <input type=\'checkbox\' ' +
 ((__t = (checked)) == null ? '' : __t) +
-' />\n    Use a Data Source to populate field options?\n</label>\n\n';
+' />\n    Use a Data Source to populate field value?\n</label>\n\n';
  var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
 __p += '\n<div class=\'ds-dd\'>\n  <select ' +
 ((__t = (disabled)) == null ? '' : __t) +

@@ -23,9 +23,9 @@ Formbuilder.registerField 'autodate',
             <option value="datetime">Date &amp; Time</option>
             <option value="time">Time Only</option>
             <option value="date">Date Only</option>
-          </select>
-          <!--<label>Auto-populate:</label>
-          <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.TIME_AUTOPOPULATE  %>' />-->
+          </select><br />
+          <label>Format:</label>
+          <input type="text" value="YYYY-MM-DD HH:MM" style="width: auto;">
         </div>
         """
 

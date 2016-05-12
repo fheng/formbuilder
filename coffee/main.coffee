@@ -49,7 +49,7 @@ class Formbuilder
       INTEGER_ONLY: 'field_options.integer_only'
       LOCATION_UNIT: 'field_options.location_unit'
       DATETIME_UNIT: 'field_options.datetime_unit'
-      DATETIME_FORMAT: 'field_options.datetime_format'
+      DATETIME_FORMAT: 'fieldOptions.definition.dateTimeFormat'
       MIN: 'field_options.min'
       MAX: 'field_options.max'
       STEP_SIZE: 'field_options.stepSize'

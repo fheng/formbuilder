@@ -23,10 +23,9 @@ Formbuilder.registerField 'autodate',
             <option value="datetime">Date &amp; Time</option>
             <option value="time">Time Only</option>
             <option value="date">Date Only</option>
-          </select><br />
+          </select>
           <label class="dateformat">Format:</label>
           <input class="dateformat" type="text" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>" style="width: auto;"/>
-          <br />
         </div>
         """
 

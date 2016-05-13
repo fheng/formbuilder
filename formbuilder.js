@@ -289,7 +289,8 @@
           'change .fieldFormatMode': 'changeFieldFormatHelpText',
           'change .fb-required input[type=checkbox]': 'requiredChanged',
           'change .includeDataSource input[type=checkbox]': 'toggleDSView',
-          'change .ds-select': 'onDSSelect'
+          'change .ds-select': 'onDSSelect',
+          'change .datetype': 'toggleDateFormat'
         },
         initialize: function() {
           this.listenTo(this.model, "destroy", this.remove);
@@ -321,6 +322,7 @@
           rivets.bind(this.$el, {
             model: this.model
           });
+          this.toggleDateFormat();
           return this;
         },
         remove: function() {
@@ -442,6 +444,19 @@
             } else {
               return this.model.set(Formbuilder.options.mappings.MIN, 1);
             }
+          }
+        },
+        toggleDateFormat: function(e) {
+          var dateFormatElements;
+          dateFormatElements = this.$el.find('.dateformat');
+          if (this.model.get(Formbuilder.options.mappings.DATETIME_UNIT) !== 'datetime') {
+            return dateFormatElements.each(function() {
+              return $(this).hide();
+            });
+          } else {
+            return dateFormatElements.each(function() {
+              return $(this).show();
+            });
           }
         }
       }),
@@ -839,7 +854,7 @@
     repeatable: true,
     valueField: false,
     view: "<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\n  <input disabled value=\"YYYY-MM-DD\">\n  <span class='icon icon-calendar'></span>\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\n  <input disabled value=\"HH:MM\">\n  <span class='icon icon-time'></span>\n<% }else{ %>\n  <input disabled value=\"YYYY-MM-DD HH:MM\">\n  <span class='icon icon-calendar'></span><span class='icon icon-time'></span>\n\n<% } %>",
-    edit: "<div class='fb-edit-section-header'>Date Stamp Options</div>\n<div class=\"inline-labels\">\n  <label>Field type:</label>\n  <select data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n    <option value=\"datetime\">Date &amp; Time</option>\n    <option value=\"time\">Time Only</option>\n    <option value=\"date\">Date Only</option>\n  </select><br />\n  <label>Format:</label>\n  <input type=\"text\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>\" style=\"width: auto;\"/>\n</div>",
+    edit: "<div class='fb-edit-section-header'>Date Stamp Options</div>\n<div class=\"inline-labels\">\n  <label>Field type:</label>\n  <select class=\"datetype\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n    <option value=\"datetime\">Date &amp; Time</option>\n    <option value=\"time\">Time Only</option>\n    <option value=\"date\">Date Only</option>\n  </select><br />\n  <label class=\"dateformat\">Format:</label>\n  <input class=\"dateformat\" type=\"text\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>\" style=\"width: inherit;\"/>\n  <br />\n</div>",
     addButton: "<span class='symbol'><span class='icon-calendar'></span></span> Datestamp",
     defaultAttributes: function(attrs) {
       attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime';

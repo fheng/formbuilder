@@ -19,13 +19,14 @@ Formbuilder.registerField 'autodate',
         <div class='fb-edit-section-header'>Date Stamp Options</div>
         <div class="inline-labels">
           <label>Field type:</label>
-          <select data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>" style="width: auto;">
+          <select class="datetype" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>" style="width: auto;">
             <option value="datetime">Date &amp; Time</option>
             <option value="time">Time Only</option>
             <option value="date">Date Only</option>
           </select><br />
-          <label>Format:</label>
-          <input type="text" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>" style="width: auto;"/>
+          <label class="dateformat">Format:</label>
+          <input class="dateformat" type="text" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>" style="width: auto;"/>
+          <br />
         </div>
         """
 

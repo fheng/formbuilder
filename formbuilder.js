@@ -858,6 +858,7 @@
     addButton: "<span class='symbol'><span class='icon-calendar'></span></span> Datestamp",
     defaultAttributes: function(attrs) {
       attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime';
+      attrs[Formbuilder.options.mappings.DATETIME_FORMAT] = 'YYYY-MM-DD HH:mm:ss';
       return attrs;
     }
   });

@@ -37,4 +37,5 @@ Formbuilder.registerField 'autodate',
 
   defaultAttributes: (attrs) ->
     attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime'
+    attrs[Formbuilder.options.mappings.DATETIME_FORMAT] = 'YYYY-MM-DD HH:mm:ss'
     attrs

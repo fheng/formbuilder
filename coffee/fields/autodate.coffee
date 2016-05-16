@@ -10,7 +10,7 @@ Formbuilder.registerField 'autodate',
           <input disabled value="HH:MM">
           <span class='icon icon-time'></span>
         <% }else{ %>
-          <input disabled value="YYYY-MM-DD HH:MM">
+          <input disabled value="<%= rf.get(Formbuilder.options.mappings.DATETIME_FORMAT) || 'YYYY-MM-DD HH:mm:ss' %>">
           <span class='icon icon-calendar'></span><span class='icon icon-time'></span>
 
         <% } %>

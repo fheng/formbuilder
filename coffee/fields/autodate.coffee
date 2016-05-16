@@ -10,7 +10,7 @@ Formbuilder.registerField 'autodate',
           <input disabled value="HH:MM">
           <span class='icon icon-time'></span>
         <% }else{ %>
-          <input disabled value="YYYY-MM-DD HH:MM">
+          <input disabled value="<%= rf.get(Formbuilder.options.mappings.DATETIME_FORMAT) || 'YYYY-MM-DD HH:mm:ss' %>">
           <span class='icon icon-calendar'></span><span class='icon icon-time'></span>
 
         <% } %>
@@ -19,13 +19,15 @@ Formbuilder.registerField 'autodate',
         <div class='fb-edit-section-header'>Date Stamp Options</div>
         <div class="inline-labels">
           <label>Field type:</label>
-          <select data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>" style="width: auto;">
+          <select class="datetype" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>">
             <option value="datetime">Date &amp; Time</option>
             <option value="time">Time Only</option>
             <option value="date">Date Only</option>
           </select>
-          <!--<label>Auto-populate:</label>
-          <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.TIME_AUTOPOPULATE  %>' />-->
+	  <div class="dateformat">
+          <label>Format:</label>
+          <input type="text" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>"/>
+	  <div>
         </div>
         """
 

@@ -63,7 +63,7 @@
   Formbuilder = (function() {
     Formbuilder.helpers = {
       defaultFieldAttrs: function(field_type) {
-        var attrs, base;
+        var attrs, _base;
         if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]) {
           field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type];
         }
@@ -76,7 +76,7 @@
         attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
         attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false;
         attrs[Formbuilder.options.mappings.FIELD_CODE] = null;
-        return (typeof (base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? base.defaultAttributes(attrs) : void 0) || attrs;
+        return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
@@ -113,6 +113,7 @@
         INTEGER_ONLY: 'field_options.integer_only',
         LOCATION_UNIT: 'field_options.location_unit',
         DATETIME_UNIT: 'field_options.datetime_unit',
+        DATETIME_FORMAT: 'field_options.definition.dateTimeFormat',
         MIN: 'field_options.min',
         MAX: 'field_options.max',
         STEP_SIZE: 'field_options.stepSize',
@@ -193,10 +194,10 @@
     });
 
     Formbuilder.registerField = function(name, opts) {
-      var j, len, ref, x;
-      ref = ['view', 'edit'];
-      for (j = 0, len = ref.length; j < len; j++) {
-        x = ref[j];
+      var x, _i, _len, _ref;
+      _ref = ['view', 'edit'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        x = _ref[_i];
         opts[x] = _.template(opts[x]);
       }
       Formbuilder.fields[name] = opts;
@@ -288,7 +289,8 @@
           'change .fieldFormatMode': 'changeFieldFormatHelpText',
           'change .fb-required input[type=checkbox]': 'requiredChanged',
           'change .includeDataSource input[type=checkbox]': 'toggleDSView',
-          'change .ds-select': 'onDSSelect'
+          'change .ds-select': 'onDSSelect',
+          'change .datetype': 'toggleDateFormat'
         },
         initialize: function() {
           this.listenTo(this.model, "destroy", this.remove);
@@ -320,6 +322,7 @@
           rivets.bind(this.$el, {
             model: this.model
           });
+          this.toggleDateFormat();
           return this;
         },
         remove: function() {
@@ -442,6 +445,19 @@
               return this.model.set(Formbuilder.options.mappings.MIN, 1);
             }
           }
+        },
+        toggleDateFormat: function(e) {
+          var dateFormatElements;
+          dateFormatElements = this.$el.find('.dateformat');
+          if (this.model.get(Formbuilder.options.mappings.DATETIME_UNIT) !== 'datetime') {
+            return dateFormatElements.each(function() {
+              return $(this).hide();
+            });
+          } else {
+            return dateFormatElements.each(function() {
+              return $(this).show();
+            });
+          }
         }
       }),
       main: Backbone.View.extend({
@@ -492,22 +508,22 @@
           return this.addAll();
         },
         render: function() {
-          var $fields, $fieldsNonInput, alias, field, fieldName, j, k, len, len1, orig, ref, ref1, ref2, subview;
+          var $fields, $fieldsNonInput, alias, field, fieldName, orig, subview, _i, _j, _len, _len1, _ref, _ref1, _ref2;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
           this.options.addAt = this.options.hasOwnProperty('addAt') ? this.options.addAt : 'last';
           if (Formbuilder.options.mappings.TYPE_ALIASES) {
-            ref = Formbuilder.options.mappings.TYPE_ALIASES;
-            for (orig in ref) {
-              alias = ref[orig];
+            _ref = Formbuilder.options.mappings.TYPE_ALIASES;
+            for (orig in _ref) {
+              alias = _ref[orig];
               Formbuilder.fields[alias] = Formbuilder.fields[orig];
             }
           }
           $fields = {};
           $fieldsNonInput = {};
           if (this.options.hasOwnProperty('fields')) {
-            ref1 = this.options.fields;
-            for (j = 0, len = ref1.length; j < len; j++) {
-              fieldName = ref1[j];
+            _ref1 = this.options.fields;
+            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+              fieldName = _ref1[_i];
               field = Formbuilder.inputFields[fieldName] || Formbuilder.nonInputFields[fieldName];
               if (!field) {
                 throw new Error("No field found with name" + fieldName);
@@ -532,9 +548,9 @@
           this.$responseFields = this.$el.find('.fb-response-fields');
           this.bindWindowScrollEvent();
           this.hideShowNoResponseFields();
-          ref2 = this.SUBVIEWS;
-          for (k = 0, len1 = ref2.length; k < len1; k++) {
-            subview = ref2[k];
+          _ref2 = this.SUBVIEWS;
+          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+            subview = _ref2[_j];
             new subview({
               parentView: this
             }).render();
@@ -776,12 +792,12 @@
             contentType: "application/json",
             success: (function(_this) {
               return function(data) {
-                var datum, j, len, ref;
+                var datum, _i, _len, _ref;
                 _this.updatingBatch = true;
-                for (j = 0, len = data.length; j < len; j++) {
-                  datum = data[j];
-                  if ((ref = _this.collection.get(datum.cid)) != null) {
-                    ref.set({
+                for (_i = 0, _len = data.length; _i < _len; _i++) {
+                  datum = data[_i];
+                  if ((_ref = _this.collection.get(datum.cid)) != null) {
+                    _ref.set({
                       id: datum.id
                     });
                   }
@@ -837,8 +853,8 @@
     icon: 'icon-calendar',
     repeatable: true,
     valueField: false,
-    view: "<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\n  <input disabled value=\"YYYY-MM-DD\">\n  <span class='icon icon-calendar'></span>\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\n  <input disabled value=\"HH:MM\">\n  <span class='icon icon-time'></span>\n<% }else{ %>\n  <input disabled value=\"YYYY-MM-DD HH:MM\">\n  <span class='icon icon-calendar'></span><span class='icon icon-time'></span>\n\n<% } %>",
-    edit: "<div class='fb-edit-section-header'>Date Stamp Options</div>\n<div class=\"inline-labels\">\n  <label>Field type:</label>\n  <select data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\" style=\"width: auto;\">\n    <option value=\"datetime\">Date &amp; Time</option>\n    <option value=\"time\">Time Only</option>\n    <option value=\"date\">Date Only</option>\n  </select>\n  <!--<label>Auto-populate:</label>\n  <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.TIME_AUTOPOPULATE  %>' />-->\n</div>",
+    view: "<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\n  <input disabled value=\"YYYY-MM-DD\">\n  <span class='icon icon-calendar'></span>\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\n  <input disabled value=\"HH:MM\">\n  <span class='icon icon-time'></span>\n<% }else{ %>\n  <input disabled value=\"<%= rf.get(Formbuilder.options.mappings.DATETIME_FORMAT) || 'YYYY-MM-DD HH:mm:ss' %>\">\n  <span class='icon icon-calendar'></span><span class='icon icon-time'></span>\n\n<% } %>",
+    edit: "        <div class='fb-edit-section-header'>Date Stamp Options</div>\n        <div class=\"inline-labels\">\n          <label>Field type:</label>\n          <select class=\"datetype\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\">\n            <option value=\"datetime\">Date &amp; Time</option>\n            <option value=\"time\">Time Only</option>\n            <option value=\"date\">Date Only</option>\n          </select>\n<div class=\"dateformat\">\n          <label>Format:</label>\n          <input type=\"text\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>\"/>\n<div>\n        </div>",
     addButton: "<span class='symbol'><span class='icon-calendar'></span></span> Datestamp",
     defaultAttributes: function(attrs) {
       attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime';

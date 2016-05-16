@@ -49,6 +49,7 @@ class Formbuilder
       INTEGER_ONLY: 'field_options.integer_only'
       LOCATION_UNIT: 'field_options.location_unit'
       DATETIME_UNIT: 'field_options.datetime_unit'
+      DATETIME_FORMAT: 'field_options.definition.dateTimeFormat'
       MIN: 'field_options.min'
       MAX: 'field_options.max'
       STEP_SIZE: 'field_options.stepSize'
@@ -197,7 +198,8 @@ class Formbuilder
         'change .fieldFormatMode' : 'changeFieldFormatHelpText'
         'change .fb-required input[type=checkbox]' : 'requiredChanged',
         'change .includeDataSource input[type=checkbox]': 'toggleDSView',
-        'change .ds-select': 'onDSSelect'
+        'change .ds-select': 'onDSSelect',
+        'change .datetype': 'toggleDateFormat'
 
       initialize: ->
         @listenTo @model, "destroy", @remove
@@ -219,6 +221,7 @@ class Formbuilder
         if $dsSelect
           $dsSelect.html(Formbuilder.templates["partials/ds_options"]({datasources: @parentView.options.datasources, datasource: @model.get(Formbuilder.options.mappings.DATASOURCE)}))
         rivets.bind @$el, { model: @model }
+        @toggleDateFormat()
         return @
 
       remove: ->
@@ -330,6 +333,12 @@ class Formbuilder
             @model.unset(Formbuilder.options.mappings.MAX)
           else
             @model.set(Formbuilder.options.mappings.MIN, 1)
+      toggleDateFormat: (e) ->
+        dateFormatElements =  @$el.find('.dateformat')
+        if (@model.get(Formbuilder.options.mappings.DATETIME_UNIT) != 'datetime')
+           dateFormatElements.each(() -> $(this).hide())
+        else
+           dateFormatElements.each(() -> $(this).show())
     main: Backbone.View.extend
       SUBVIEWS: []
 

@@ -16,23 +16,23 @@ Formbuilder.registerField 'autodate',
         <% } %>
         """
   edit: """
-        <div class='fb-edit-section-header'>Date Stamp Options</div>
+        <div class='fb-edit-section-header' data-rv-translate>Date Stamp Options</div>
         <div class="inline-labels">
-          <label>Field type:</label>
+          <label data-rv-translate>Field type:</label>
           <select class="datetype" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>">
-            <option value="datetime">Date &amp; Time</option>
-            <option value="time">Time Only</option>
-            <option value="date">Date Only</option>
+            <option value="datetime" data-rv-translate>Date &amp; Time</option>
+            <option value="time" data-rv-translate>Time Only</option>
+            <option value="date" data-rv-translate>Date Only</option>
           </select>
 	  <div class="dateformat">
-          <label>Format:</label>
+          <label data-rv-translate>Format:</label>
           <input type="text" data-rv-value="model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>"/>
 	  <div>
         </div>
         """
 
   addButton: """
-             <span class='symbol'><span class='icon-calendar'></span></span> Datestamp
+             <span class='symbol'><span class='icon-calendar'></span></span> <span data-rv-translate>Datestamp</span>
              """
 
   defaultAttributes: (attrs) ->

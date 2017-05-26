@@ -11,7 +11,7 @@ Formbuilder.registerField 'sliderNumber',
         """
 
   addButton: """
-             <span class="symbol"><span class="icon-number">123</span></span> Slider (Number)
+             <span class="symbol"><span class="icon-number">123</span></span> <span data-rv-translate>Slider (Number)</span>
              """
   defaultAttributes: (attrs) ->
     attrs = new Backbone.Model(attrs)

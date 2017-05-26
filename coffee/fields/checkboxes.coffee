@@ -16,7 +16,7 @@ Formbuilder.registerField 'checkboxes',
       <div class='other-option'>
         <label class='fb-option'>
           <input type='checkbox' />
-          Other
+          <span data-rv-translate>Other</span>
         </label>
 
         <input type='text' />
@@ -30,7 +30,7 @@ Formbuilder.registerField 'checkboxes',
   """
 
   addButton: """
-    <span class="symbol"><span class="icon-check"></span></span> Checkboxes
+    <span class="symbol"><span class="icon-check"></span></span> <span data-rv-translate>Checkboxes</span>
   """
 
   defaultAttributes: (attrs) ->

@@ -1,11 +1,11 @@
  <label class="fb-repeating">
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REPEATING %>' />
-    Repeating
+    <span data-rv-translate>Repeating</span>
   </label>
   <label class="fb-repititions">
-    Min
+    <span data-rv-translate>Min</span>
     <% var disabled = (rf.get('repeating')===true) ? "" : "disabled"; %>
     <input class="minReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MINREPITIONS %> | number" style="width: 30px" />
-    Max
+    <span data-rv-translate>Max</span>
     <input class="maxReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MAXREPITIONS%> | number" style="width: 30px" />
   </label>

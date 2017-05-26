@@ -23,8 +23,8 @@ Formbuilder.registerField 'time',
 
       <span class='am_pm'>
         <select>
-          <option>AM</option>
-          <option>PM</option>
+          <option data-rv-translate>AM</option>
+          <option data-rv-translate>PM</option>
         </select>
       </span>
     </div>
@@ -33,5 +33,5 @@ Formbuilder.registerField 'time',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="icon-time"></span></span> Time
+    <span class="symbol"><span class="icon-time"></span></span> <span data-rv-translate>Time</span>
   """

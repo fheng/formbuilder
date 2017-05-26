@@ -16,7 +16,7 @@ Formbuilder.registerField 'radio',
       <div class='other-option'>
         <label class='fb-option'>
           <input type='radio' />
-          Other
+          <span data-rv-translate>Other</span>
         </label>
 
         <input type='text' />
@@ -29,7 +29,7 @@ Formbuilder.registerField 'radio',
   """
 
   addButton: """
-    <span class="symbol"><span class="icon-circle-blank"></span></span> Radio Buttons
+    <span class="symbol"><span class="icon-circle-blank"></span></span> <span data-rv-translate>Radio Buttons</span>
   """
 
   defaultAttributes: (attrs) ->

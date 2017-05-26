@@ -21,7 +21,7 @@ Formbuilder.registerField 'dropdown',
   """
 
   addButton: """
-    <span class="symbol"><span class="icon-caret-down"></span></span> Dropdown
+    <span class="symbol"><span class="icon-caret-down"></span></span> <span data-rv-translate>Dropdown</span>
   """
 
   defaultAttributes: (attrs) ->

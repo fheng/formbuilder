@@ -26,5 +26,5 @@ Formbuilder.registerField 'date',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="icon-calendar"></span></span> Date
+    <span class="symbol"><span class="icon-calendar"></span></span> <span data-rv-translate>Date</span>
   """

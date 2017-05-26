@@ -1,25 +1,25 @@
 <label class="fb-required">
   <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REQUIRED %>' />
-  Required
+  <span data-rv-translate>Required</span>
 </label>
 <label class="fb-immediately">
   <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.VALIDATE_IMMEDIATELY %>' />
-  Validate Immediately
+  <span data-rv-translate>Validate Immediately</span>
 </label>
 <label class="fb-admin_only">
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.ADMIN_ONLY %>' />
-    Admin only (Note: Admin fields will not appear in the client app.)
+    <span data-rv-translate>Admin only (Note: Admin fields will not appear in the client app.)</span>
 </label>
 <% if (repeatable){ %>
   <label class="fb-repeating">
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.REPEATING %>' />
-    Repeating
+    <span data-rv-translate>Repeating</span>
   </label>
   <label class="fb-repititions">
-    Min
+    <span data-rv-translate>Min</span>
     <% var disabled = (repeating===true) ? "" : "disabled"; %>
     <input class="minReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MINREPITIONS %> | number" style="width: 30px" />
-    Max
+    <span data-rv-translate>Max</span>
     <input class="maxReps" type="text" <%= disabled %> data-rv-input="model.<%= Formbuilder.options.mappings.MAXREPITIONS%> | number" style="width: 30px" />
   </label>
 <% } %>

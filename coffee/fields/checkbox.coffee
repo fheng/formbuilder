@@ -7,12 +7,12 @@ Formbuilder.registerField 'checkbox',
         """
 
   edit: """
-        <div class='fb-edit-section-header'>Checked</div>
+        <div class='fb-edit-section-header' data-rv-translate>Checked</div>
         <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> data-rv-checked='model.<%= Formbuilder.options.mappings.SINGLE_CHECKED%>' />
         """
 
   addButton: """
-             <span class="symbol"><span class="icon-check"></span></span> Checkbox
+             <span class="symbol"><span class="icon-check"></span></span> <span data-rv-translate>Checkbox</span>
              """
 
   defaultAttributes: (attrs) ->

@@ -1,17 +1,17 @@
 <% if (editStructure) { %>
-  <div class='fb-edit-section-header'>Name</div>
+  <div class='fb-edit-section-header' data-rv-translate>Name</div>
   <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
 <% } %>
 <% if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { %>
-  <div class='fb-edit-section-header'><%= Formbuilder.options.mappings.VALUE_HEADER %></div>
+  <div class='fb-edit-section-header'><%= Formbuilder._(Formbuilder.options.mappings.VALUE_HEADER) %></div>
   <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.VALUE %>' />
 <% } %>
 <div class="fb-field-description">
-  <div class='fb-edit-section-header'><%= Formbuilder.options.mappings.DESCRIPTION_TITLE %></div>
+  <div class='fb-edit-section-header'><%= Formbuilder._(Formbuilder.options.mappings.DESCRIPTION_TITLE) %></div>
   <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'
-    placeholder='<%= Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER %>'></textarea>
+    placeholder='<%= Formbuilder._(Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER) %>'></textarea>
 </div>
 <label class="fb-field-description">
-    <div class='fb-edit-section-header'>Field Code</div>
+    <div class='fb-edit-section-header' data-rv-translate>Field Code</div>
     <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.FIELD_CODE %>' />
 </label>

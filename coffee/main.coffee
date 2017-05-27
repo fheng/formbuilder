@@ -20,7 +20,7 @@ class Formbuilder
     lang = @getLanguage()
     tbl = @languageTable_[lang]
     @languageTable_['en'][string] = undefined
-    if tbl? and tbl[string]?
+    if tbl? and tbl[string]? and tbl[string] != ''
       ret = tbl[string]
     else
       ret = string

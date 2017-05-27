@@ -105,7 +105,7 @@
       lang = this.getLanguage();
       tbl = this.languageTable_[lang];
       this.languageTable_['en'][string] = void 0;
-      if ((tbl != null) && (tbl[string] != null)) {
+      if ((tbl != null) && (tbl[string] != null) && tbl[string] !== '') {
         ret = tbl[string];
       } else {
         ret = string;

@@ -63,7 +63,7 @@
   Formbuilder = (function() {
     Formbuilder.helpers = {
       defaultFieldAttrs: function(field_type) {
-        var attrs, _base;
+        var attrs, base;
         if (Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]) {
           field_type = Formbuilder.options.mappings.TYPE_ALIASES[field_type];
         }
@@ -76,7 +76,7 @@
         attrs[Formbuilder.options.mappings.VALIDATE_IMMEDIATELY] = true;
         attrs[Formbuilder.options.mappings.ADMIN_ONLY] = false;
         attrs[Formbuilder.options.mappings.FIELD_CODE] = null;
-        return (typeof (_base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? _base.defaultAttributes(attrs) : void 0) || attrs;
+        return (typeof (base = Formbuilder.fields[field_type]).defaultAttributes === "function" ? base.defaultAttributes(attrs) : void 0) || attrs;
       },
       simple_format: function(x) {
         return x != null ? x.replace(/\n/g, '<br />') : void 0;
@@ -194,10 +194,10 @@
     });
 
     Formbuilder.registerField = function(name, opts) {
-      var x, _i, _len, _ref;
-      _ref = ['view', 'edit'];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        x = _ref[_i];
+      var j, len, ref, x;
+      ref = ['view', 'edit'];
+      for (j = 0, len = ref.length; j < len; j++) {
+        x = ref[j];
         opts[x] = _.template(opts[x]);
       }
       Formbuilder.fields[name] = opts;
@@ -508,22 +508,22 @@
           return this.addAll();
         },
         render: function() {
-          var $fields, $fieldsNonInput, alias, field, fieldName, orig, subview, _i, _j, _len, _len1, _ref, _ref1, _ref2;
+          var $fields, $fieldsNonInput, alias, field, fieldName, j, k, len, len1, orig, ref, ref1, ref2, subview;
           this.options.editStructure = this.options.hasOwnProperty('editStructure') ? this.options.editStructure : true;
           this.options.addAt = this.options.hasOwnProperty('addAt') ? this.options.addAt : 'last';
           if (Formbuilder.options.mappings.TYPE_ALIASES) {
-            _ref = Formbuilder.options.mappings.TYPE_ALIASES;
-            for (orig in _ref) {
-              alias = _ref[orig];
+            ref = Formbuilder.options.mappings.TYPE_ALIASES;
+            for (orig in ref) {
+              alias = ref[orig];
               Formbuilder.fields[alias] = Formbuilder.fields[orig];
             }
           }
           $fields = {};
           $fieldsNonInput = {};
           if (this.options.hasOwnProperty('fields')) {
-            _ref1 = this.options.fields;
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              fieldName = _ref1[_i];
+            ref1 = this.options.fields;
+            for (j = 0, len = ref1.length; j < len; j++) {
+              fieldName = ref1[j];
               field = Formbuilder.inputFields[fieldName] || Formbuilder.nonInputFields[fieldName];
               if (!field) {
                 throw new Error("No field found with name" + fieldName);
@@ -548,9 +548,9 @@
           this.$responseFields = this.$el.find('.fb-response-fields');
           this.bindWindowScrollEvent();
           this.hideShowNoResponseFields();
-          _ref2 = this.SUBVIEWS;
-          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-            subview = _ref2[_j];
+          ref2 = this.SUBVIEWS;
+          for (k = 0, len1 = ref2.length; k < len1; k++) {
+            subview = ref2[k];
             new subview({
               parentView: this
             }).render();
@@ -792,12 +792,12 @@
             contentType: "application/json",
             success: (function(_this) {
               return function(data) {
-                var datum, _i, _len, _ref;
+                var datum, j, len, ref;
                 _this.updatingBatch = true;
-                for (_i = 0, _len = data.length; _i < _len; _i++) {
-                  datum = data[_i];
-                  if ((_ref = _this.collection.get(datum.cid)) != null) {
-                    _ref.set({
+                for (j = 0, len = data.length; j < len; j++) {
+                  datum = data[j];
+                  if ((ref = _this.collection.get(datum.cid)) != null) {
+                    ref.set({
                       id: datum.id
                     });
                   }
@@ -1146,9 +1146,13 @@
   Formbuilder.registerField('section_break', {
     type: 'non_input',
     icon: 'icon-minus',
+    repeatable: true,
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px dashed #bbb\">",
-    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>",
-    addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break"
+    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>\n<%= Formbuilder.templates['edit/repeating']({repeating: false, rf: rf}) %>",
+    addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break",
+    defaultAttributes: function(attrs) {
+      return attrs;
+    }
   });
 
 }).call(this);
@@ -1503,6 +1507,29 @@ __p += '\n<div class=\'option-wrapper ' +
 '\'>\n  <div class=\'option\' data-rv-each-option=\'model.' +
 ((__t = ( Formbuilder.options.mappings.OPTIONS )) == null ? '' : __t) +
 '\'>\n    <textarea type="text" data-rv-input="option:label" class=\'option-label-input\' /></textarea>\n  </div>\n</div>\n';
+
+}
+return __p
+};
+
+this["Formbuilder"]["templates"]["edit/repeating"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += ' <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
+'\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min\n    ';
+ var disabled = (repeating===true) ? "" : "disabled"; ;
+__p += '\n    <input class="minReps" type="text" ' +
+((__t = ( disabled )) == null ? '' : __t) +
+' data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
+' | number" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
+((__t = ( disabled )) == null ? '' : __t) +
+' data-rv-input="model.' +
+((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
+' | number" style="width: 30px" />\n  </label>\n';
 
 }
 return __p

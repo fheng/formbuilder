@@ -1148,7 +1148,7 @@
     icon: 'icon-minus',
     repeatable: true,
     view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px dashed #bbb\">",
-    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>\n<%= Formbuilder.templates['edit/repeating']({repeating: false, rf: rf}) %>",
+    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>\n<%= Formbuilder.templates['edit/repeating']({rf: rf}) %>",
     addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break",
     defaultAttributes: function(attrs) {
       return attrs;
@@ -1520,7 +1520,7 @@ with (obj) {
 __p += ' <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
 '\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min\n    ';
- var disabled = (repeating===true) ? "" : "disabled"; ;
+ var disabled = (rf.get('repeating')===true) ? "" : "disabled"; ;
 __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +

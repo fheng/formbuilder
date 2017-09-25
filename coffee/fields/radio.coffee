@@ -7,7 +7,7 @@ Formbuilder.registerField 'radio',
       <div>
         <label class='fb-option'>
           <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick="javascript: return false;" />
-          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
+          <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>
         </label>
       </div>
     <% } %>

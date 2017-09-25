@@ -3,11 +3,11 @@ Formbuilder.registerField 'readOnly',
   type: 'non_input'
   icon : 'icon-comment'
   view: """
-  <label class='section-name'>&nbsp; <%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
+  <label class='section-name'>&nbsp; <%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>
     <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>
       <div>
         <label class='fb-option'>
-          <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>
+          <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>
         </label>
       </div>
       <br/>

@@ -3,8 +3,8 @@ Formbuilder.registerField 'section_break',
   icon: 'icon-minus'
   repeatable: true
   view: """
-    <label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
-    <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+    <label class='section-name'><%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>
+    <p><%= rf.escape(Formbuilder.options.mappings.DESCRIPTION) %></p>
     <hr style="border-bottom: 2px dashed #bbb">
   """
 

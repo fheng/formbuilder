@@ -2,8 +2,8 @@ Formbuilder.registerField 'page_break',
   icon: 'icon-file'
   type: 'non_input'
   view: """
-        <label class='section-name'>&nbsp; <%= rf.get(Formbuilder.options.mappings.LABEL) %></label>
-        <p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>
+        <label class='section-name'>&nbsp; <%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>
+        <p><%= rf.escape(Formbuilder.options.mappings.DESCRIPTION) %></p>
         <hr style="border-bottom: 2px solid #bbb">
         """
 

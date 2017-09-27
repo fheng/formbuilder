@@ -3,8 +3,8 @@ Formbuilder.registerField 'file',
   icon: 'icon-cloud-upload'
   valueField: false
   view: """
-    <div class="file_container" data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>"></div>
-    <input type='file' name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" data-name="<%= rf.get(Formbuilder.options.mappings.LABEL) %>" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />
+    <div class="file_container" data-name="<%= rf.escape(Formbuilder.options.mappings.LABEL) %>"></div>
+    <input type='file' name="<%= rf.escape(Formbuilder.options.mappings.LABEL) %>" data-name="<%= rf.escape(Formbuilder.options.mappings.LABEL) %>" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />
   """
 
   edit: """

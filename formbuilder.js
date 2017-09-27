@@ -903,7 +903,7 @@
     repeatable: false,
     valueField: false,
     icon: 'icon-check',
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>\n<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkboxes",
     defaultAttributes: function(attrs) {
@@ -940,7 +940,7 @@
     repeatable: true,
     valueField: false,
     icon: 'icon-caret-down',
-    view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </option>\n  <% } %>\n</select>",
+    view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true, includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> Dropdown",
     defaultAttributes: function(attrs) {
@@ -977,8 +977,8 @@
   Formbuilder.registerField('list', {
     icon: 'icon-list',
     type: 'non_input',
-    view: "<div class=\"btn-group pull-right\">\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<div class=\"fieldlist_table\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\">\n<p class=\"instructions\"><i class=\"icon-info-sign\"></i>Empty list - to add contents: </p><br />\n&nbsp; &nbsp;  1) Use \"Edit Structure\" to add fields to the list <br />\n&nbsp;  &nbsp;  2) Use \"Edit Data\" to add rows\n</div>",
-    edit: "<div class=\"btn-group\">\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n\n<div class='fb-edit-section-header'>List Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n",
+    view: "<div class=\"btn-group pull-right\">\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n<label class='section-name'><%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<div class=\"fieldlist_table\" data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\">\n<p class=\"instructions\"><i class=\"icon-info-sign\"></i>Empty list - to add contents: </p><br />\n&nbsp; &nbsp;  1) Use \"Edit Structure\" to add fields to the list <br />\n&nbsp;  &nbsp;  2) Use \"Edit Data\" to add rows\n</div>",
+    edit: "<div class=\"btn-group\">\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n\n<div class='fb-edit-section-header'>List Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n",
     addButton: "<span class='symbol'><span class='icon-list'></span></span> Field List"
   });
 
@@ -989,7 +989,7 @@
     repeatable: true,
     icon: 'icon-cloud-upload',
     valueField: false,
-    view: "<div class=\"file_container\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.get(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
+    view: "<div class=\"file_container\" data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
     edit: "<div class='fb-edit-section-header'>File Settings</div>\nMax. File Size\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %> | number\" style=\"width: 60px\" /> KB",
     addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
   });
@@ -1043,7 +1043,7 @@
   Formbuilder.registerField('page_break', {
     icon: 'icon-file',
     type: 'non_input',
-    view: "<label class='section-name'>&nbsp; <%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px solid #bbb\">",
+    view: "<label class='section-name'>&nbsp; <%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.escape(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px solid #bbb\">",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\nplaceholder='Add a longer description to this field'></textarea>",
     addButton: "<span class='symbol'><span class='icon-file'></span></span> Page Break"
   });
@@ -1098,7 +1098,7 @@
     icon: 'icon-circle-blank',
     repeatable: true,
     valueField: false,
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Radio Buttons",
     defaultAttributes: function(attrs) {
@@ -1124,7 +1124,7 @@
     repeatable: false,
     type: 'non_input',
     icon: 'icon-comment',
-    view: "<label class='section-name'>&nbsp; <%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <div>\n      <label class='fb-option'>\n        <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].label %>\n      </label>\n    </div>\n    <br/>\n  <% } %>\n\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n    <div class='other-option'>\n      <input type='text' />\n    </div>\n  <% } %>",
+    view: "<label class='section-name'>&nbsp; <%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <div>\n      <label class='fb-option'>\n        <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n      </label>\n    </div>\n    <br/>\n  <% } %>\n\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n    <div class='other-option'>\n      <input type='text' />\n    </div>\n  <% } %>",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n  <%= Formbuilder.templates['edit/readonly']({includeDatasource: true, rf: rf}) %>",
     addButton: "<span class=\"symbol\"><span class=\"icon-comment\"></span></span> Read Only",
     defaultAttributes: function(attrs) {
@@ -1147,7 +1147,7 @@
     type: 'non_input',
     icon: 'icon-minus',
     repeatable: true,
-    view: "<label class='section-name'><%= rf.get(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.get(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px dashed #bbb\">",
+    view: "<label class='section-name'><%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.escape(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px dashed #bbb\">",
     edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>\n<%= Formbuilder.templates['edit/repeating']({rf: rf}) %>",
     addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break",
     defaultAttributes: function(attrs) {
@@ -1740,7 +1740,7 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<span class=\'help-block\'>\n  ' +
-((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) )) == null ? '' : __t) +
+((__t = ( Formbuilder.helpers.simple_format(rf.escape(Formbuilder.options.mappings.DESCRIPTION)) )) == null ? '' : __t) +
 '\n</span>\n';
 
 }
@@ -1763,7 +1763,7 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<label class="fb-field-title">\n  <span>' +
-((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
+((__t = ( Formbuilder.helpers.simple_format(rf.escape(Formbuilder.options.mappings.LABEL)) )) == null ? '' : __t) +
 '\n  ';
  if (rf.get(Formbuilder.options.mappings.REQUIRED)) { ;
 __p += '\n    <abbr title=\'required\'>*</abbr>\n  ';

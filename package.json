@@ -8,6 +8,12 @@
     "grunt-contrib-jst": "*",
     "grunt-contrib-stylus": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-contrib-watch": "*"
-  }
+    "grunt-contrib-watch": "*",
+    "snyk": "^1.42.6"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }

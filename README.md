@@ -125,10 +125,23 @@ builder.on('save', function(payload){
 ```
 
 ## Developing
+
 1. `npm install`
 2. `bower install`
 3. `grunt watch`
-4. open `example/index.html` and you're all set!
+4. open `example/index.html` and you're all set! 
+
+#### Applying the changes in RHMAP studio
+
+1. `rm -rf node_modules && npm install`
+2. `bower install`
+3. `Add the formbuilder.js content in fh-ngui (public/javascript/lib/formbuilder/formbuilder.js)`
+
+#### Updating its bundles translations in RHMAP studio
+
+Execute the grunt tasks as described in the [fh-ngui Readme](https://github.com/fheng/fh-ngui#internationalization)
+
+PS.: In RHMAP studio this project is used in the Build Forms feature
 
 ## License
 

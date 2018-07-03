@@ -8,7 +8,7 @@ Formbuilder.registerField 'signature',
   edit: """"""
 
   addButton: """
-    <span class='symbol'><span class='icon-pencil'></span></span> Signature Capture
+    <span class='symbol'><span class='icon-pencil'></span></span> <span dataa-rv-translate>Signature Capture</span>
   """
 
   defaultAttributes: (attrs) ->

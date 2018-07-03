@@ -9,15 +9,15 @@ Formbuilder.registerField 'section_break',
   """
 
   edit: """
-    <div class='fb-edit-section-header'>Label</div>
+    <div class='fb-edit-section-header' data-rv-translate>Label</div>
     <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
     <textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'
-      placeholder='Add a longer description to this field'></textarea>
+      placeholder='<%= Formbuilder._("Add a longer description to this field") %>'></textarea>
     <%= Formbuilder.templates['edit/repeating']({rf: rf}) %>
   """
 
   addButton: """
-    <span class='symbol'><span class='icon-minus'></span></span> Section Break
+    <span class='symbol'><span class='icon-minus'></span></span> <span data-rv-translate>Section Break</span>
   """
 
   defaultAttributes: (attrs) ->

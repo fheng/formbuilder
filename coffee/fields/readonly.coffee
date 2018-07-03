@@ -21,13 +21,13 @@ Formbuilder.registerField 'readOnly',
   """
 
   edit: """
-  <div class='fb-edit-section-header'>Label</div>
+  <div class='fb-edit-section-header' data-rv-translate>Label</div>
   <input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />
     <%= Formbuilder.templates['edit/readonly']({includeDatasource: true, rf: rf}) %>
   """
 
   addButton: """
-    <span class="symbol"><span class="icon-comment"></span></span> Read Only
+    <span class="symbol"><span class="icon-comment"></span></span> <span data-rv-translate>Read Only</span>
   """
 
   defaultAttributes: (attrs) ->
@@ -35,6 +35,6 @@ Formbuilder.registerField 'readOnly',
     attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'readOnly');
     attrs.set(Formbuilder.options.mappings.REQUIRED, false);
     attrs.set(Formbuilder.options.mappings.OPTIONS, [
-      label: "Read Only Text Paragraph"
+      label: Formbuilder._("Read Only Text Paragraph")
     ])
     attrs.toJSON()

@@ -1,10 +1,10 @@
-<div class='fb-edit-section-header'>Options</div>
+<div class='fb-edit-section-header' data-rv-translate>Options</div>
 
 <% if (typeof includeDatasource !== 'undefined'){ %>
   <label class="includeDataSource">
     <% var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; %>
       <input type='checkbox' <%=checked%> />
-      Use a Data Source to populate field options?
+      <span data-rv-translate>Use a Data Source to populate field options?</span>
   </label>
 
  <% var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; %>
@@ -18,7 +18,7 @@
 <% if (typeof includeBlank !== 'undefined'){ %>
   <label class="includeBlank">
     <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_BLANK %>' />
-    Include blank
+    <span data-rv-translate>Include blank</span>
   </label>
 <% } %>
 
@@ -30,18 +30,18 @@
     <% } %>
     <input type="text" data-rv-input="option:label" class='option-label-input' />
     <div class="btn-group">
-      <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class='icon-plus-sign'></i></a>
-      <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class='icon-minus-sign'></i></a>
+      <a class="btn btn-success btn-small js-add-option" title="<%= Formbuilder._('Add Option') %>"><i class='icon-plus-sign'></i></a>
+      <a class="btn btn-danger btn-small js-remove-option" title="<%= Formbuilder._('Remove Option') %>"><i class='icon-minus-sign'></i></a>
     </div>
   </div>
 
   <% if (typeof includeOther !== 'undefined'){ %>
     <label class="includeOther">
       <input type='checkbox' data-rv-checked='model.<%= Formbuilder.options.mappings.INCLUDE_OTHER %>' />
-      Include "other"
+      <span data-rv-translate>Include "other"</span>
     </label>
   <% } %>
   <div class='fb-bottom-add'>
-    <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>">Add option</a>
+    <a class="js-add-option <%= Formbuilder.options.BUTTON_CLASS %>" data-rv-translate>Add option</a>
   </div>
 </div>

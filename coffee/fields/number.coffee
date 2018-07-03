@@ -16,5 +16,5 @@ Formbuilder.registerField 'number',
   """
 
   addButton: """
-    <span class="symbol"><span class="icon-number">123</span></span> Number
+    <span class="symbol"><span class="icon-number">123</span></span> <span data-rv-translate>Number</span>
   """

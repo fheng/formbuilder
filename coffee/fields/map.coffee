@@ -8,7 +8,7 @@ Formbuilder.registerField 'map',
   edit: """"""
 
   addButton: """
-    <span class='symbol'><span class='icon-map-marker'></span></span> Map
+    <span class='symbol'><span class='icon-map-marker'></span></span> <span data-rv-translate>Map</span>
   """
 
   defaultAttributes: (attrs) ->

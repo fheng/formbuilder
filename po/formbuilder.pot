@@ -1,0 +1,280 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2017-12-15 09:09+0000\n"
+"Plural-Forms: \n"
+
+msgid "Add a longer description to this field"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "All changes saved"
+msgstr ""
+
+msgid "Save form"
+msgstr ""
+
+msgid ""
+"You have unsaved changes. If you leave this page, you will lose those "
+"changes!"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "State / Province / Region"
+msgstr ""
+
+msgid "Zipcode"
+msgstr ""
+
+msgid "United States"
+msgstr ""
+
+msgid "Country"
+msgstr ""
+
+msgid "Date Stamp Options"
+msgstr ""
+
+msgid "Field type:"
+msgstr ""
+
+msgid "Date & Time"
+msgstr ""
+
+msgid "Time Only"
+msgstr ""
+
+msgid "Date Only"
+msgstr ""
+
+msgid "Format:"
+msgstr ""
+
+msgid "Datestamp"
+msgstr ""
+
+msgid "Value: "
+msgstr ""
+
+msgid "Format: "
+msgstr ""
+
+msgid "Barcode"
+msgstr ""
+
+msgid "Checked"
+msgstr ""
+
+msgid "Checkbox"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Checkboxes"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Dropdown"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Edit Data"
+msgstr ""
+
+msgid "Edit Structure"
+msgstr ""
+
+msgid "Empty list - to add contents:"
+msgstr ""
+
+msgid "1) Use \"Edit Structure\" to add fields to the list"
+msgstr ""
+
+msgid "2) Use \"Edit Data\" to add rows"
+msgstr ""
+
+msgid "List Name"
+msgstr ""
+
+msgid "Field List"
+msgstr ""
+
+msgid "File Settings"
+msgstr ""
+
+msgid "Max. File Size"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Latitude/Longitude"
+msgstr ""
+
+msgid "Eastings/Northings"
+msgstr ""
+
+msgid "Location Unit"
+msgstr ""
+
+msgid "Latitude / Longitude"
+msgstr ""
+
+msgid "Eastings / Northings"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Map"
+msgstr ""
+
+msgid "Number"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Page Break"
+msgstr ""
+
+msgid "Paragraph"
+msgstr ""
+
+msgid "Camera & Library"
+msgstr ""
+
+msgid "Max Width"
+msgstr ""
+
+msgid "px"
+msgstr ""
+
+msgid "Quality"
+msgstr ""
+
+msgid "Photo Source"
+msgstr ""
+
+msgid "Photo Settings"
+msgstr ""
+
+msgid "Max Height"
+msgstr ""
+
+msgid "Camera Only"
+msgstr ""
+
+msgid "Library Only"
+msgstr ""
+
+msgid "Photo Type"
+msgstr ""
+
+msgid "JPEG"
+msgstr ""
+
+msgid "PNG"
+msgstr ""
+
+msgid "Save To Photo Album?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Photo Capture"
+msgstr ""
+
+msgid "Dollars"
+msgstr ""
+
+msgid "Cents"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "Radio Buttons"
+msgstr ""
+
+msgid "Read Only"
+msgstr ""
+
+msgid "Section Break"
+msgstr ""
+
+msgid "Slider (Number)"
+msgstr ""
+
+msgid "Format"
+msgstr ""
+
+msgid "Field Format"
+msgstr ""
+
+msgid "Simple"
+msgstr ""
+
+msgid "Advanced (Regex)"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "alphanumeric character"
+msgstr ""
+
+msgid "number"
+msgstr ""
+
+msgid "e.g. ccnn-nnnn matches ab12-5432, but not 0000-0000"
+msgstr ""
+
+msgid ""
+"\n"
+"Use javascript-friendly regular expressions to validate - no need to "
+"include surrounding / characters \n"
+"e.g. .+ but not /.+/\n"
+"\n"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "AM"
+msgstr ""
+
+msgid "PM"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Website"
+msgstr ""

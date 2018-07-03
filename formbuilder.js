@@ -10,23 +10,37 @@
     }
   };
 
+  rivets.binders.translate = function(el, value) {
+    if (el.innerText != null) {
+      return el.innerText = Formbuilder.gettext(el.innerText);
+    } else if (el.textContent != null) {
+      return el.textContent = Formbuilder.gettext(el.textContent);
+    }
+  };
+
   rivets.configure({
     prefix: "rv",
     adapter: {
       subscribe: function(obj, keypath, callback) {
-        callback.wrapped = function(m, v) {
-          return callback(v);
-        };
-        return obj.on('change:' + keypath, callback.wrapped);
+        if ((obj != null) && (obj.on != null)) {
+          callback.wrapped = function(m, v) {
+            return callback(v);
+          };
+          return obj.on('change:' + keypath, callback.wrapped);
+        }
       },
       unsubscribe: function(obj, keypath, callback) {
-        return obj.off('change:' + keypath, callback.wrapped);
+        if ((obj != null) && (obj.off != null)) {
+          return obj.off('change:' + keypath, callback.wrapped);
+        }
       },
       read: function(obj, keypath) {
-        if (keypath === "cid") {
-          return obj.cid;
+        if ((obj != null) && (obj.get != null)) {
+          if (keypath === "cid") {
+            return obj.cid;
+          }
+          return obj.get(keypath);
         }
-        return obj.get(keypath);
       },
       publish: function(obj, keypath, value) {
         if (obj.cid) {
@@ -61,6 +75,59 @@
   var Formbuilder;
 
   Formbuilder = (function() {
+    Formbuilder.setLanguageHelper = function(cb) {
+      if (cb != null) {
+        return this.getLanguage = cb;
+      } else {
+        return this.getLanguage = function() {
+          return "en";
+        };
+      }
+    };
+
+    Formbuilder.setLanguageTable = function(lang, tbl) {
+      if (this.languageTable_ == null) {
+        this.languageTable_ = {};
+      }
+      if (lang != null) {
+        return this.languageTable_[lang] = tbl;
+      }
+    };
+
+    Formbuilder.gettext = function(string) {
+      var lang, ret, tbl;
+      if (this.getLanguage == null) {
+        this.setLanguageHelper();
+      }
+      if (this.languageTable_ == null) {
+        this.setLanguageTable("en", {});
+      }
+      lang = this.getLanguage();
+      tbl = this.languageTable_[lang];
+      this.languageTable_['en'][string] = void 0;
+      if ((tbl != null) && (tbl[string] != null) && tbl[string] !== '') {
+        ret = tbl[string];
+      } else {
+        ret = string;
+      }
+      return ret;
+    };
+
+    Formbuilder.N_ = function(string) {
+      if (this.getLanguage == null) {
+        this.setLanguageHelper();
+      }
+      if (this.languageTable_ == null) {
+        this.setLanguageTable("en", {});
+      }
+      this.languageTable_['en'][string] = void 0;
+      return string;
+    };
+
+    Formbuilder._ = function(string) {
+      return Formbuilder.gettext(string);
+    };
+
     Formbuilder.helpers = {
       defaultFieldAttrs: function(field_type) {
         var attrs, base;
@@ -102,8 +169,8 @@
         FIELD_OPTIONS: 'field_options',
         OPTIONS: 'field_options.options',
         DESCRIPTION: 'field_options.description',
-        DESCRIPTION_PLACEHOLDER: 'Add a longer description to this field',
-        DESCRIPTION_TITLE: 'Description',
+        DESCRIPTION_PLACEHOLDER: Formbuilder.N_('Add a longer description to this field'),
+        DESCRIPTION_TITLE: Formbuilder.N_('Description'),
         INCLUDE_OTHER: 'field_options.include_other_option',
         INCLUDE_BLANK: 'field_options.include_blank_option',
         DATASOURCE: 'dataSource',
@@ -130,7 +197,7 @@
         PHOTO_QUALITY: 'field_options.photo_quality',
         SINGLE_CHECKED: 'field_options.checked',
         TIME_AUTOPOPULATE: 'field_options.time_autopopulate',
-        VALUE_HEADER: 'Value',
+        VALUE_HEADER: Formbuilder.N_('Value'),
         TYPE_ALIASES: false,
         FIELD_ERROR: 'field_error'
       },
@@ -145,9 +212,9 @@
         return type;
       },
       dict: {
-        ALL_CHANGES_SAVED: 'All changes saved',
-        SAVE_FORM: 'Save form',
-        UNSAVED_CHANGES: 'You have unsaved changes. If you leave this page, you will lose those changes!'
+        ALL_CHANGES_SAVED: Formbuilder.N_('All changes saved'),
+        SAVE_FORM: Formbuilder.N_('Save form'),
+        UNSAVED_CHANGES: Formbuilder.N_('You have unsaved changes. If you leave this page, you will lose those changes!')
       }
     };
 
@@ -223,7 +290,10 @@
           'keyup textarea': 'forceEditRender',
           'change input[type=file]': 'forceEditRender'
         },
-        initialize: function() {
+        initialize: function(options) {
+          if (!this.options) {
+            this.options = options;
+          }
           this.parentView = this.options.parentView;
           this.listenTo(this.model, "change", this.render);
           return this.listenTo(this.model, "destroy", this.remove);
@@ -237,7 +307,7 @@
           editStructure = this.parentView.options.hasOwnProperty('editStructure') ? this.parentView.options.editStructure : true;
           $type = this.model.get(Formbuilder.options.mappings.FIELD_TYPE);
           if (this.model.get(Formbuilder.options.mappings.ADMIN_ONLY)) {
-            Formbuilder.fieldRuleConfirmationFunction(this.model, "adminChange", "Admin Only fields cannot be the subject of rules. Changing this field to Admin Only will remove any references of this field from page/field rules. Do you wish to keep the updated rules?");
+            Formbuilder.fieldRuleConfirmationFunction(this.model, "adminChange", Formbuilder._("Admin Only fields cannot be the subject of rules. Changing this field to Admin Only will remove any references of this field from page/field rules. Do you wish to keep the updated rules?"));
             this.$el.addClass('admin-field');
           } else {
             this.$el.removeClass('admin-field');
@@ -249,6 +319,9 @@
             editStructure: editStructure,
             rf: this.model
           }));
+          rivets.bind(this.$el, {
+            model: this.model
+          });
           return this;
         },
         focusEditView: function(e) {
@@ -262,7 +335,7 @@
         },
         clear: function() {
           this.parentView.handleFormUpdate();
-          return Formbuilder.fieldRuleConfirmationFunction(this.model, "deleteChange", "Deleting this field will remove any references of this field from page/field rules. Do you wish to keep the updated rules?", (function(_this) {
+          return Formbuilder.fieldRuleConfirmationFunction(this.model, "deleteChange", Formbuilder._("Deleting this field will remove any references of this field from page/field rules. Do you wish to keep the updated rules?"), (function(_this) {
             return function(confirmed) {
               return _this.model.destroy();
             };
@@ -272,7 +345,7 @@
           var attrs;
           attrs = _.clone(this.model.attributes);
           delete attrs['id'];
-          attrs[Formbuilder.options.mappings.LABEL] += ' Copy';
+          attrs[Formbuilder.options.mappings.LABEL] += Formbuilder._(' Copy');
           return this.parentView.createField(attrs, {
             position: this.model.indexInDOM() + 1
           });
@@ -468,7 +541,10 @@
           'blur input.minReps': 'checkReps',
           'blur input.maxReps': 'checkReps'
         },
-        initialize: function() {
+        initialize: function(options) {
+          if (!this.options) {
+            this.options = options;
+          }
           if (!this.options.eventFix) {
             this.events['click .fb-tabs a'] = 'showTab';
           }
@@ -558,6 +634,9 @@
           if (this.options.eventFix) {
             this.$el.find('.fb-tabs a').unbind().click(this.showTab);
           }
+          rivets.bind(this.$el, {
+            model: this.model
+          });
           return this;
         },
         bindWindowScrollEvent: function() {
@@ -841,9 +920,9 @@
 (function() {
   Formbuilder.registerField('address', {
     repeatable: true,
-    view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option>United States</option></select>\n    <label>Country</label>\n  </span>\n</div>",
+    view: "<div class='input-line'>\n  <span class='street'>\n    <input type='text' />\n    <label data-rv-translate>Address</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='city'>\n    <input type='text' />\n    <label data-rv-translate>City</label>\n  </span>\n\n  <span class='state'>\n    <input type='text' />\n    <label data-rv-translate>State / Province / Region</label>\n  </span>\n</div>\n\n<div class='input-line'>\n  <span class='zip'>\n    <input type='text' />\n    <label data-rv-translate>Zipcode</label>\n  </span>\n\n  <span class='country'>\n    <select><option data-rv-translate>United States</option></select>\n    <label data-rv-translate>Country</label>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"icon-home\"></span></span> Address"
+    addButton: "<span class=\"symbol\"><span class=\"icon-home\"></span></span> <span data-rv-translate>Address</span>"
   });
 
 }).call(this);
@@ -854,8 +933,8 @@
     repeatable: true,
     valueField: false,
     view: "<% if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"date\"){ %>\n  <input disabled value=\"YYYY-MM-DD\">\n  <span class='icon icon-calendar'></span>\n<% } else if (rf.get(Formbuilder.options.mappings.DATETIME_UNIT)===\"time\"){ %>\n  <input disabled value=\"HH:MM\">\n  <span class='icon icon-time'></span>\n<% }else{ %>\n  <input disabled value=\"<%= rf.get(Formbuilder.options.mappings.DATETIME_FORMAT) || 'YYYY-MM-DD HH:mm:ss' %>\">\n  <span class='icon icon-calendar'></span><span class='icon icon-time'></span>\n\n<% } %>",
-    edit: "        <div class='fb-edit-section-header'>Date Stamp Options</div>\n        <div class=\"inline-labels\">\n          <label>Field type:</label>\n          <select class=\"datetype\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\">\n            <option value=\"datetime\">Date &amp; Time</option>\n            <option value=\"time\">Time Only</option>\n            <option value=\"date\">Date Only</option>\n          </select>\n<div class=\"dateformat\">\n          <label>Format:</label>\n          <input type=\"text\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>\"/>\n<div>\n        </div>",
-    addButton: "<span class='symbol'><span class='icon-calendar'></span></span> Datestamp",
+    edit: "        <div class='fb-edit-section-header' data-rv-translate>Date Stamp Options</div>\n        <div class=\"inline-labels\">\n          <label data-rv-translate>Field type:</label>\n          <select class=\"datetype\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_UNIT %>\">\n            <option value=\"datetime\" data-rv-translate>Date &amp; Time</option>\n            <option value=\"time\" data-rv-translate>Time Only</option>\n            <option value=\"date\" data-rv-translate>Date Only</option>\n          </select>\n<div class=\"dateformat\">\n          <label data-rv-translate>Format:</label>\n          <input type=\"text\" data-rv-value=\"model.<%= Formbuilder.options.mappings.DATETIME_FORMAT %>\"/>\n<div>\n        </div>",
+    addButton: "<span class='symbol'><span class='icon-calendar'></span></span> <span data-rv-translate>Datestamp</span>",
     defaultAttributes: function(attrs) {
       attrs[Formbuilder.options.mappings.DATETIME_UNIT] = 'datetime';
       attrs[Formbuilder.options.mappings.DATETIME_FORMAT] = 'YYYY-MM-DD HH:mm:ss';
@@ -870,9 +949,9 @@
     icon: 'icon-barcode',
     repeatable: true,
     valueField: false,
-    view: "<label>Value: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  /><br/>\n<label>Format: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />",
+    view: "<label data-rv-translate>Value: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  /><br/>\n<label data-rv-translate>Format: </label><input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />",
     edit: "",
-    addButton: "<span class='symbol'><span class='icon-barcode'></span></span> Barcode",
+    addButton: "<span class='symbol'><span class='icon-barcode'></span></span> <span data-rv-translate>Barcode</span>",
     defaultAttributes: function(attrs) {
       return attrs;
     }
@@ -886,8 +965,8 @@
     icon: 'icon-check',
     valueField: false,
     view: "<input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> onclick=\"javascript: return false;\" />",
-    edit: "<div class='fb-edit-section-header'>Checked</div>\n<input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> data-rv-checked='model.<%= Formbuilder.options.mappings.SINGLE_CHECKED%>' />",
-    addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkbox",
+    edit: "<div class='fb-edit-section-header' data-rv-translate>Checked</div>\n<input type='checkbox' <%= rf.get(Formbuilder.options.mappings.SINGLE_CHECKED) && 'checked' %> data-rv-checked='model.<%= Formbuilder.options.mappings.SINGLE_CHECKED%>' />",
+    addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> <span data-rv-translate>Checkbox</span>",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.SINGLE_CHECKED, true);
@@ -903,9 +982,9 @@
     repeatable: false,
     valueField: false,
     icon: 'icon-check',
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='checkbox' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='checkbox' />\n      <span data-rv-translate>Other</span>\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max_options']({ rf : rf }) %>\n<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> Checkboxes",
+    addButton: "<span class=\"symbol\"><span class=\"icon-check\"></span></span> <span data-rv-translate>Checkboxes</span>",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'checkboxes');
@@ -930,7 +1009,7 @@
     repeatable: true,
     view: "<div class='input-line'>\n  <span class='month'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='day'>\n    <input type=\"text\" />\n    <label>DD</label>\n  </span>\n\n  <span class='above-line'>/</span>\n\n  <span class='year'>\n    <input type=\"text\" />\n    <label>YYYY</label>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"icon-calendar\"></span></span> Date"
+    addButton: "<span class=\"symbol\"><span class=\"icon-calendar\"></span></span> <span data-rv-translate>Date</span>"
   });
 
 }).call(this);
@@ -942,7 +1021,7 @@
     icon: 'icon-caret-down',
     view: "<select>\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_BLANK)) { %>\n    <option value=''></option>\n  <% } %>\n\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <option <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'selected' %>>\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </option>\n  <% } %>\n</select>",
     edit: "<%= Formbuilder.templates['edit/options']({ includeBlank: true, includeDatasource: true, rf: rf}) %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> Dropdown",
+    addButton: "<span class=\"symbol\"><span class=\"icon-caret-down\"></span></span> <span data-rv-translate>Dropdown</span>",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'dropdown');
@@ -968,7 +1047,7 @@
     icon: 'icon-envelope-alt',
     view: "<input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' placeholder=\"email@example.com\" class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' />",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"icon-envelope-alt\"></span></span> Email"
+    addButton: "<span class=\"symbol\"><span class=\"icon-envelope-alt\"></span></span> <span data-rv-translate>Email</span>"
   });
 
 }).call(this);
@@ -977,9 +1056,9 @@
   Formbuilder.registerField('list', {
     icon: 'icon-list',
     type: 'non_input',
-    view: "<div class=\"btn-group pull-right\">\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n<label class='section-name'><%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<div class=\"fieldlist_table\" data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\">\n<p class=\"instructions\"><i class=\"icon-info-sign\"></i>Empty list - to add contents: </p><br />\n&nbsp; &nbsp;  1) Use \"Edit Structure\" to add fields to the list <br />\n&nbsp;  &nbsp;  2) Use \"Edit Data\" to add rows\n</div>",
-    edit: "<div class=\"btn-group\">\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> Edit Data</a>\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> Edit Structure</i></a>\n</div>\n\n<div class='fb-edit-section-header'>List Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n",
-    addButton: "<span class='symbol'><span class='icon-list'></span></span> Field List"
+    view: "<div class=\"btn-group pull-right\">\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> <span data-rv-translate>Edit Data</span></a>\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-small btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> <span data-rv-translate>Edit Structure</span></i></a>\n</div>\n<label class='section-name'><%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n<br />\n<br />\n<div class=\"fieldlist_table\" data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\">\n<p class=\"instructions\"><i class=\"icon-info-sign\"></i><span data-rv-translate>Empty list - to add contents:</span> </p><br />\n&nbsp; &nbsp;  <span data-rv-translate>1) Use \"Edit Structure\" to add fields to the list</span> <br />\n&nbsp;  &nbsp;  <span data-rv-translate>2) Use \"Edit Data\" to add rows</span>\n</div>",
+    edit: "<div class=\"btn-group\">\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-data\" href=\"#\"><i class=\"icon-pencil\"></i> <span data-rv-translate>Edit Data</span></a>\n<a data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" class=\"btn btn-listfield-structure\" href=\"#\"><i class=\"icon-road\"></i> <span data-rv-translate>Edit Structure</span></i></a>\n</div>\n\n<div class='fb-edit-section-header' data-rv-translate>List Name</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n",
+    addButton: "<span class='symbol'><span class='icon-list'></span></span> <span data-rv-translate>Field List</span>"
   });
 
 }).call(this);
@@ -990,8 +1069,8 @@
     icon: 'icon-cloud-upload',
     valueField: false,
     view: "<div class=\"file_container\" data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\"></div>\n<input type='file' name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" data-name=\"<%= rf.escape(Formbuilder.options.mappings.LABEL) %>\" data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  />",
-    edit: "<div class='fb-edit-section-header'>File Settings</div>\nMax. File Size\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %> | number\" style=\"width: 60px\" /> KB",
-    addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> File"
+    edit: "<div class='fb-edit-section-header' data-rv-translate>File Settings</div>\n<span data-rv-translate>Max. File Size</span>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FILE_SIZE %> | number\" style=\"width: 60px\" /> KB",
+    addButton: "<span class=\"symbol\"><span class=\"icon-cloud-upload\"></span></span> <span data-rv-translate>File</span>"
   });
 
 }).call(this);
@@ -1001,9 +1080,9 @@
     repeatable: true,
     valueField: false,
     icon: 'icon-location-arrow',
-    view: "<% if (rf.get(Formbuilder.options.mappings.LOCATION_UNIT)===\"latlong\"){ %>\nLatitude/Longitude\n<% } else { %>\nEastings/Northings\n<% } %>\n<br />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />",
-    edit: "<div class='fb-edit-section-header'>Location Unit</div>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.LOCATION_UNIT %>\" style=\"width: auto;\">\n  <option value=\"latlong\">Latitude / Longitude</option>\n  <option value=\"eastnorth\">Eastings / Northings</option>\n</select>",
-    addButton: "<span class='symbol'><span class='icon-location-arrow'></span></span> Location",
+    view: "<% if (rf.get(Formbuilder.options.mappings.LOCATION_UNIT)===\"latlong\"){ %>\n<span data-rv-translate>Latitude/Longitude</span>\n<% } else { %>\n<span data-rv-translate>Eastings/Northings</span>\n<% } %>\n<br />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />\n<input disabled class='rf-size-small' type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' />",
+    edit: "<div class='fb-edit-section-header' data-rv-translate>Location Unit</div>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.LOCATION_UNIT %>\" style=\"width: auto;\">\n  <option value=\"latlong\" data-rv-translate>Latitude / Longitude</option>\n  <option value=\"eastnorth\" data-rv-translate>Eastings / Northings</option>\n</select>",
+    addButton: "<span class='symbol'><span class='icon-location-arrow'></span></span> <span data-rv-translate>Location</span>",
     defaultAttributes: function(attrs) {
       attrs[Formbuilder.options.mappings.LOCATION_UNIT] = 'latlong';
       return attrs;
@@ -1019,7 +1098,7 @@
     icon: 'icon-map-marker',
     view: "<h1><span class='icon-map-marker'></span></h1>",
     edit: "",
-    addButton: "<span class='symbol'><span class='icon-map-marker'></span></span> Map",
+    addButton: "<span class='symbol'><span class='icon-map-marker'></span></span> <span data-rv-translate>Map</span>",
     defaultAttributes: function(attrs) {
       return attrs;
     }
@@ -1034,7 +1113,7 @@
     iconText: '123',
     view: "<input type='number' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' />\n<% if (units = rf.get(Formbuilder.options.mappings.UNITS)) { %>\n  <%= units %>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/min_max']() %>\n<%= Formbuilder.templates['edit/units']() %>\n<%= Formbuilder.templates['edit/integer_only']() %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> Number"
+    addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> <span data-rv-translate>Number</span>"
   });
 
 }).call(this);
@@ -1044,8 +1123,8 @@
     icon: 'icon-file',
     type: 'non_input',
     view: "<label class='section-name'>&nbsp; <%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.escape(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px solid #bbb\">",
-    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\nplaceholder='Add a longer description to this field'></textarea>",
-    addButton: "<span class='symbol'><span class='icon-file'></span></span> Page Break"
+    edit: "<div class='fb-edit-section-header' data-rv-translate>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\nplaceholder='<%= Formbuilder._(\"Add a longer description to this field\") %>'></textarea>",
+    addButton: "<span class='symbol'><span class='icon-file'></span></span> <span data-rv-translate>Page Break</span>"
   });
 
 }).call(this);
@@ -1056,7 +1135,7 @@
     repeatable: true,
     view: "<textarea class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>' ><%= rf.get(Formbuilder.options.mappings.VALUE) %></textarea>",
     edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>",
-    addButton: "<span class=\"icon icon-align-justify\"></span> Paragraph",
+    addButton: "<span class=\"icon icon-align-justify\"></span> <span data-rv-translate>Paragraph</span>",
     defaultAttributes: function(attrs) {
       return attrs;
     }
@@ -1070,8 +1149,8 @@
     repeatable: true,
     valueField: false,
     view: "<h1><span class='icon-camera'></span></h1>",
-    edit: "<div class='fb-edit-section-header'>Photo Settings</div>\n<div class=\"inline-labels\">\n<label>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %> | number\" style=\"width: 60px\" /> px<br />\n<label>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %> | number\" style=\"width: 60px\" /> px<br />\n<label>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %> | number\" style=\"width: 60px\" /> %<br />\n<label>Photo Source</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_SOURCE %>\" style=\"width: auto;\">\n<option value=\"both\">Camera &amp; Library</option>\n<option value=\"camera\">Camera Only</option>\n<option value=\"library\">Library Only</option>\n</select> <br />\n<label>Photo Type</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_TYPE %>\" style=\"width: auto;\">\n<option value=\"jpeg\">JPEG</option>\n<option value=\"png\">PNG</option>\n</select> <br />\n<label>Save To Photo Album?</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_SAVE %>\" style=\"width: auto;\">\n<option value=\"true\">Yes</option>\n<option value=\"false\">No</option>\n</select>\n</div>",
-    addButton: "<span class='symbol'><span class='icon-camera'></span></span> Photo Capture",
+    edit: "<div class='fb-edit-section-header' data-rv-translate>Photo Settings</div>\n<div class=\"inline-labels\">\n<label data-rv-translate>Max Height</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_HEIGHT %> | number\" style=\"width: 60px\" /> <span data-rv-translate>px</span><br />\n<label data-rv-translate>Max Width</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_WIDTH %> | number\" style=\"width: 60px\" /> <span data-rv-translate>px</span><br />\n<label data-rv-translate>Quality</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.PHOTO_QUALITY %> | number\" style=\"width: 60px\" /> %<br />\n<label data-rv-translate>Photo Source</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_SOURCE %>\" style=\"width: auto;\">\n<option value=\"both\" data-rv-translate>Camera &amp; Library</option>\n<option value=\"camera\" data-rv-translate>Camera Only</option>\n<option value=\"library\" data-rv-translate>Library Only</option>\n</select> <br />\n<label data-rv-translate>Photo Type</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_TYPE %>\" style=\"width: auto;\">\n<option value=\"jpeg\" data-rv-translate>JPEG</option>\n<option value=\"png\" data-rv-translate>PNG</option>\n</select> <br />\n<label data-rv-translate>Save To Photo Album?</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.PHOTO_SAVE %>\" style=\"width: auto;\">\n<option value=\"true\" data-rv-translate>Yes</option>\n<option value=\"false\" data-rv-translate>No</option>\n</select>\n</div>",
+    addButton: "<span class='symbol'><span class='icon-camera'></span></span> <span data-rv-translate>Photo Capture</span>",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.PHOTO_SOURCE, "both");
@@ -1086,9 +1165,9 @@
 (function() {
   Formbuilder.registerField('price', {
     repeatable: true,
-    view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label>Cents</label>\n  </span>\n</div>",
+    view: "<div class='input-line'>\n  <span class='above-line'>$</span>\n  <span class='dolars'>\n    <input type='text' />\n    <label data-rv-translate>Dollars</label>\n  </span>\n  <span class='above-line'>.</span>\n  <span class='cents'>\n    <input type='text' />\n    <label data-rv-translate>Cents</label>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"icon-dollar\"></span></span> Price"
+    addButton: "<span class=\"symbol\"><span class=\"icon-dollar\"></span></span> <span data-rv-translate>Price</span>"
   });
 
 }).call(this);
@@ -1098,9 +1177,9 @@
     icon: 'icon-circle-blank',
     repeatable: true,
     valueField: false,
-    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      Other\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
+    view: "<% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n  <div>\n    <label class='fb-option'>\n      <input type='radio' <%= rf.get(Formbuilder.options.mappings.OPTIONS)[i].checked && 'checked' %> onclick=\"javascript: return false;\" />\n      <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n    </label>\n  </div>\n<% } %>\n\n<% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n  <div class='other-option'>\n    <label class='fb-option'>\n      <input type='radio' />\n      <span data-rv-translate>Other</span>\n    </label>\n\n    <input type='text' />\n  </div>\n<% } %>",
     edit: "<%= Formbuilder.templates['edit/options']({includeDatasource: true, rf: rf}) %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> Radio Buttons",
+    addButton: "<span class=\"symbol\"><span class=\"icon-circle-blank\"></span></span> <span data-rv-translate>Radio Buttons</span>",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'radio');
@@ -1125,15 +1204,15 @@
     type: 'non_input',
     icon: 'icon-comment',
     view: "<label class='section-name'>&nbsp; <%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n  <% for (i in (rf.get(Formbuilder.options.mappings.OPTIONS) || [])) { %>\n    <div>\n      <label class='fb-option'>\n        <%= _.escape(rf.get(Formbuilder.options.mappings.OPTIONS)[i].label) %>\n      </label>\n    </div>\n    <br/>\n  <% } %>\n\n  <% if (rf.get(Formbuilder.options.mappings.INCLUDE_OTHER)) { %>\n    <div class='other-option'>\n      <input type='text' />\n    </div>\n  <% } %>",
-    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n  <%= Formbuilder.templates['edit/readonly']({includeDatasource: true, rf: rf}) %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-comment\"></span></span> Read Only",
+    edit: "<div class='fb-edit-section-header' data-rv-translate>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n  <%= Formbuilder.templates['edit/readonly']({includeDatasource: true, rf: rf}) %>",
+    addButton: "<span class=\"symbol\"><span class=\"icon-comment\"></span></span> <span data-rv-translate>Read Only</span>",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.FIELD_TYPE, 'readOnly');
       attrs.set(Formbuilder.options.mappings.REQUIRED, false);
       attrs.set(Formbuilder.options.mappings.OPTIONS, [
         {
-          label: "Read Only Text Paragraph"
+          label: Formbuilder._("Read Only Text Paragraph")
         }
       ]);
       return attrs.toJSON();
@@ -1148,8 +1227,8 @@
     icon: 'icon-minus',
     repeatable: true,
     view: "<label class='section-name'><%= rf.escape(Formbuilder.options.mappings.LABEL) %></label>\n<p><%= rf.escape(Formbuilder.options.mappings.DESCRIPTION) %></p>\n<hr style=\"border-bottom: 2px dashed #bbb\">",
-    edit: "<div class='fb-edit-section-header'>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='Add a longer description to this field'></textarea>\n<%= Formbuilder.templates['edit/repeating']({rf: rf}) %>",
-    addButton: "<span class='symbol'><span class='icon-minus'></span></span> Section Break",
+    edit: "<div class='fb-edit-section-header' data-rv-translate>Label</div>\n<input type='text' data-rv-input='model.<%= Formbuilder.options.mappings.LABEL %>' />\n<textarea data-rv-input='model.<%= Formbuilder.options.mappings.DESCRIPTION %>'\n  placeholder='<%= Formbuilder._(\"Add a longer description to this field\") %>'></textarea>\n<%= Formbuilder.templates['edit/repeating']({rf: rf}) %>",
+    addButton: "<span class='symbol'><span class='icon-minus'></span></span> <span data-rv-translate>Section Break</span>",
     defaultAttributes: function(attrs) {
       return attrs;
     }
@@ -1164,7 +1243,7 @@
     icon: 'icon-pencil',
     view: "<h1 style=\"border: 1px solid #bbb; padding: 10px; border-radius: 6px;\"><span class='icon-pencil'></span></h1>",
     edit: "",
-    addButton: "<span class='symbol'><span class='icon-pencil'></span></span> Signature Capture",
+    addButton: "<span class='symbol'><span class='icon-pencil'></span></span> <span dataa-rv-translate>Signature Capture</span>",
     defaultAttributes: function(attrs) {
       return attrs;
     }
@@ -1179,7 +1258,7 @@
     iconText: '123',
     view: "<h1 style=\"border: 1px solid #bbb; padding: 10px; border-radius: 6px;\"><span class='icon-exchange'></span></h1>",
     edit: "<%= Formbuilder.templates['edit/min_max_step']() %>",
-    addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> Slider (Number)",
+    addButton: "<span class=\"symbol\"><span class=\"icon-number\">123</span></span> <span data-rv-translate>Slider (Number)</span>",
     defaultAttributes: function(attrs) {
       attrs = new Backbone.Model(attrs);
       attrs.set(Formbuilder.options.mappings.MIN, 1);
@@ -1196,8 +1275,8 @@
     icon: 'icon-font',
     repeatable: true,
     view: "<% var size = rf.get(Formbuilder.options.mappings.SIZE) || 'large'; %>\n<input type='text' data-cid='<%= rf.cid %>' data-_id='<%= rf.get('_id') %>'  value='<%= rf.get(Formbuilder.options.mappings.VALUE) %>' class='rf-size-<%= size %>' />",
-    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>\n<div class='fb-edit-section-header'>Field Format</div>\n<div class=\"inline-labels\">\n\n<label>Type</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.FIELD_FORMAT_MODE %>\" class=\"fieldFormatMode\" style=\"width: auto;\">\n  <option value=\"simple\">Simple</option>\n  <option value=\"regex\">Advanced (Regex)</option>\n</select><br />\n<label>Format</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FIELD_FORMAT_STRING %>\" class=\"fieldFormatString\" style=\"width: 150px;\" /><br />\n</div>\n<div class=\"simpleFormat\">\n  <strong>c</strong> = alphanumeric character<br />\n  <strong>n</strong> = number<br />\n  <strong>e.g.</strong> ccnn-nnnn matches ab12-5432, but not 0000-0000\n</div>\n<div class=\"advancedFormat\">\nUse javascript-friendly regular expressions to validate - no need to include surrounding / characters <br />\n<strong>e.g.</strong> .+ but not /.+/\n\n</div>\n",
-    addButton: "<span class='symbol'><span class='icon-font'></span></span> Text",
+    edit: "<%= Formbuilder.templates['edit/size']() %>\n<%= Formbuilder.templates['edit/min_max_length']() %>\n<div class='fb-edit-section-header' data-rv-translate>Field Format</div>\n<div class=\"inline-labels\">\n\n<label data-rv-translate>Type</label>\n<select data-rv-value=\"model.<%= Formbuilder.options.mappings.FIELD_FORMAT_MODE %>\" class=\"fieldFormatMode\" style=\"width: auto;\">\n  <option value=\"simple\" data-rv-translate>Simple</option>\n  <option value=\"regex\" data-rv-translate>Advanced (Regex)</option>\n</select><br />\n<label data-rv-translate>Format</label>\n<input type=\"text\" data-rv-input=\"model.<%= Formbuilder.options.mappings.FIELD_FORMAT_STRING %>\" class=\"fieldFormatString\" style=\"width: 150px;\" /><br />\n</div>\n<div class=\"simpleFormat\">\n  <strong>c</strong> = <span data-rv-translate>alphanumeric character</span><br />\n  <strong>n</strong> = <span data-rv-translate>number</span><br />\n  <span data-rv-translate><strong>e.g.</strong> ccnn-nnnn matches ab12-5432, but not 0000-0000</span>\n</div>\n<div class=\"advancedFormat\" data-rv-translate>\nUse javascript-friendly regular expressions to validate - no need to include surrounding / characters <br />\n<strong>e.g.</strong> .+ but not /.+/\n\n</div>\n",
+    addButton: "<span class='symbol'><span class='icon-font'></span></span> <span data-rv-translate>Text</span>",
     defaultAttributes: function(attrs) {
       return attrs;
     }
@@ -1208,9 +1287,9 @@
 (function() {
   Formbuilder.registerField('time', {
     repeatable: true,
-    view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option>AM</option>\n      <option>PM</option>\n    </select>\n  </span>\n</div>",
+    view: "<div class='input-line'>\n  <span class='hours'>\n    <input type=\"text\" />\n    <label>HH</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='minutes'>\n    <input type=\"text\" />\n    <label>MM</label>\n  </span>\n\n  <span class='above-line'>:</span>\n\n  <span class='seconds'>\n    <input type=\"text\" />\n    <label>SS</label>\n  </span>\n\n  <span class='am_pm'>\n    <select>\n      <option data-rv-translate>AM</option>\n      <option data-rv-translate>PM</option>\n    </select>\n  </span>\n</div>",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"icon-time\"></span></span> Time"
+    addButton: "<span class=\"symbol\"><span class=\"icon-time\"></span></span> <span data-rv-translate>Time</span>"
   });
 
 }).call(this);
@@ -1221,7 +1300,7 @@
     icon: 'icon-link',
     view: "<input type='text' class='rf-size-<%= rf.get(Formbuilder.options.mappings.SIZE) %>' placeholder='http://' />",
     edit: "",
-    addButton: "<span class=\"symbol\"><span class=\"icon-link\"></span></span> Website"
+    addButton: "<span class=\"symbol\"><span class=\"icon-link\"></span></span> <span data-rv-translate>Website</span>"
   });
 
 }).call(this);
@@ -1283,21 +1362,21 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<label class="fb-required">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REQUIRED )) == null ? '' : __t) +
-'\' />\n  Required\n</label>\n<label class="fb-immediately">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
+'\' />\n  <span data-rv-translate>Required</span>\n</label>\n<label class="fb-immediately">\n  <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALIDATE_IMMEDIATELY )) == null ? '' : __t) +
-'\' />\n  Validate Immediately\n</label>\n<label class="fb-admin_only">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
+'\' />\n  <span data-rv-translate>Validate Immediately</span>\n</label>\n<label class="fb-admin_only">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.ADMIN_ONLY )) == null ? '' : __t) +
-'\' />\n    Admin only (Note: Admin fields will not appear in the client app.)\n</label>\n';
+'\' />\n    <span data-rv-translate>Admin only (Note: Admin fields will not appear in the client app.)</span>\n</label>\n';
  if (repeatable){ ;
 __p += '\n  <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
-'\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min\n    ';
+'\' />\n    <span data-rv-translate>Repeating</span>\n  </label>\n  <label class="fb-repititions">\n    <span data-rv-translate>Min</span>\n    ';
  var disabled = (repeating===true) ? "" : "disabled"; ;
 __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
-' | number" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
+' | number" style="width: 30px" />\n    <span data-rv-translate>Max</span>\n    <input class="maxReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
@@ -1347,27 +1426,27 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (editStructure) { ;
-__p += '\n  <div class=\'fb-edit-section-header\'>Name</div>\n  <input type=\'text\' data-rv-input=\'model.' +
+__p += '\n  <div class=\'fb-edit-section-header\' data-rv-translate>Name</div>\n  <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.LABEL )) == null ? '' : __t) +
 '\' />\n';
  } ;
 __p += '\n';
  if (Formbuilder.fields[rf.get(Formbuilder.options.mappings.FIELD_TYPE)].valueField !== false) { ;
 __p += '\n  <div class=\'fb-edit-section-header\'>' +
-((__t = ( Formbuilder.options.mappings.VALUE_HEADER )) == null ? '' : __t) +
+((__t = ( Formbuilder._(Formbuilder.options.mappings.VALUE_HEADER) )) == null ? '' : __t) +
 '</div>\n  <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.VALUE )) == null ? '' : __t) +
 '\' />\n';
  } ;
 __p += '\n<div class="fb-field-description">\n  <div class=\'fb-edit-section-header\'>' +
-((__t = ( Formbuilder.options.mappings.DESCRIPTION_TITLE )) == null ? '' : __t) +
+((__t = ( Formbuilder._(Formbuilder.options.mappings.DESCRIPTION_TITLE) )) == null ? '' : __t) +
 '</div>\n  <textarea data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.DESCRIPTION )) == null ? '' : __t) +
 '\'\n    placeholder=\'' +
-((__t = ( Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER )) == null ? '' : __t) +
-'\'></textarea>\n</div>\n<label class="fb-field-description">\n    <div class=\'fb-edit-section-header\'>Field Code</div>\n    <input type=\'text\' data-rv-input=\'model.' +
+((__t = ( Formbuilder._(Formbuilder.options.mappings.DESCRIPTION_PLACEHOLDER) )) == null ? '' : __t) +
+'\'></textarea>\n</div>\n<label class="fb-field-description">\n    <div class=\'fb-edit-section-header\' data-rv-translate>Field Code</div>\n    <input type=\'text\' data-rv-input=\'model.' +
 ((__t = ( Formbuilder.options.mappings.FIELD_CODE )) == null ? '' : __t) +
-'\' />\n</label>';
+'\' />\n</label>\n';
 
 }
 return __p
@@ -1377,13 +1456,13 @@ this["Formbuilder"]["templates"]["edit/min_max"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nMin\n<input type="text" data-rv-input="model.' +
+__p += '<div class=\'fb-edit-section-header\' data-rv-translate>Minimum / Maximum</div>\n\n<span data-rv-translate>Min</span>\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-' | number" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.' +
+' | number" style="width: 30px" />\n\n&nbsp;&nbsp;\n\n<span data-rv-translate>Max</span>\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
 ' | number" style="width: 30px" />\n\n<select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
-'" style="width: auto;">\n  <option value="value">Value</option>\n</select>\n';
+'" style="width: auto;">\n  <option value="value" data-rv-translate>Value</option>\n</select>\n';
 
 }
 return __p
@@ -1393,13 +1472,13 @@ this["Formbuilder"]["templates"]["edit/min_max_length"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\'>Length Limit</div>\n\n  Min\n  <input type="text" data-rv-input="model.' +
+__p += '<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\' data-rv-translate>Length Limit</div>\n\n  <span data-rv-translate>Min</span>\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
+' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <span data-rv-translate>Max</span>\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAX)) == null ? '' : __t) +
 ' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <select data-rv-value="model.' +
 ((__t = ( Formbuilder.options.mappings.LENGTH_UNITS )) == null ? '' : __t) +
-'" style="width: auto;">\n    <option value="characters">characters</option>\n  </select>\n</div>\n';
+'" style="width: auto;">\n    <option value="characters" data-rv-translate>characters</option>\n  </select>\n</div>\n';
 
 }
 return __p
@@ -1412,9 +1491,9 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  if (rf.get(Formbuilder.options.mappings.REQUIRED) === true){ ;
-__p += '\n<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\'>Selected Options Limit</div>\n\n  Min\n  <input type="text" data-rv-input="model.' +
+__p += '\n<div class="fb-configure-length">\n  <div class=\'fb-edit-section-header\' data-rv-translate>Selected Options Limit</div>\n\n  <span data-rv-translate>Min</span>\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  Max\n  <input type="text" data-rv-input="model.' +
+' | number" style="width: 30px" />\n\n  &nbsp;&nbsp;\n\n  <span data-rv-translate>Max</span>\n  <input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAX)) == null ? '' : __t) +
 ' | number" style="width: 30px" />\n</div>\n';
  } ;
@@ -1428,13 +1507,13 @@ this["Formbuilder"]["templates"]["edit/min_max_step"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Minimum / Maximum</div>\n\nMin\n<input type="text" data-rv-input="model.' +
+__p += '<div class=\'fb-edit-section-header\' data-rv-translate>Minimum / Maximum</div>\n\n<span data-rv-translate>Min</span>\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MIN )) == null ? '' : __t) +
-' | number" style="width: 30px" />\n\n&nbsp;&nbsp;\n\nMax\n<input type="text" data-rv-input="model.' +
+' | number" style="width: 30px" />\n\n&nbsp;&nbsp;\n\n<span data-rv-translate>Max</span>\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAX )) == null ? '' : __t) +
-' | number" style="width: 30px" />\n\nStep Size\n<input type="text" data-rv-input="model.' +
+' | number" style="width: 30px" />\n\n<span data-rv-translate>Step Size</span>\n<input type="text" data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.STEP_SIZE )) == null ? '' : __t) +
-' | number" style="width: 30px" />';
+' | number" style="width: 30px" />\n';
 
 }
 return __p
@@ -1445,13 +1524,13 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'fb-edit-section-header\'>Options</div>\n\n';
+__p += '<div class=\'fb-edit-section-header\' data-rv-translate>Options</div>\n\n';
  if (typeof includeDatasource !== 'undefined'){ ;
 __p += '\n  <label class="includeDataSource">\n    ';
  var checked = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "checked" : ""; ;
 __p += '\n      <input type=\'checkbox\' ' +
 ((__t = (checked)) == null ? '' : __t) +
-' />\n      Use a Data Source to populate field options?\n  </label>\n\n ';
+' />\n      <span data-rv-translate>Use a Data Source to populate field options?</span>\n  </label>\n\n ';
  var disabled = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "" : "disabled"; ;
 __p += '\n  <div class=\'ds-dd\'>\n    <select ' +
 ((__t = (disabled)) == null ? '' : __t) +
@@ -1461,7 +1540,7 @@ __p += '\n\n';
  if (typeof includeBlank !== 'undefined'){ ;
 __p += '\n  <label class="includeBlank">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_BLANK )) == null ? '' : __t) +
-'\' />\n    Include blank\n  </label>\n';
+'\' />\n    <span data-rv-translate>Include blank</span>\n  </label>\n';
  } ;
 __p += '\n\n';
  var isHidden = (rf.get(Formbuilder.options.mappings.DATASOURCE_TYPE)==='dataSource') ? "hidden" : "" ;
@@ -1473,15 +1552,19 @@ __p += '\n<div class=\'option-wrapper ' +
  if (typeof noCheckboxes === 'undefined'){ ;
 __p += '\n      <input type="checkbox" class=\'js-default-updated\' data-rv-checked="option:checked" />\n    ';
  } ;
-__p += '\n    <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n    <div class="btn-group">\n      <a class="btn btn-success btn-small js-add-option" title="Add Option"><i class=\'icon-plus-sign\'></i></a>\n      <a class="btn btn-danger btn-small js-remove-option" title="Remove Option"><i class=\'icon-minus-sign\'></i></a>\n    </div>\n  </div>\n\n  ';
+__p += '\n    <input type="text" data-rv-input="option:label" class=\'option-label-input\' />\n    <div class="btn-group">\n      <a class="btn btn-success btn-small js-add-option" title="' +
+((__t = ( Formbuilder._('Add Option') )) == null ? '' : __t) +
+'"><i class=\'icon-plus-sign\'></i></a>\n      <a class="btn btn-danger btn-small js-remove-option" title="' +
+((__t = ( Formbuilder._('Remove Option') )) == null ? '' : __t) +
+'"><i class=\'icon-minus-sign\'></i></a>\n    </div>\n  </div>\n\n  ';
  if (typeof includeOther !== 'undefined'){ ;
 __p += '\n    <label class="includeOther">\n      <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.INCLUDE_OTHER )) == null ? '' : __t) +
-'\' />\n      Include "other"\n    </label>\n  ';
+'\' />\n      <span data-rv-translate>Include "other"</span>\n    </label>\n  ';
  } ;
 __p += '\n  <div class=\'fb-bottom-add\'>\n    <a class="js-add-option ' +
 ((__t = ( Formbuilder.options.BUTTON_CLASS )) == null ? '' : __t) +
-'">Add option</a>\n  </div>\n</div>\n';
+'" data-rv-translate>Add option</a>\n  </div>\n</div>\n';
 
 }
 return __p
@@ -1519,13 +1602,13 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += ' <label class="fb-repeating">\n    <input type=\'checkbox\' data-rv-checked=\'model.' +
 ((__t = ( Formbuilder.options.mappings.REPEATING )) == null ? '' : __t) +
-'\' />\n    Repeating\n  </label>\n  <label class="fb-repititions">\n    Min\n    ';
+'\' />\n    <span data-rv-translate>Repeating</span>\n  </label>\n  <label class="fb-repititions">\n    <span data-rv-translate>Min</span>\n    ';
  var disabled = (rf.get('repeating')===true) ? "" : "disabled"; ;
 __p += '\n    <input class="minReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MINREPITIONS )) == null ? '' : __t) +
-' | number" style="width: 30px" />\n    Max\n    <input class="maxReps" type="text" ' +
+' | number" style="width: 30px" />\n    <span data-rv-translate>Max</span>\n    <input class="maxReps" type="text" ' +
 ((__t = ( disabled )) == null ? '' : __t) +
 ' data-rv-input="model.' +
 ((__t = ( Formbuilder.options.mappings.MAXREPITIONS)) == null ? '' : __t) +
@@ -1600,7 +1683,7 @@ __p += '\n        <a data-field-type="' +
 ((__t = ( fieldsEnabledNonInput[i].addButton )) == null ? '' : __t) +
 '\n        </a>\n      ';
  } ;
-__p += '\n    </div>\n  </div>\n</div>';
+__p += '\n    </div>\n  </div>\n</div>\n';
 
 }
 return __p
@@ -1611,7 +1694,7 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<option value="prompt">Select a Data Source</option>\n';
+__p += '<option value="prompt" data-rv-translate>Select a Data Source</option>\n';
  for (i in datasources) { ;
 __p += '\n    ';
  var selected = datasources[i]._id == datasource ? "selected" : "";  ;
@@ -1643,7 +1726,7 @@ this["Formbuilder"]["templates"]["partials/left_side"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'span6 middle\'>\n  <div class=\'fb-no-response-fields\'>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>';
+__p += '<div class=\'span6 middle\'>\n  <div class=\'fb-no-response-fields\' data-rv-translate>No response fields</div>\n  <div class=\'fb-response-fields\'></div>\n</div>\n';
 
 }
 return __p
@@ -1656,9 +1739,9 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class=\'span4 right\'>\n  <ul class=\'fb-tabs nav nav-tabs compact \'>\n    ';
  if(editStructure){ ;
-__p += '\n      <li class=\'active addfield\'><a data-target=\'#addField\'><i class="icon-plus"></i> Field</a></li>\n      <li class="configurefield"><a data-target=\'#editField\'><i class="icon-cog"></i> Field</a></li>\n    ';
+__p += '\n      <li class=\'active addfield\'><a data-target=\'#addField\'><i class="icon-plus"></i> <span data-rv-translate>Field</span></a></li>\n      <li class="configurefield"><a data-target=\'#editField\'><i class="icon-cog"></i> <span data-rv-translate>Field</span></a></li>\n    ';
  }else{ ;
-__p += '\n      <li class="active configurefield"><a data-target=\'#editField\'><i class="icon-cog"></i> Field</a></li>\n    ';
+__p += '\n      <li class="active configurefield"><a data-target=\'#editField\'><i class="icon-cog"></i> <span data-rv-translate>Field</span></a></li>\n    ';
  } ;
 __p += '\n  </ul>\n\n  <div class=\'fb-tab-content\'>\n    ';
  if(editStructure){ ;
@@ -1668,7 +1751,7 @@ __p += '\n      ' +
  } ;
 __p += '\n    ' +
 ((__t = ( Formbuilder.templates['partials/edit_field']() )) == null ? '' : __t) +
-'\n  </div>\n</div>';
+'\n  </div>\n</div>\n';
 
 }
 return __p
@@ -1752,11 +1835,17 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<div class=\'actions-wrapper btn-group\'>\n  <a class="js-duplicate btn btn-small btn-success" title="Duplicate Field"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-clear btn btn-small btn-danger" title="Remove Field"><i class=\'icon-minus-sign\'></i></a>\n</div>\n';
+__p += '<div class=\'actions-wrapper btn-group\'>\n  <a class="js-duplicate btn btn-small btn-success" title="' +
+((__t = ( Formbuilder._('Duplicate Field') )) == null ? '' : __t) +
+'"><i class=\'icon-plus-sign\'></i></a>\n  <a class="js-clear btn btn-small btn-danger" title="' +
+((__t = ( Formbuilder._('Remove Field') )) == null ? '' : __t) +
+'"><i class=\'icon-minus-sign\'></i></a>\n</div>\n';
  if (rf.get(Formbuilder.options.mappings.REPEATING)) { ;
-__p += '\n  <span class="icon icon-inline icon-repeat" title="Repeated Field"></span>\n';
+__p += '\n  <span class="icon icon-inline icon-repeat" title="' +
+((__t = ( Formbuilder._('Repeated Field') )) == null ? '' : __t) +
+'"></span>\n';
  } ;
-
+__p += '\n';
 
 }
 return __p

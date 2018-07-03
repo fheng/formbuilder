@@ -1,4 +1,42 @@
 class Formbuilder
+  @setLanguageHelper: (cb) ->
+    if cb?
+      @getLanguage = cb
+    else
+      @getLanguage = () ->
+        "en"
+
+  @setLanguageTable: (lang, tbl) ->
+    if not @languageTable_?
+      @languageTable_ = {}
+    if lang?
+      @languageTable_[lang] = tbl
+
+  @gettext: (string) ->
+    if not @getLanguage?
+      @setLanguageHelper()
+    if not @languageTable_?
+      @setLanguageTable("en", {})
+    lang = @getLanguage()
+    tbl = @languageTable_[lang]
+    @languageTable_['en'][string] = undefined
+    if tbl? and tbl[string]? and tbl[string] != ''
+      ret = tbl[string]
+    else
+      ret = string
+    ret
+
+  @N_: (string) ->
+    if not @getLanguage?
+      @setLanguageHelper()
+    if not @languageTable_?
+      @setLanguageTable("en", {})
+    @languageTable_['en'][string] = undefined
+    string
+
+  @_: (string) ->
+    Formbuilder.gettext(string)
+
   @helpers:
     defaultFieldAttrs: (field_type) ->
       if Formbuilder.options.mappings.TYPE_ALIASES && Formbuilder.options.mappings.TYPE_ALIASES[field_type]
@@ -38,8 +76,8 @@ class Formbuilder
       FIELD_OPTIONS : 'field_options'
       OPTIONS: 'field_options.options'
       DESCRIPTION: 'field_options.description'
-      DESCRIPTION_PLACEHOLDER: 'Add a longer description to this field'
-      DESCRIPTION_TITLE: 'Description'
+      DESCRIPTION_PLACEHOLDER: Formbuilder.N_('Add a longer description to this field')
+      DESCRIPTION_TITLE: Formbuilder.N_('Description')
       INCLUDE_OTHER: 'field_options.include_other_option'
       INCLUDE_BLANK: 'field_options.include_blank_option'
       DATASOURCE: 'dataSource',
@@ -66,7 +104,7 @@ class Formbuilder
       PHOTO_QUALITY: 'field_options.photo_quality'
       SINGLE_CHECKED: 'field_options.checked'
       TIME_AUTOPOPULATE: 'field_options.time_autopopulate'
-      VALUE_HEADER : 'Value'
+      VALUE_HEADER : Formbuilder.N_('Value')
       TYPE_ALIASES: false
       FIELD_ERROR : 'field_error'
     unAliasType: (type) ->
@@ -76,9 +114,9 @@ class Formbuilder
           type = _.keys(Formbuilder.options.mappings.TYPE_ALIASES)[$idx]
       type
     dict:
-      ALL_CHANGES_SAVED: 'All changes saved'
-      SAVE_FORM: 'Save form'
-      UNSAVED_CHANGES: 'You have unsaved changes. If you leave this page, you will lose those changes!'
+      ALL_CHANGES_SAVED: Formbuilder.N_('All changes saved')
+      SAVE_FORM: Formbuilder.N_('Save form')
+      UNSAVED_CHANGES: Formbuilder.N_('You have unsaved changes. If you leave this page, you will lose those changes!')
 
   @fields: {}
   @inputFields: {}
@@ -135,7 +173,9 @@ class Formbuilder
         'change input[type=file]' : 'forceEditRender'
 
 
-      initialize: ->
+      initialize: (options) ->
+        if !@options
+          @options = options
         @parentView = @options.parentView
         @listenTo @model, "change", @render
         @listenTo @model, "destroy", @remove
@@ -153,7 +193,7 @@ class Formbuilder
         $type = @model.get(Formbuilder.options.mappings.FIELD_TYPE)
 
         if @model.get(Formbuilder.options.mappings.ADMIN_ONLY)
-          Formbuilder.fieldRuleConfirmationFunction @model, "adminChange", "Admin Only fields cannot be the subject of rules. Changing this field to Admin Only will remove any references of this field from page/field rules. Do you wish to keep the updated rules?"
+          Formbuilder.fieldRuleConfirmationFunction @model, "adminChange", Formbuilder._("Admin Only fields cannot be the subject of rules. Changing this field to Admin Only will remove any references of this field from page/field rules. Do you wish to keep the updated rules?")
 
           @$el.addClass('admin-field')
         else
@@ -164,6 +204,8 @@ class Formbuilder
         @$el.addClass('response-field-'+$type)
             .data('cid', @model.cid)
             .html(Formbuilder.templates["view/base#{if !@model.is_input() then '_non_input' else ''}"]({ editStructure : editStructure, rf: @model}))
+
+        rivets.bind @$el, { model: @model }
 
         return @
 
@@ -179,12 +221,12 @@ class Formbuilder
         return
       clear: ->
         @parentView.handleFormUpdate()
-        Formbuilder.fieldRuleConfirmationFunction @model, "deleteChange", "Deleting this field will remove any references of this field from page/field rules. Do you wish to keep the updated rules?", (confirmed) =>
+        Formbuilder.fieldRuleConfirmationFunction @model, "deleteChange", Formbuilder._("Deleting this field will remove any references of this field from page/field rules. Do you wish to keep the updated rules?"), (confirmed) =>
             @model.destroy()
       duplicate: ->
         attrs = _.clone(@model.attributes)
         delete attrs['id']
-        attrs[Formbuilder.options.mappings.LABEL] += ' Copy'
+        attrs[Formbuilder.options.mappings.LABEL] += Formbuilder._(' Copy')
         @parentView.createField attrs, { position: @model.indexInDOM() + 1 }
     edit_field: Backbone.View.extend
       className: "edit-response-field"
@@ -348,7 +390,9 @@ class Formbuilder
         'blur input.minReps' : 'checkReps'
         'blur input.maxReps' : 'checkReps'
 
-      initialize: ->
+      initialize: (options) ->
+        if !@options
+          @options = options
         if !@options.eventFix
           @events['click .fb-tabs a'] = 'showTab'
 
@@ -421,6 +465,8 @@ class Formbuilder
 
         if @options.eventFix
           @.$el.find('.fb-tabs a').unbind().click(@.showTab)
+
+        rivets.bind @$el, { model: @model }
 
         return @
 

@@ -1,7 +1,7 @@
 <div class='actions-wrapper btn-group'>
-  <a class="js-duplicate btn btn-small btn-success" title="Duplicate Field"><i class='icon-plus-sign'></i></a>
-  <a class="js-clear btn btn-small btn-danger" title="Remove Field"><i class='icon-minus-sign'></i></a>
+  <a class="js-duplicate btn btn-small btn-success" title="<%= Formbuilder._('Duplicate Field') %>"><i class='icon-plus-sign'></i></a>
+  <a class="js-clear btn btn-small btn-danger" title="<%= Formbuilder._('Remove Field') %>"><i class='icon-minus-sign'></i></a>
 </div>
 <% if (rf.get(Formbuilder.options.mappings.REPEATING)) { %>
-  <span class="icon icon-inline icon-repeat" title="Repeated Field"></span>
+  <span class="icon icon-inline icon-repeat" title="<%= Formbuilder._('Repeated Field') %>"></span>
 <% } %>

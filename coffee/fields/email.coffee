@@ -8,5 +8,5 @@ Formbuilder.registerField 'email',
   edit: ""
 
   addButton: """
-    <span class="symbol"><span class="icon-envelope-alt"></span></span> Email
+    <span class="symbol"><span class="icon-envelope-alt"></span></span> <span data-rv-translate>Email</span>
   """

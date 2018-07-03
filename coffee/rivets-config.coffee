@@ -6,19 +6,28 @@ rivets.binders.input =
   unbind: (el) ->
     el.removeEventListener('input', this.publish)
 
+rivets.binders.translate = (el, value) ->
+  if el.innerText?
+    el.innerText = Formbuilder.gettext(el.innerText)
+  else if el.textContent?
+    el.textContent = Formbuilder.gettext(el.textContent)
+
 rivets.configure
   prefix: "rv"
   adapter:
     subscribe: (obj, keypath, callback) ->
-      callback.wrapped = (m, v) -> callback(v)
-      obj.on('change:' + keypath, callback.wrapped)
+      if obj? && obj.on?
+        callback.wrapped = (m, v) -> callback(v)
+        obj.on('change:' + keypath, callback.wrapped)
 
     unsubscribe: (obj, keypath, callback) ->
-      obj.off('change:' + keypath, callback.wrapped)
+      if obj? && obj.off?
+        obj.off('change:' + keypath, callback.wrapped)
 
     read: (obj, keypath) ->
-      if keypath is "cid" then return obj.cid
-      obj.get(keypath)
+      if obj? && obj.get?
+        if keypath is "cid" then return obj.cid
+        obj.get(keypath)
 
     publish: (obj, keypath, value) ->
       if obj.cid

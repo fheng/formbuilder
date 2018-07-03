@@ -9,23 +9,23 @@ Formbuilder.registerField 'text',
   edit: """
     <%= Formbuilder.templates['edit/size']() %>
     <%= Formbuilder.templates['edit/min_max_length']() %>
-    <div class='fb-edit-section-header'>Field Format</div>
+    <div class='fb-edit-section-header' data-rv-translate>Field Format</div>
     <div class="inline-labels">
 
-    <label>Type</label>
+    <label data-rv-translate>Type</label>
     <select data-rv-value="model.<%= Formbuilder.options.mappings.FIELD_FORMAT_MODE %>" class="fieldFormatMode" style="width: auto;">
-      <option value="simple">Simple</option>
-      <option value="regex">Advanced (Regex)</option>
+      <option value="simple" data-rv-translate>Simple</option>
+      <option value="regex" data-rv-translate>Advanced (Regex)</option>
     </select><br />
-    <label>Format</label>
+    <label data-rv-translate>Format</label>
     <input type="text" data-rv-input="model.<%= Formbuilder.options.mappings.FIELD_FORMAT_STRING %>" class="fieldFormatString" style="width: 150px;" /><br />
     </div>
     <div class="simpleFormat">
-      <strong>c</strong> = alphanumeric character<br />
-      <strong>n</strong> = number<br />
-      <strong>e.g.</strong> ccnn-nnnn matches ab12-5432, but not 0000-0000
+      <strong>c</strong> = <span data-rv-translate>alphanumeric character</span><br />
+      <strong>n</strong> = <span data-rv-translate>number</span><br />
+      <span data-rv-translate><strong>e.g.</strong> ccnn-nnnn matches ab12-5432, but not 0000-0000</span>
     </div>
-    <div class="advancedFormat">
+    <div class="advancedFormat" data-rv-translate>
     Use javascript-friendly regular expressions to validate - no need to include surrounding / characters <br />
     <strong>e.g.</strong> .+ but not /.+/
 
@@ -34,7 +34,7 @@ Formbuilder.registerField 'text',
   """
 
   addButton: """
-    <span class='symbol'><span class='icon-font'></span></span> Text
+    <span class='symbol'><span class='icon-font'></span></span> <span data-rv-translate>Text</span>
   """
 
   defaultAttributes: (attrs) ->

@@ -12,7 +12,7 @@ Formbuilder.registerField 'paragraph',
   """
 
   addButton: """
-    <span class="icon icon-align-justify"></span> Paragraph
+    <span class="icon icon-align-justify"></span> <span data-rv-translate>Paragraph</span>
   """
 
   defaultAttributes: (attrs) ->
